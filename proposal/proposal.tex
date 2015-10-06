@@ -3,33 +3,41 @@
 
 \title{The title of your project proposal}
 \author{
-  LastName1, FirstName1\\
-  \texttt{github1}
+  Sinha, Rishi\\
+  \texttt{rishizsinha}
   \and
-  LastName2, FirstName2\\
-  \texttt{github2}
+  Mo, Cindy\\
+  \texttt{cxmo}
   \and
-  LastName3, FirstName3\\
-  \texttt{github3}
+  Agarwal, Raj\\
+  \texttt{raj4}
   \and
-  LastName4, FirstName4\\
-  \texttt{github4}
+  Wang, Aria Yuan\\
+  \texttt{ariaaay}
+  \and
+  Dong, Steve Yucheng\\
+  \texttt{yuchengdong}
 }
 
 \begin{document}
 \maketitle
 
-Identify a published fMRI paper and the accompanying data
-\cite{lindquist2008statistical}.  You should explain the basic idea of the
-paper in a paragraph.  You should also perform basic sanity check on the data
-(e.g., can you downloaded, can you load the files, confirm that you have the
-correct number of subjects).
+The study in "Natural Scene Statistics Account for the Representation of 
+Scene Categories in Human Visual Cortex"\cite{stansbury2013neuron} analyzed 
+fMRI scans in response subjects watching movies as a visual stimulus.
+The study created 'scene' definitions consisting of the objects in the scene
+by visually analyzing the movie, and then attempted to determine correlations
+between areas of the brain and objects/scenes. The data included spans the
+fMRI scans of around twenty patients,d
 
-Briefly explain what approach you intend to take for exploring
-the data and paper.  If you intend to ``reproduce'' some aspect of the paper,
-explain in exactly what sense you mean to do this.  If you are thinking about
-validating the data describe the assumpution used in the analysis and indicate
-how you might check them.
+For our project, we plan to perform an analogous study, attempting to find
+correlations between brain activity inferred through fMRI scans and emotions.
+The data provided includes a detailed transcript of the movie, divided by 
+scenes, so this process includes a text-sentiment analysis of the script, 
+and determining an 'emotional distribution' of each scene. After training a 
+model based on multiple scene/fMRI pairs, we hope to be able to predict
+how people are feeling based on fMRI scans and the active areas of the brain
+during that period. 
 
 \bibliography{proposal}
 
