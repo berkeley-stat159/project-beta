@@ -1,19 +1,19 @@
 Project progression presentation(~2 weeks from now):
 
-What we need to do: (step 2 and 3 can be done at the same time)
+What we need to do: (step 2 and 3 can be done at the same time) 
 1. Download the data and separate them into sessions (1 subjects all session ~15G) (DONE)
 we will start with subject 4 (Steve downloaded data and they are in the google drive)
-2. Preprocessing of data (WEEK 1)
+2. Preprocessing of data (WEEK 1) (Raj, Cindy, Steve)
 (Depends on how the data look like)
 motion correction?
 trends correction?
-3. Construction of design matrix: movie description analysis (WEEK 1)
+3. Construction of design matrix: movie description analysis (WEEK 1)(Aria, Rishi)
 - feature extraction: identify objects and action in movie description. 
 and labeling it frame by frame; Preferably using label with wordNet to make use of its tree structure
-Voxel modeling using ridge regression model (+cross validation using different parameter) (WEEK 2+3)
+4. Voxel modeling using ridge regression model (+cross validation using different parameter) (WEEK 2+3) (Everyone)
 It is similar to single voxel modeling that is talked about in class(day 15)
 In order to model all voxel at once, we just use matrix to represent all voxel
-4. prediction and visualize results (WEEK 3)
+5. prediction and visualize results (WEEK 3) (Cindy)
 
 
 Things to do now:
