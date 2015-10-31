@@ -1,0 +1,30 @@
+1. Data Description:
+Prolonged quasi-natural auditory stimulation (Forrest Gump audio movie)
+
+Details:
+2 hour in total for 1 subject 
+8 runs 
+15 mins each run
+Format: 4D volumetric images (160x160x36)in NIfTI format
+TR: 2s
+Sequence: T2*-weighted gradient-echo EPI sequence (1.4 mm isotropic voxel size). 
+**: These images have partial brain coverage — centered on the auditory cortices
+ in both brain hemispheres and include frontal and posterior portions of the 
+ brain. There is no coverage for the upper portion of the brain (e.g. large 
+ parts of motor and somato-sensory cortices).”
+
+Subject we Downloaded:
+004
+
+
+
+2. Data Preprocessing: 
+
+The original audio description was in German, so we first used Google Translate 
+to convert from German to English. Due to grammatical differences, we decided to
+ only keep nouns and verbs, and discarded the adjectives and other words.  We 
+ saved the translated text into a CSV file and parsed in Python. Princeton 
+ University provides a list of stopwords for text preprocessing. Stopwords are 
+ the most commonly used natural language words in the English, but have very 
+ little meaning. Examples of stop words include 
+

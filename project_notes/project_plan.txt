@@ -1,0 +1,33 @@
+Project progression presentation(~2 weeks from now):
+
+What we need to do: (step 2 and 3 can be done at the same time)
+1. Download the data and separate them into sessions (1 subjects all session ~15G) (DONE)
+we will start with subject 4 (Steve downloaded data and they are in the google drive)
+2. Preprocessing of data (WEEK 1)
+(Depends on how the data look like)
+motion correction?
+trends correction?
+3. Construction of design matrix: movie description analysis (WEEK 1)
+- feature extraction: identify objects and action in movie description. 
+and labeling it frame by frame; Preferably using label with wordNet to make use of its tree structure
+Voxel modeling using ridge regression model (+cross validation using different parameter) (WEEK 2+3)
+It is similar to single voxel modeling that is talked about in class(day 15)
+In order to model all voxel at once, we just use matrix to represent all voxel
+4. prediction and visualize results (WEEK 3)
+
+
+Things to do now:
+-- Data preprocessing 
+1. plot the subject 1 data for single run (run 001-run 008); (plot it as activation
+ (y-axis) by time(x-axis ) (refer to hw2)
+2. check for outliers, trends in the data; clean them; (refer to hw2)
+3. compare across runs for all runs, and align run 001 to run 007 for training data
+set; and run 008 for validation run;
+-- Design matrix:
+4. text cleaning(could skip a,b if c can be done directly)
+4.1 Take out German specific words, annotation, irrelevant words(“on”, “the”, “a”, “is”, “”) (Keep people’s names and adjective for now)
+4.2 eliminate case differences
+4.3 extract object/action/adjective words from the movie description
+5. Tag description with WordNet labels (in order to obtain the tree structure of words in English)
+6.  construct a wordNet tree
+7. construct a design matrix
