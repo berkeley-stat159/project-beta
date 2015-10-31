@@ -15,8 +15,7 @@ It is similar to single voxel modeling that is talked about in class(day 15)
 In order to model all voxel at once, we just use matrix to represent all voxel
 4. prediction and visualize results (WEEK 3)
 
-
-Things to do now:
+Things to do now(for step 2, 3 above):
 -- Data preprocessing 
 1. plot the subject 1 data for single run (run 001-run 008); (plot it as activation
  (y-axis) by time(x-axis ) (refer to hw2)
