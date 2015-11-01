@@ -29,5 +29,5 @@ set; and run 008 for validation run;
 4.2 eliminate case differences
 4.3 extract object/action/adjective words from the movie description
 5. Tag description with WordNet labels (in order to obtain the tree structure of words in English)
-6.  construct a wordNet tree
+6. construct a wordNet tree
 7. construct a design matrix
