@@ -7,19 +7,24 @@
 import numpy as np
 import os
 
+BASE_PATH = os.getcwd()
+
 def make_filname(root, index, ext):
     name =  root + '_' + str(index) + '.' + ext
     return name
 
-def make_folder(typ, name):
+def make_folder(typ, fold_name):
+    assert os.getcwd() == BASE_PATH #Make sure in right directory
     os.getcwd()
-    os.mkdir(name)
-    return name
+    os.chdir(typ)
+    os.mkdir(fold_name)
+    os.chdir('..') #Return back to working directory  
+    return fold_name
 
 def save_object(obj, foldername, typ, filename):
-    os.getcwd()
-    os.chdir(foldername) 
-    #np.save(filename) #FIX: NEED TO MAKE FOLDERNAME AND SAVE THIS IN THERE
+    assert os.getcwd() == BASE_PATH #Make sure in right directory 
+    save_path = BASE_PATH + '/' + typ + '/' + filename
+    np.savez(save_path, obj)
     path = './' + typ + '/' + foldername + '/' + filename
     return path 
 
@@ -43,9 +48,9 @@ def save_all(arr, fileroot, typ, folder_root, ext):
     """
     assert typ in ['txt', 'data', 'figures', 'other']
     paths = []
+    foldername = make_folder(typ, folder_root)
     for index, obj in enumerate(arr):
         filename = make_filname(fileroot, index, ext)
-        foldername = make_folder(folder_root)
         path = save_object(obj, foldername, typ, filename)
         paths.append(path)
         print('Created ' + filename + ' in ' + './' + typ + '/' + foldername)
