@@ -1,7 +1,7 @@
 
-""" Functions to save create consistent names and folders in scripts 
-    ADD MORE DESCRIPTION 
-
+""" Functions to save create consistent names and folders in scripts. 
+    This will also save an array of objects into seperate files in one folder.  
+    ADD MORE
 """ 
 
 import numpy as np
@@ -15,6 +15,8 @@ def make_filname(root, index, ext):
 
 def make_folder(typ, fold_name):
     assert os.getcwd() == BASE_PATH #Make sure in right directory
+    if not os.path.exists(typ):
+        os.makedirs(typ) 
     os.getcwd()
     os.chdir(typ)
     os.mkdir(fold_name)
@@ -22,9 +24,12 @@ def make_folder(typ, fold_name):
     return fold_name
 
 def save_object(obj, foldername, typ, filename):
-    assert os.getcwd() == BASE_PATH #Make sure in right directory 
-    save_path = BASE_PATH + '/' + typ + '/' + filename
-    np.savez(save_path, obj)
+    assert os.getcwd() == BASE_PATH #Make sure in right directory
+    os.chdir(typ) 
+    os.chdir(foldername)
+    np.save(filename, obj) #FIX adds .npz extension 
+    os.chdir('..')
+    os.chdir('..') 
     path = './' + typ + '/' + foldername + '/' + filename
     return path 
 
