@@ -5,6 +5,7 @@
 """ 
 
 import numpy as np
+import matplotlib.pyplot as plt
 import os
 
 BASE_PATH = os.getcwd()
@@ -19,15 +20,19 @@ def make_folder(typ, fold_name):
         os.makedirs(typ) 
     os.getcwd()
     os.chdir(typ)
-    os.mkdir(fold_name)
+    if not os.path.exists(fold_name):
+        os.mkdir(fold_name)
     os.chdir('..') #Return back to working directory  
     return fold_name
 
-def save_object(obj, foldername, typ, filename):
+def save_object(obj, foldername, typ, filename, is_plt):
     assert os.getcwd() == BASE_PATH #Make sure in right directory
     os.chdir(typ) 
     os.chdir(foldername)
-    np.save(filename, obj) #FIX adds .npz extension 
+    if is_plt:
+        plt.savefig(filename)
+    else:
+        np.save(filename, obj) #FIX adds .npz extension 
     os.chdir('..')
     os.chdir('..') 
     path = './' + typ + '/' + foldername + '/' + filename
@@ -36,7 +41,8 @@ def save_object(obj, foldername, typ, filename):
 def save_all(arr, fileroot, typ, folder_root, ext):
     """ 
     Saves each element in the array 'arr' based on root and the index of
-    the element. 'typ' must be either 'txt', data', 'figures', or 'other'.
+    the element. 'typ' must be either 'txt', data', or 'other'. 
+    At this point, this can't save plots (need to use 'save_plt').
         
     Example
     -------
@@ -51,12 +57,19 @@ def save_all(arr, fileroot, typ, folder_root, ext):
     ./figures/RMS_plots/RMS_1.pdf
     ./figures/RMS_plots/RMS_2.pdf
     """
-    assert typ in ['txt', 'data', 'figures', 'other']
+    assert typ in ['txt', 'data', 'other']
     paths = []
     foldername = make_folder(typ, folder_root)
     for index, obj in enumerate(arr):
         filename = make_filname(fileroot, index, ext)
-        path = save_object(obj, foldername, typ, filename)
+        path = save_object(obj, foldername, typ, filename, is_plt=False)
         paths.append(path)
         print('Created ' + filename + ' in ' + './' + typ + '/' + foldername)
-    return paths 
+    return paths
+
+def save_plt(fileroot, index, folder_root, ext):
+    """ADD DES
+    """
+    foldername = make_folder('figures', folder_root)
+    filename = make_filname(fileroot, index, ext)
+    save_object('', foldername, 'figures', filename, True)
