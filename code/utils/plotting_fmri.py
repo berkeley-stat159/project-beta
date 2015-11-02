@@ -39,4 +39,21 @@ def plot_sdevs(sdevs, outliers_sdevs, outlier_interval):
 def plot_rms(data):
 
 
+def 
 #Time-series plots 
+
+
+## Generate all the plot
+
+def generate(data,output_folder_name):
+
+sttr = 'task001_run00'
+for i in range(8):
+    folder_name = sttr + str(i+ 1)
+    name = '/bold_dico.nii.gz'
+    folder_loc = folder_name + name
+    print(folder_loc)
+    temp_data = gzip.open(folder_loc)
+    load_data(temp_data)
+    output_folder_name= 'output_' + str(i+1)
+    generate(temp_data, output_folder_name)
