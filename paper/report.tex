@@ -26,10 +26,18 @@
 \maketitle
 
 \abstract{You should have a short abstract.}
+ Audio 
 
 \section{Introduction}
 
 \section{Data}
+ The original audio description was in German, so we first used Google Translate 
+ to convert from German to English. Due to grammatical differences, we decided to
+ only keep nouns and verbs, and discarded the adjectives and other words including
+ stopwords. Princeton University provides a list of stopwords for text preprocessing.
+ Stopwords are the most commonly used natural language words in the English, but have 
+ very little meaning. Examples of stop words include "and", "to", and "him". We saved 
+ the translated text into a CSV file and parsed in Python. 
 
 \section{Methods}
 \section{Results}
