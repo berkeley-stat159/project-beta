@@ -3,7 +3,7 @@
 #############################
 # Wordnet Labeler GUI      #
 # Created by Yuan Wang     #
-# Originall for affordnace #
+# Originally for affordnace #
 # Modified on 11/03/2015   #
 #############################
 
