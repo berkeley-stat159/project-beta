@@ -42,20 +42,20 @@ def save_all(arr, fileroot, typ, folder_root, ext):
     """ 
     Saves each element in the array 'arr' based on root and the index of
     the element. 'typ' must be either 'txt', data', or 'other'. 
-    At this point, this can't save plots (need to use 'save_plt').
+    At this point, this can't save plots (need to use 'save_plt' below).
         
     Example
     -------
-    >>> arr = [plt_obj1, plt_obj2, plt_obj3]
+    >>> arr = [obj1, obj2, obj3]
     >>> fileroot = 'RMS'
     >>> ext = 'pdf'
-    >>> typ = 'figures'
-    >>> folder_root = RMS_plots
-    >>> paths = save_all_plt(arr, fileroot, folder_root)
+    >>> typ = 'data'
+    >>> folder_root = RMS
+    >>> paths = save_all_plt(arr, fileroot, typ, folder_root, ext)
     >>> print(paths)
-    ./figures/RMS_plots/RMS_0.pdf
-    ./figures/RMS_plots/RMS_1.pdf
-    ./figures/RMS_plots/RMS_2.pdf
+    ./data/RMS/RMS_0.pdf
+    ./data/RMS/RMS_1.pdf
+    ./data/RMS/RMS_2.pdf
     """
     assert typ in ['txt', 'data', 'other']
     paths = []
