@@ -26,10 +26,24 @@
 \maketitle
 
 \abstract{You should have a short abstract.}
+We attempt to find correlations between brain activity through fMRI scans and emotions 
+or actions occuring in the movie. The data provided includes a detailed transcript of 
+the movie divided by scenes. This process involves NLP (Natural Language Processing) of 
+the script using text-sentiment/n-gram analysis of the script to determine the "emotional 
+distribution" of each scene. After training a linear regression model based on multiple 
+scsene/ fMRI pairs, we will predict how people are feeling or actions that are occuring 
+based on fMRI scans and the active areas of the brain during that period.  
 
 \section{Introduction}
 
 \section{Data}
+ The original audio description was in German, so we first used Google Translate 
+ to convert from German to English. Due to grammatical differences, we decided to
+ only keep nouns and verbs, and discarded the adjectives and other words including
+ stopwords. Princeton University provides a list of stopwords for text preprocessing.
+ Stopwords are the most commonly used natural language words in the English, but have 
+ very little meaning. Examples of stop words include "and", "to", and "him". We saved 
+ the translated text into a CSV file and parsed in Python. 
 
 \section{Methods}
 \section{Results}
