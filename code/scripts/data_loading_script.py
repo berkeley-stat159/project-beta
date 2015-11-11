@@ -10,8 +10,27 @@
         'save_files.py'  
 """   
 
-""" Import standard libraries """
+import sys
+import os
 
+#Add path to modules in 'utils' folder
+start_path = os.getcwd()
+os.chdir('..')
+curr_path = os.path.abspath(os.getcwd())
+sys.path.append(curr_path)
+
+#Add path to data files
+os.chdir('..') 
+os.chdir('..')
+os.chdir('data')
+data_path = os.path.abspath(os.getcwd())
+sys.path.append(data_path)
+os.chdir('..')
+os.chdir('code/scripts')
+
+assert start_path == os.getcwd()
+
+#Import standard libraries
 import numpy as np
 import nibabel as nb
 import matplotlib.pyplot as plt
@@ -19,29 +38,29 @@ import data_loading as dl
 import plotting_fmri as plt_fmri
 import save_files as sv
 
-""" All file strings corresponding to BOLD data for subject 4 """ 
+#All file strings corresponding to BOLD data for subject 4 
 
 files = ['task001_run001.bold_dico.nii', 'task001_run002.bold_dico.nii', 
          'task001_run003.bold_dico.nii', 'task001_run004.bold_dico.nii', 
          'task001_run005.bold_dico.nii', 'task001_run006.bold.nii'
          'task001_run007.bold.nii', 'task001_run008.bold.nii']
 
-"""
-* Load the images as an image object
-* Load all the image data from the images
-* Drop the first four volumes, as we know these are outliers
-"""
+#
+# Load the images as an image object
+# Load all the image data from the images
+# Drop the first four volumes, as we know these are outliers
+#
 
 all_data = []
 for filename in files:
 	new_data = dl.load_data(filename) #load_data function drops first 4 for us
 	all_data.append(new_data)
 
-""" 
-* Get indices of outlier volumes for each dataset. 
-* Write each as its own file and save in 'vol_std_outliers' folder 
-* Takes 15 min to run
-"""
+
+# * Get indices of outlier volumes for each dataset. 
+# * Write each as its own file and save in 'vol_std_outliers' folder 
+# * Takes 15 min to run
+
 all_bands_outliers = []
 all_sdevs = []
 all_iqr_outliers = []
@@ -61,16 +80,13 @@ sv.save_all(all_iqr_outliers, fileroot='out_iqr', typ = 'data',
 sv.save_all(all_bands_outliers,fileroot='band',typ='data',folder_root='IQR_BANDS'
 	            ext='txt')
 
-"""  
-For each run, we have a plot of:
+#For each run, we have a plot of:
 
-* The volume standard deviation values;
-* The outlier points from the std values, marked on the plot with an 'o'
-  marker;
-* A horizontal dashed line at the lower IRQ threshold;
-* A horizontal dashed line at the higher IRQ threshold
-
-"""
+# * The volume standard deviation values;
+# * The outlier points from the std values, marked on the plot with an 'o'
+#   marker;
+# * A horizontal dashed line at the lower IRQ threshold;
+# * A horizontal dashed line at the higher IRQ threshold
  
 for index, sdevs in enumerate(all_sdevs):
 	outlier_sdevs = all_iqr_outliers[index]
