@@ -13,6 +13,7 @@ from Tkinter import *
 import nltk
 import json
 import pickle
+import sys
 
 
 ###########
@@ -20,7 +21,7 @@ import pickle
 
 
 ### load inherited affordance dictionary
-affordance_dict_fpath = '/Users/AriaW/Desktop/159/project-beta/code/utils/description_pp/sample_description.json'
+affordance_dict_fpath = sys.argv[1]
 
 """
 Load json file should be an dictionry with the keys as the words to be tagged, 
