@@ -25,7 +25,8 @@ for row in csv_description:
 	r = [re.sub(r'\W+', '', w) for w in r if re.sub(r'\W+', '', w) != ""]
 	r = [w for w in r if w not in stopwords_list]
 	uwords |= set(r)
-print uwords
+with open("uniquewords.json", 'w') as f:
+	json.dump(dict.fromkeys(uwords), f) 
 
 
 storedict = OrderedDict()
