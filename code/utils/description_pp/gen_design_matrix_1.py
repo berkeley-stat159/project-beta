@@ -31,7 +31,7 @@ len(all_unique_words)
 # In[139]:
 
 #design matrix with all words at all time
-# 3544 is the total number of TRs
+# 3543+1 is the total number of TRs
 design_1 = np.zeros((3544,len(set(all_words))))
 for d in sti_dict_list:
     start = np.floor(float(d['start']))//2
@@ -44,5 +44,5 @@ for d in sti_dict_list:
 
 # In[144]:
 
-design_1_fpath = "design_matrix_1.npy"
+design_1_fpath = "../prediction/design_matrix_1.npy"
 np.save(design_1_fpath,design_1)
