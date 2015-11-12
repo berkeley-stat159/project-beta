@@ -43,10 +43,11 @@
 - Generated a time (TRs) by features (WordNet tags) design matrix
 
 # Completed Steps (Cont) 
-![Design Matrix](images/visual_design_matrix.png)
+![Design Matrix](processflow.png "Design Matrix")
 
 # Completed Steps (Cont)
 ## Scene modeling
+- Created task-courses and scene categories for each run
 - Extracted scenes from description and splitted scenes according to runs
 
 ## fMRI Data Preprocessing
@@ -58,19 +59,25 @@
 ## Two Kinds of Modeling
 - Voxelwise Modeling of audio description using Ridge Regression Model 
 	- train models with BOLD signal on audio description
-	- Goal1: predict voxelwise BOLD response based on description
-	- Goal2: predict words based on BOLD response
+	- Goal 1: predict voxelwise BOLD response based on description
+	- Goal 2: predict words based on BOLD response
 - Linear Modeling of brain activity on Scenes 
 	- Goal: predict the scene category based on brain activity
-
+- Hypothesis Testing: 
+    - Parametric: t-test, z-test
+    - Non-Parametric: permutation test, sign-test
+- Checking Robustness, assesing model peformance (e.g. AIC), resampling    
 
 # Future Plan 
 - Accomplish two modeling goals
+- Checking out-of-sample peformance
+- Adding more tests, docstrings, and improving readability    
 
 ## Problems 
 - Learning Github flow
   - Learn to "unpush" something 
 - Understanding fMRI data 
+- Reproducibility and handling such large datasets 
 - Data manipulation to fit the question we are trying to answer 
 
 
