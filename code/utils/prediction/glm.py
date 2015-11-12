@@ -1,12 +1,12 @@
-
 import numpy as np
 from sklearn import linear_model as lm 
 import numpy.linalg as npl
+import matplotlib.pyplot as plt
 
 def sk_regression(data_4d, convolved, model):
 	num_vols = data_4d.shape[-1]
 	assert(len(convolved) == num_vols)
-	X = np.ones(num_vols, 2))
+	X = np.ones(num_vols, 2)
 	X[:, 1] = convolved
 	vox_by_time = np.reshape(data_4d, (-1, num_vols))
 
@@ -43,5 +43,7 @@ def show_design(X, design_title):
     """ Show the design matrix nicely """
     plt.imshow(scale_design_mtx(X),
                interpolation='nearest',
-               cmap='gray') # Gray colormap
+               cmap='hot',
+               aspect='auto') # Gray colormap
     plt.title(design_title)
+    # plt.show()
