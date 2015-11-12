@@ -12,7 +12,7 @@
 
 ## The Data
 - 2 hour in total for 1 subject 
-- 8 runs 
+- 8 runs (7 runs for later training and 1 run for validation)
 - 15 mins each run
 - Format: 4D volumetric images (160x160x36)in NIfTI format
 - TR: 2s
@@ -25,35 +25,41 @@
 
 # Completed Steps 
 
-## Data Preprocessing 
+## Stimuli Preprocessing 
 - Translated German audio description into English 
 - Removed English stopwords (common words that hold no meaning) 
   from audio descriptions 
-- Saved outlier data indices 
 
-## WordNet 
-- Tagged descriptions using WordNet labels and store in JSON file 
-- Separate each English description into 2 second intervals 
 
-## Initial Analysis 
+## Voxelwise modeling - WordNet 
+- Tagged audio descriptions with WordNet labels and generated a "word to WordNet" dictionary
+- Grouped audio stimuli according TRs
+- Generated a time (TRs) by features (WordNet tags) design matrix
+(ADD DESIGN MATRIX PICTURE)
+
+
+## Scene modeling
+- Extracted scenes from description and splitted scenes according to runs
+(ADD SCENE PICTURE)
+
+
+## fMRI Data Preprocessing
+- Inspected the data by generating different kinds of summary statistics
+- Saved outlier data indices
+
+# In progress
+## Two Kinds of Modeling
+- Voxelwise Modeling of audio description using Ridge Regression Model 
+	- train models with BOLD signal on audio description
+	- Goal1: predict voxelwise BOLD response based on description
+	- Goal2: predict words based on BOLD response
+- Linear Modeling of brain activity on Scenes 
+	- Goal: predict the scene category based on brain activity
+
 
 # Future Plan 
+- Accomplish two modeling goals
 
-## Construct a Design Matrix 
-
-## Voxel Modeling Using Ridge Regression Model 
-### Cross-validation 
-- 70% of the data used as training 
-- 30% used as test data 
-
-## Two Kinds of Modeling
-### Scenes Modeling 
-- Setting where scenes take place
-- ~ 50 seconds 
-### Detailed Description Modeling 
-- Divide words in each time window 
-- Model each of the word in the description 
-### Deduce from Brain Scan to Word Category 
 
 ## Problems 
 - Learning Github flow
