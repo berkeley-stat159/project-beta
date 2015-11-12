@@ -23,7 +23,7 @@ import save_files as sv
 
 files = ['task001_run001.bold_dico.nii', 'task001_run002.bold_dico.nii', 
          'task001_run003.bold_dico.nii', 'task001_run004.bold_dico.nii', 
-         'task001_run005.bold_dico.nii', 'task001_run006.bold.nii'
+         'task001_run005.bold_dico.nii', 'task001_run006.bold.nii',
          'task001_run007.bold.nii', 'task001_run008.bold.nii']
 
 """
@@ -40,7 +40,7 @@ for filename in files:
 """ 
 * Get indices of outlier volumes for each dataset. 
 * Write each as its own file and save in 'vol_std_outliers' folder 
-* Takes 15 min to run
+* Takes 5 min to run
 """
 all_bands_outliers = []
 all_sdevs = []
@@ -85,7 +85,7 @@ all_outliers_rms = []
 all_bands_rms = []
 for data in all_data:
 	rms = dl.vol_rms_diff(data)
-	outliers_rms, rms_interval = dn.iqr_outliers(rms)
+	outliers_rms, rms_interval = dl.iqr_outliers(rms)
 	all_rms.append(rms)
 	all_outliers_rms.append(outliers_rms)
 	all_bands_rms.append(rms_interval)
