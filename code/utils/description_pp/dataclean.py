@@ -36,21 +36,26 @@ for w in translator:
 print translator
 
 with open("description.csv") as f:
-	storedict = OrderedDict()
+	storedictduration = OrderedDict()
+	storedictstop = OrderedDict()
 	ind = 0
 	for row in csv_description: 
-		start, stop = row[0], row[1]
-		raw = row[3].lower().split()
-		refined = [re.sub(r'\W+', '', w) for w in raw if re.sub(r'\W+', '', w) != ""]
-		refined = [translator[w] for w in refined if w in translator]
-		print refined
-		storedict[ind] = {"start":start, "stop":stop, "words":refined}
+		if ind == 0:
+			pass
+		else:
+			start, stop, duration = row[0], row[1], str(float(row[1])-float(row[0]))
+			raw = row[3].lower().split()
+			refined = [re.sub(r'\W+', '', w) for w in raw if re.sub(r'\W+', '', w) != ""]
+			refined = [translator[w] for w in refined if w in translator]
+			storedictduration[ind] = {"start":start, "duration":duration, "words":refined}
+			storedictstop[ind] = {"start":start, "stop":stop, "words":refined}
 		ind += 1
-	print storedict
-	with open("cleandescription.json", 'w') as f:
-		json.dump(storedict.values(), f)
+	with open("wordnet_stop.json", 'w') as f:
+		json.dump(storedictstop.values(), f)
+	with open("wordnet_duration.json", 'w') as f:
+		json.dump(storedictduration.values(), f)
 
-print sum([len(e["words"]) for e in storedict])/float(len(storedict))
+# print sum([len(e["words"]) for e in storedict])/float(len(storedict))
 
 # df = pd.DataFrame(storedict.values()[1:], columns = ["start", "stop", "words"])
 # df.to_csv("cleaned.csv")
