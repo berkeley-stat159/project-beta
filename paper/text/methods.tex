@@ -11,15 +11,17 @@ testing.
 \subsection{Text Preprocessing}
 \par As the movie description as provided was in German, we first used Google
 Translate to translate the description to English before proceeding with 
-any further processing. This decision was made because we believed that 
-it
+any further processing. Though there may be translational errors, it was decided
+that it was best to transform the original descriptions (versus using other english descriptions) to maintain the original timestamps from the researchers
+to have optimal alignment between the description and FMRI data.
 
-Due to grammatical differences, we decided to
+\par Due to grammatical differences, we decided to
  only keep nouns and verbs, and discarded the adjectives and other words including
- stopwords. Princeton University provides a list of stopwords for text preprocessing.
- Stopwords are the most commonly used natural language words in the English, but have 
- very little meaning. Examples of stop words include "and", "to", and "him". We saved 
- the translated text into a CSV file and parsed in Python. 
+ stopwords, which are commonly used words with little meaning or determinable context (e.g. 'and', 'to', 'him'). A publicly available list of stopwords from Princeton University was used for this task. 
+
+ \par Of the words that remained, a WordNet dictionary was built.
+
+ \centerline{\includegraphics[width=.9\linewidth]{processflow}}
 
 \subsection{FMRI Preprocessing}
 
