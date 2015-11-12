@@ -43,7 +43,7 @@
 - Generated a time (TRs) by features (WordNet tags) design matrix
 
 # Completed Steps (Cont) 
-![Design Matrix](processflow.png "Process Flow")
+![Design Matrix](images/visual_design_matrix.png)
 
 # Completed Steps (Cont)
 ## Scene modeling
