@@ -66,7 +66,7 @@
 - Hypothesis Testing: 
     - Parametric: t-test, z-test
     - Non-Parametric: permutation test, sign-test
-- Checking Robustness, assesing model peformance (e.g. AIC), resampling    
+- Checking robustness, assesing model peformance (e.g. AIC), resampling    
 
 # Future Plan 
 - Accomplish two modeling goals
