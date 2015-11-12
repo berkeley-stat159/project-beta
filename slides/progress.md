@@ -5,11 +5,13 @@
 # Background
 
 ## Data Description
+
 - high-resolution fMRI dataset 
   - 20 participants 
 - audio description in German with start and end times
 - dsnum: ds000113 
 
+# Background (Cont) 
 ## The Data
 - 2 hour in total for 1 subject 
 - 8 runs (7 runs for later training and 1 run for validation)
@@ -17,11 +19,15 @@
 - Format: 4D volumetric images (160x160x36)in NIfTI format
 - TR: 2s
 - Sequence: T2*-weighted gradient-echo EPI sequence (1.4 mm isotropic voxel size). 
+
+# Background (Cont)
+## The Data 
 - IMPORTANT NOTES: These images have partial brain coverage — centered on the auditory cortices
  in both brain hemispheres and include frontal and posterior portions of the 
  brain. There is no coverage for the upper portion of the brain (e.g. large 
  parts of motor and somato-sensory cortices).”
 - Subject we downloaded: 004, (014, 015)
+
 
 # Completed Steps 
 
@@ -30,24 +36,25 @@
 - Removed English stopwords (common words that hold no meaning) 
   from audio descriptions 
 
-
-## Voxelwise modeling - WordNet 
+# Completed Steps (Cont)
+## Voxelwise Modeling - WordNet 
 - Tagged audio descriptions with WordNet labels and generated a "word to WordNet" dictionary
 - Grouped audio stimuli according TRs
 - Generated a time (TRs) by features (WordNet tags) design matrix
-(ADD DESIGN MATRIX PICTURE)
 
+# Completed Steps (Cont) 
+![Design Matrix](images/visual_design_matrix.png)
 
+# Completed Steps (Cont)
 ## Scene modeling
 - Extracted scenes from description and splitted scenes according to runs
-(ADD SCENE PICTURE)
-
 
 ## fMRI Data Preprocessing
 - Inspected the data by generating different kinds of summary statistics
 - Saved outlier data indices
 
-# In progress
+
+# In Progress
 ## Two Kinds of Modeling
 - Voxelwise Modeling of audio description using Ridge Regression Model 
 	- train models with BOLD signal on audio description
@@ -60,26 +67,28 @@
 # Future Plan 
 - Accomplish two modeling goals
 
-
 ## Problems 
 - Learning Github flow
   - Learn to "unpush" something 
 - Understanding fMRI data 
-- Data manipulation to fit the question we're trying to answer 
+- Data manipulation to fit the question we are trying to answer 
+
 
 # Process 
-
 ## Issues as Team 
 - Finding right time to meet
+- Varying degrees of statistical and coding knowledge 
 
-## Class Feedback 
-### Useful: 
+# Feedback 
+## Useful: 
 - Code exercises and solutions 
 - Github 
-### Could Improve: 
+
+## Could Improve: 
 - Lack of notes 
 - More emphasis on fMRI data 
-### Areas of Review: 
+
+## Areas of Review: 
 - ANOVA 
 - Regression modeling 
 
