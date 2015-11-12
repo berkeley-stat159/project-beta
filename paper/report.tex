@@ -1,6 +1,8 @@
-\documentclass[11pt]{article}
+\documentclass[12pt]{article}
 
 \usepackage[margin=0.75in]{geometry}
+\usepackage{indentfirst}
+\bibliographystyle{siam}
 
 \title{Modeling of Semantic Representation in the brain using fMRI response}
 \author{
@@ -20,32 +22,18 @@
   \texttt{yuchengdong}
 }
 
-\bibliographystyle{siam}
 
 \begin{document}
-\maketitle
+\maketitle{\input{text/abstract.tex}}
 
 \abstract{You should have a short abstract.}
 
 
 \section{Introduction}
-Dustin E. Stansbur's article "Natural Scene Statistics Account for the Representation of 
-Scene Categories in Human Visual Cortex" describes the method by which the human brain 
-aggregrate information about subjects to represent scene categories. Using statical learning 
-methods, researchers can learn categories of certain objects, and model fMRI brain signals 
-when human subjects are viewed images of scenes using the learned categories. In our study, 
-instead of images of scenes, we have audio descriptions of the scenes that are presented to 
-human subjects. However, we hypothesize that the response is the same- audio would first be 
-processed in the  
+        \input{text/intro.tex}
 
 \section{Data}
- The original audio description was in German, so we first used Google Translate 
- to convert from German to English. Due to grammatical differences, we decided to
- only keep nouns and verbs, and discarded the adjectives and other words including
- stopwords. Princeton University provides a list of stopwords for text preprocessing.
- Stopwords are the most commonly used natural language words in the English, but have 
- very little meaning. Examples of stop words include "and", "to", and "him". We saved 
- the translated text into a CSV file and parsed in Python. 
+        \input{text/data.tex}
 
 \section{Methods}
 \section{Results}
