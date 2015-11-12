@@ -1,9 +1,27 @@
 \par \indent 
 
-This is a high-resolution functional magnetic resonance (fMRI) dataset — 20 participants recorded at high field strength (7 Tesla) during prolonged stimulation with an auditory feature film ("Forrest Gump''). The original audio description was in German, so we first used Google Translate 
- to convert from German to English. Due to grammatical differences, we decided to
- only keep nouns and verbs, and discarded the adjectives and other words including
- stopwords. Princeton University provides a list of stopwords for text preprocessing.
- Stopwords are the most commonly used natural language words in the English, but have 
- very little meaning. Examples of stop words include "and", "to", and "him". We saved 
- the translated text into a CSV file and parsed in Python. 
+\subsection{Original Dataset}
+\par The dataset used belongs to a study conducted using high-resolution functional magnetic resonance (fMRI) to analyze stimulation due to visual stimulii. 20 participants recorded at high field strength (7 Tesla) during prolonged stimulation with an auditory feature film ("Forrest Gump''). 
+
+\par The movie description was provided in a csv format, with each row containing a 
+start and end time (in seconds) corresponding to the time in the movie, along with
+a description in German of the events occurring in the movie at that time. 
+One noticeable feature of the dataset upon initial observation is that the description
+is not continuous-- there exist gaps in the events provided, though minimal.
+
+\par As for the FMRI data, data for 20 subjects were provided, each of whom watched
+the movie while being scanned. The FMRI images were taken every two seconds for
+the duration of the movie. All of this data was in nii format, and thus compatible
+with nibabel libraries in Python.
+
+\par For each of the 20 subjects, answers to pre-experiment survey questions were made available, asking a variety of questions (e.g. left or right handed). 
+
+
+\subsection{Data Used}
+\par The survey data was used to select subject 4 to at least initially build our
+model on. She was chosen partially because her fMRI data was one of the most complete
+and also for the arbitrary fact that she had perfect pitch.
+
+\par All of the movie description data was used, as it is applicable to the FMRI time-course data for all subjects. 
+
+\par The survey data was not used beyond this point.
