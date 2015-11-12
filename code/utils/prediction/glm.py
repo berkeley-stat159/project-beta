@@ -45,5 +45,7 @@ def show_design(X, design_title):
                interpolation='nearest',
                cmap='hot',
                aspect='auto') # Gray colormap
+    plt.xlabel("features (words)")
+    plt.ylabel("time (TR)")
     plt.title(design_title)
     # plt.show()
