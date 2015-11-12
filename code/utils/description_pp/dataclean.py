@@ -19,38 +19,28 @@ stopwords = open("stopwords.txt")
 stopwords_list = stopwords.read().splitlines()
 
 # extract set of all significant words from text
-with open("description.csv") as f:
-	uwords = set()
-	for row in f:
-		r = row[3].lower().split()
-		r = [re.sub(r'\W+', '', w) for w in r if re.sub(r'\W+', '', w) != ""]
-		r = [w for w in r if w not in stopwords_list]
-		uwords |= set(r)
-	with open("uniquewords.json", 'w') as f:
-		json.dump(dict.fromkeys(uwords), f) 
+uwords = set()
+for row in csv_description:
+	r = row[3].lower().split()
+	r = [re.sub(r'\W+', '', w) for w in r if re.sub(r'\W+', '', w) != ""]
+	r = [w for w in r if w not in stopwords_list]
+	uwords |= set(r)
+with open("uniquewords.json", 'w') as f:
+	json.dump(dict.fromkeys(uwords), f) 
 
-with open("word2wn.json") as f:
-	translator = json.loads(f.read())
-for w in translator:
-	translator[w] = translator[w][0]
-print translator
 
-with open("description.csv") as f:
-	storedict = OrderedDict()
-	ind = 0
-	for row in csv_description: 
-		start, stop = row[0], row[1]
-		raw = row[3].lower().split()
-		refined = [re.sub(r'\W+', '', w) for w in raw if re.sub(r'\W+', '', w) != ""]
-		refined = [translator[w] for w in refined if w in translator]
-		print refined
-		storedict[ind] = {"start":start, "stop":stop, "words":refined}
-		ind += 1
-	print storedict
-	with open("cleandescription.json", 'w') as f:
-		json.dump(storedict.values(), f)
+storedict = OrderedDict()
+ind = 0
+for row in csv_description: 
+	start, stop = row[0], row[1]
+	raw = row[3].lower().split()
+	refined = [re.sub(r'\W+', '', w) for w in raw if re.sub(r'\W+', '', w) != ""]
+	refined = [w for w in refined if w not in stopwords_list]
+	storedict[ind] = {"start":start, "stop":stop, "words":refined}
+	ind += 1
 
-print sum([len(e["words"]) for e in storedict])/float(len(storedict))
+with open("cleandescription.json", 'w') as f:
+	json.dump(storedict.values(), f)
 
 # df = pd.DataFrame(storedict.values()[1:], columns = ["start", "stop", "words"])
 # df.to_csv("cleaned.csv")
