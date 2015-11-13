@@ -1,7 +1,3 @@
-\par We attempt to find correlations between brain activity through fMRI scans and emotions 
-or actions occuring in the movie. The data provided includes a detailed transcript of 
-the movie divided by scenes. This process involves NLP (Natural Language Processing) of 
-the script using text-sentiment/n-gram analysis of the script to determine the "emotional 
-distribution" of each scene. After training a linear regression model based on multiple 
-scsene/ fMRI pairs, we will predict how people are feeling or actions that are occuring based on fMRI scans and the active areas of the brain during that period.  
 
+
+\par We attempt to use fMRI data to find correlations between brain activity and events occurring in an audio movie stimuli and make prediction about events happened in the movie. Previous study on semantic modeling has shown that with natural movie stimuli, it is able to predict the semantics categories only using the BOLD responses \cite{stansbury2013neuron}. The data we used in this projects include a detailed transcript of an audio movie ('Forest Gump') as well as scenes description divided by time windows, and the BOLD response of 20 subjects listening to the audio movie \cite{Hanke}. There are two modeling goals for this project. The first one is to model semantic category in the audio description of the movie using BOLD response. We aim to predict what words/category a subject is listening to using the trained regression model on brain activity. The second one is to model the time-course activity using different scenes, aiming to predict what scenes was happening in the audio movie based on the BOLD response at the time. To accomplish this project, it requires preprocessing of BOLD response as well as the movie description, which involves NLP (Natural Language Processing) of the script using WordNet, as well as modeling method, such as general linear regression and ridge regression.
