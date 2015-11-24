@@ -1,5 +1,6 @@
 #FIX ALL PATHS AND CHANGE FILE NAMES SINCE NOT CORRECT
-#PROBABLY WANT TO DO THIS ON CLEANED DATA  
+#PROBABLY WANT TO DO THIS ON CLEANED DATA 
+#ADD TESTS 
 
 #Import standard libraries
 import numpy as np
@@ -9,6 +10,10 @@ import matplotlib.pyplot as plt
 import data_loading as dl
 import plotting_fmri as plt_fmri
 import save_files as sv
+import numpy.linalg as npl
+
+from scipy.spatial.distance import hamming #MIGHT NOT NEED SOME OF THESE PACKAGES 
+                                           #WHEN PUTTIING FUNCS IN UTILS 
 
 #All file strings corresponding to BOLD data for subject 4 
 
@@ -56,8 +61,44 @@ def other_scene_ids(remove_ids):
 	other_ids = [i for i in all_ids if i not in remove_ids]
     return other_ids
 
-def get_voxel_weight(arr4d, voxel):
-	
+def make_scene_design_mat():
+
+def calc_weights(X, Y):
+	return npl.pinv(X).dot(Y)
+
+def get_voxel_weight(vox_by_time, voxel_index, times, on_scene_ids):
+	vox_time_course = vox_by_time[voxel_index, times]
+	vox_design_mat = make_scene_design_mat(vox_by_time, voxel_index, times, on_scene_ids)
+    weights = calc_weights(vox_design_mat, vox_time_course)
+    return weights
+
+def get_all_weights(vox_by_time, times, on_scene_ids):
+	all_weights = []
+	for i in range(vox_by_time.shape[0]):
+		weight = get_voxel_weight(vox_by_time, i, times, on_scene_ids)
+		all_weights.append(weight)
+	all_weights = np.array(all_weights)
+	return all_weights
+
+def predict_scene(trained_weights, t_0_activity):
+	#ASSERTS HERE FOR DIMENSION?
+	design_mat = trained_weights.T
+	raw_predicted_scenes = calc_weights(design_mat, t_0_activity)
+    largest_index = np.where(raw_predicted_scenes == max(raw_predicted_scenes))
+    return largest_index #FIX what if there are ties 
+
+def preduct_all_times(trained_weights, test_activities):
+    predicted_indces = []
+	for activity in test_activities:
+		index = predict_scene(trained_weights, activity)
+	return predicted_indces
+
+def analyze_performance(predicted_labels, actual_labels): 
+	normed_distance = hamming(predicted_labels, actual_labels) #between 0 - 1
+	return 1 - normed_distance
+    
+
+
 ###################################################################
 
 GUMP_SCENES_IDS = [38, 40, 41, 42] #factor ids of Gump scenes
