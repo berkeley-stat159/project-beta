@@ -32,7 +32,7 @@ assert start_path == os.getcwd()
 
 #Import standard libraries
 import numpy as np
-import nibabel as nb
+import nibabel as nib
 import matplotlib.pyplot as plt
 import data_loading as dl
 import plotting_fmri as plt_fmri
@@ -42,7 +42,7 @@ import save_files as sv
 
 files = ['task001_run001.bold_dico.nii', 'task001_run002.bold_dico.nii', 
          'task001_run003.bold_dico.nii', 'task001_run004.bold_dico.nii', 
-         'task001_run005.bold_dico.nii', 'task001_run006.bold.nii'
+         'task001_run005.bold_dico.nii', 'task001_run006.bold.nii',
          'task001_run007.bold.nii', 'task001_run008.bold.nii']
 
 #
@@ -55,7 +55,7 @@ all_data = []
 for index, filename in enumerate(files):
 	new_data = dl.load_data(filename) #load_data function drops first 4 for us
 	num_vols = new_data.shape[-1]
-	if index != 0 or index != 7:
+	if index != 0 and index != 7:
 		new_num_vols = num_vols - 4
 		new_data = new_data[:,:,:,:new_num_vols] #Drop last 4 volumes for middle runs
 	all_data.append(new_data)

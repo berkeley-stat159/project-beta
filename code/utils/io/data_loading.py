@@ -22,6 +22,24 @@ def load_data(filename):
     print(data.shape)
     return data
 
+def load_data(filename):
+    """ Return fMRI data corresponding to the given filename and prints
+        shape of the data array
+    ----------
+    filename : string 
+        This string should be a path to given file. The file must be
+        .nii 
+    Returns
+    -------
+    data : numpy array
+        An array consisting of the data. 
+    """
+    img = nib.load(filename)
+    data = img.get_data()
+    data = data[:,:,:,4:]
+    print(data.shape)
+    return data
+
 def get_axis_data(data, axis):
     """ Returns 1-D array corresponding to the data along the given
         axis
