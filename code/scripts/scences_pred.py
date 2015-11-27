@@ -22,12 +22,16 @@ files = ['task001_run001.bold_dico.nii', 'task001_run002.bold_dico.nii',
          'task001_run003.bold_dico.nii', 'task001_run004.bold_dico.nii', 
          'task001_run005.bold_dico.nii', 'task001_run006.bold.nii',
          'task001_run007.bold.nii', 'task001_run008.bold.nii']
-
+#MIGHT NEED TO DROP FIRST 8 VOLUMES IN FIRST RUN BECAUSE SCENES FILE STARTS AT 17
 all_data = []
-for filename in files:
-	new_data = dl.load_all_data(filename) 
-	all_data.append(new_data)
-
+for index, filename in enumerate(files):
+    new_data = dl.load_data(filename) #load_data function drops first 4 for us
+    num_vols = new_data.shape[-1]
+    if index != 0 and index != 7:
+        new_num_vols = num_vols - 4   
+        new_data = new_data[:,:,:,:new_num_vols] #Drop last 4 volumes for middle runs    
+    print(new_data.shape[-1])
+    all_data.append(new_data)
 
 scenes_path = './scene_times_nums.csv' #FIX
 scenes = pd.read_csv('scene_times_nums.csv', header = None) 
@@ -45,14 +49,25 @@ combined_runs = combine_run_arrays(all_data) #FIX AND ADD runi
 
 ###################################################################
 TR = 2
-NUM_VOLUMES = combined_runs.shape #3524
+NUM_VOLUMES = combined_runs.shape[-1] #3468
 ONSET_TIMES = scenes[:,0] 
 ONSET_TIMES_NORMED = ONSET_TIMES - 17 
 DURATION = scenes[:,1] 
 LABELS = scenes[:,3]
+GRID =  np.arange(start=0, stop=2*NUM_VOLUMES + 2, step=2)
 
-def sync_scene_times(labels, onset_times_normed, num_volumes=3524):
+factor_grid = []
+for scan_time in GRID:
+    index_list = np.where(ONSET_TIMES_NORMED >= scan_time)[0]
+    if len(index_list) == 0:
+    	factor_id = 68 #We are at last scene which corresponds to factor id 68
+    else: 
+    	index = index_list[0]
+        factor_id = LABELS[index]
+    factor_grid.append(factor_id)
 
+def sync_scene_times(labels, onset_times_normed, num_volumes=NUM_VOLUMES):
+    
 
 def combine_run_arrays(run_array_lst):
 	return np.concatenate(run_array_lst, axis = 3)
