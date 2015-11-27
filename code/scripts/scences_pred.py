@@ -13,6 +13,7 @@ import save_files as sv
 import numpy.linalg as npl
 
 from sklearn.neighbors import KNeighborsClassifier as KNN 
+from sklearn.cluster import KMeans
 from scipy.spatial.distance import hamming #MIGHT NOT NEED SOME OF THESE PACKAGES 
                                            #WHEN PUTTIING FUNCS IN UTILS 
 
@@ -25,7 +26,7 @@ files = ['task001_run001.bold_dico.nii', 'task001_run002.bold_dico.nii',
 #MIGHT NEED TO DROP FIRST 8 VOLUMES IN FIRST RUN BECAUSE SCENES FILE STARTS AT 17
 all_data = []
 for index, filename in enumerate(files):
-    new_data = dl.load_data(filename) #load_data function drops first 4 for us
+    new_data = load_data(filename) #load_data function drops first 4 for us
     num_vols = new_data.shape[-1]
     if index != 0 and index != 7:
         new_num_vols = num_vols - 4   
@@ -66,8 +67,32 @@ for scan_time in GRID:
         factor_id = LABELS[index]
     factor_grid.append(factor_id)
 
-def sync_scene_times(labels, onset_times_normed, num_volumes=NUM_VOLUMES):
-    
+#Sample KNN example - FIX NEED TO CUT DOWN DIMENSION W/ PCA TO DO 
+train = combined_runs[:,:,:,447:500] #run 2
+train_labels = factor_grid[447:500]
+train_vox_time = 
+knn = KNN()
+
+kmeans = KMeans(init='k-means++', n_clusters=n_digits, n_init=10)
+kmeans.fit(train_vox_time)
+
+def on_off_course(on_fact_ids):
+	on_off_times = []
+	for fact_id in factor_grid:
+		if fact_id in on_fact_ids:
+			on_off_times.append(1)
+		else:
+			on_off_times.append(0)
+	return on_off_times
+
+def multiple_types_course(on_fact_ids):
+	on_off_times = []
+	for fact_id in factor_grid:
+		if fact_id in on_fact_ids:
+			on_off_times.append(fact_id)
+		else:
+			on_off_times.append(0)
+    return on_off_times
 
 def combine_run_arrays(run_array_lst):
 	return np.concatenate(run_array_lst, axis = 3)

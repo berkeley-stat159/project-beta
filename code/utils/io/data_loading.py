@@ -22,7 +22,7 @@ def load_data(filename):
     print(data.shape)
     return data
 
-def load_data(filename):
+def load_all_data(filename):
     """ Return fMRI data corresponding to the given filename and prints
         shape of the data array
     ----------
@@ -36,7 +36,6 @@ def load_data(filename):
     """
     img = nib.load(filename)
     data = img.get_data()
-    data = data[:,:,:,4:]
     print(data.shape)
     return data
 
@@ -144,8 +143,7 @@ def remove_outliers_iqr(arr, axis, iqr_scale=1.5):
      
 def voxel_by_time(data):
     n_voxels = np.prod(data.shape[:-1])
-    data_2d = np.reshape(data, (n_voxels, data.shape[-1]))
-    return data_2d
+    return np.reshape(data, (n_voxels, data.shape[-1]))
 
 def mask_data(data):
     return None 
