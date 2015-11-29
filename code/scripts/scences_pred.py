@@ -227,6 +227,43 @@ def gen_sample_by_factors(factor_lst, factor_grid, randomize, prop=.5, min_time=
             missing_factors.append(factor)
     return (sample, missing_factors)
 
+def get_training_samples(samples):
+    """ Returns only the training indcs in 'samples.' 
+    Note: 'samples' is the returned dictionary in the 'gen_sample_by_factors'
+    function above 
+    
+    Parameters
+    ----------
+    samples : dictionary
+        Returned dictionary in 'gen_sample_by_factors'
+    Returns
+    -------
+    training : dictionary
+    """
+    training = {}
+    for factor, sample in samples.iteritems():
+        training[factor] = sample[0]
+    return training
+
+def get_testing_samples(samples):
+    """ Returns only the testing indcs in 'samples.' 
+    Note: 'samples' is the returned dictionary in the 'gen_sample_by_factors'
+    function above 
+    
+    Parameters
+    ----------
+    samples : dictionary
+        Returned dictionary in 'gen_sample_by_factors'
+    Returns
+    -------
+    testing : dictionary
+    """
+    testing = {}
+    for factor, sample in samples.iteritems():
+        testing[factor] = sample[1]
+    return testing
+
+
 def other_scene_ids(remove_ids):
     """ Return list of ids that do not contain any ids present in remove_ids. 
     
@@ -283,10 +320,24 @@ def analyze_performance(predicted_labels, actual_labels):
     normed_distance = hamming(predicted_labels, actual_labels) #between 0 - 1
     return 1 - normed_distance
     
+###################################################################
+#Clean up data before analysis 
+
 
 
 ###################################################################
 #Set up training and test set 
+GUMP_SCENES_IDS = [38, 40, 41, 42] #factor ids of Gump scenes
+other_scenes = other_scene_ids(GUMP_SCENES_IDS)
+
+samp_gump, miss_gump = gen_sample_by_factors(GUMP_SCENES_IDS, factor_grid, True)
+training_gump = get_training_samples(samp_gump)
+testing_gump = get_testing_samples(samp_gump)
+
+
+####################################################################
+#DELETE ALL THIS - JUST CHECKING IF WORKS 
+
 train = combined_runs[:,:,:,447:500] #run 2
 train_labels = on_off_course([66]) #random factor ids in time interval fix
 train_labels = train_labels[447:500]
@@ -311,7 +362,7 @@ kmeans.fit(train_vox_time.T) #Fix should specify labels
 clf = svm.SVC()
 clf.fit(train_vox_time.T, train_labels)
 clf.predict(test_vox_time.T)
-
+####################################################################
 
 #We will first check if there are any noticable differences between scenes
 #occuring in 'Gump house/room/etc.' vs. all other scenes 
