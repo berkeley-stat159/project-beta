@@ -95,14 +95,16 @@ clf.predict(test_vox_time.T)
 ###################################################################
 ALL_IDS = list(range(1, 91))
 
-def on_off_course(on_fact_ids):
+def on_off_course(on_fact_ids, factor_grid):
     """ Returns a list of 0's and 1's at each scan time in 'SCAN_TIMES' list. 
         A 0 entry indicates the scene id at the corresponding scan time entry 
         was not contained in 'on_fact_ids'. A 1 indicates the exact opposite.    
     Parameters
     ----------
     on_fact_ids : list
-        All scene/factor ids to set to 1 in the output list. (see above)        
+        All scene/factor ids to set to 1 in the output list. (see above)
+    factor_grid: list
+        At index i, this corresponds to the scene that occured at scan time (sec) i   
     Returns
     -------
     other_ids : numpy array 
@@ -116,7 +118,7 @@ def on_off_course(on_fact_ids):
             on_off_times.append(0)
     return np.array(on_off_times)
 
-def multiple_factors_course(on_fact_ids):
+def multiple_factors_course(on_fact_ids, factor_grid):
     """ Returns a list of 0's and ids in 'on_fact_ids'. 
         A 0 entry indicates the scene id at the corresponding scan time entry 
         was not contained in 'on_fact_ids'. Otherwise a value i indicates
@@ -124,7 +126,9 @@ def multiple_factors_course(on_fact_ids):
     Parameters
     ----------
     on_fact_ids : list
-        All scene/factor ids to set in the output list. (see above)        
+        All scene/factor ids to set in the output list. (see above)
+    factor_grid: list
+        At index i, this corresponds to the scene that occured at scan time (sec)         
     Returns
     -------
     other_ids : numpy array
@@ -136,10 +140,39 @@ def multiple_factors_course(on_fact_ids):
             on_off_times.append(fact_id)
         else:
             on_off_times.append(0)
-    return on_off_times
+    return np.array(on_off_times)
 
 def combine_run_arrays(run_array_lst):
+    """ Returns a combined 4d array by concatinating based on time (axis = 3)
+    ----------
+    run_array_lst : array of 4d numpy arrays 
+
+    Returns
+    -------
+    4d numpy array 
+    """
     return np.concatenate(run_array_lst, axis = 3)
+
+def all_factors_indcs(factor_lst, factor_grid):
+    """ Returns a list of numpy arrays. Each numpy array consists of the indcs 
+    at which the corresponding factor id occured in 'factor_grid'    
+    Parameters
+    ----------
+    factor_lst : list
+        Scene/factor ids  
+    factor_grid: list
+        At index i, this corresponds to the scene that occured at scan time (sec)         
+    Returns
+    -------
+    all_factors : list of numpy arrays
+        Each list consists of idcs for corresponding factor id (see above)  
+    """
+    all_factors = []
+    for factor in factor_lst:
+        factor_indcs = np.where(factor_grid == factor)[0] #Get desired list from tuple 
+        all_factors.append(factor_indcs)
+    return all_factors
+
 
 def gen_train_byID(factor_id):
 
