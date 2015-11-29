@@ -1,9 +1,10 @@
 
 """ The following script will analyze the scenes data. Specifically, it will:
 
-* Use PCA to reduce data/noise for the methods below  
-* Classify scenes based on different combinations of scenes   
-* Regression, SVM, and KNN is used for classification 
+* Use PCA to reduce data/noise for fitting 
+* Try to find patterns between neural responses and scenes   
+* Use regression, SVM, and KNN to link these together
+* Predict scenes based on BOLD activity 
 * Test the performance of the classification through cross-validation  
 
 """ 
@@ -22,6 +23,7 @@ import save_files as sv
 import numpy.linalg as npl
 
 from __future__ import print_function, division
+from sklearn.decomposition import PCA
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier as KNN 
 from sklearn.cluster import KMeans
@@ -37,7 +39,7 @@ files = ['task001_run001.bold_dico.nii', 'task001_run002.bold_dico.nii',
 
 all_data = []
 for index, filename in enumerate(files):
-    new_data = dl.load_data(filename) #load_data function drops first 4 for us
+    new_data = load_data(filename) #load_data function drops first 4 for us
     num_vols = new_data.shape[-1]
     if index != 0 and index != 7:
         new_num_vols = num_vols - 4   
@@ -72,6 +74,30 @@ for scan_time in SCAN_TIMES:
     factor_grid.append(factor_id)
 
 factor_grid = np.array(factor_grid) #Convert to np array for future analysis
+
+#DELETE THESE TWO FUNCTIONS ALREADY IN DATA_LOADING (b/c paths not right)
+def load_data(filename):
+    """ Return fMRI data corresponding to the given filename and prints
+        shape of the data array
+    ----------
+    filename : string 
+        This string should be a path to given file. The file must be
+        .nii 
+    Returns
+    -------
+    data : numpy array
+        An array consisting of the data. 
+    """
+    img = nib.load(filename)
+    data = img.get_data()
+    data = data[:,:,:,4:]
+    print(data.shape)
+    return data
+
+def voxel_by_time(data):
+    n_voxels = np.prod(data.shape[:-1])
+    return np.reshape(data, (n_voxels, data.shape[-1]))
+
 
 #FIX: PUT THESE FUNCTIONS SOMEWHERE IN UTILS
 ###################################################################
@@ -263,6 +289,18 @@ def get_testing_samples(samples):
         testing[factor] = sample[1]
     return testing
 
+def make_label_by_time(sing_samp):
+    factors = []
+    lengths = []
+    times = []
+    for factor, samp in sing_samp.iteritems():
+        factors.append(factor)
+        lengths.append(len(samp))
+        times.append(samp)
+    times = [time for time_lst in times for time in time_lst] 
+    times = np.array(times)
+    labels = np.repeat(factors, lengths)
+    return (labels, times)
 
 def other_scene_ids(remove_ids):
     """ Return list of ids that do not contain any ids present in remove_ids. 
@@ -321,12 +359,15 @@ def analyze_performance(predicted_labels, actual_labels):
     return 1 - normed_distance
     
 ###################################################################
-#Clean up data before analysis 
+#Clean up data before analysis (choose principal components to use for each scene)
+
+#Check if different scenes result in significatly different principal components 
+pca = PCA(n_components=20)
 
 
 
 ###################################################################
-#Set up training and test set 
+#Set up training and test set for Gump 
 GUMP_SCENES_IDS = [38, 40, 41, 42] #factor ids of Gump scenes
 other_scenes = other_scene_ids(GUMP_SCENES_IDS)
 
@@ -334,17 +375,25 @@ samp_gump, miss_gump = gen_sample_by_factors(GUMP_SCENES_IDS, factor_grid, True)
 training_gump = get_training_samples(samp_gump)
 testing_gump = get_testing_samples(samp_gump)
 
+train_labs_gump, train_times_gump = make_label_by_time(training_gump)
+test_labs_gump, test_times_gump = make_label_by_time(training_gump)
+
+#SVM 
+gump_subarr = combine_run_arrays[:,:,:,train_times_gump]
+vox_by_time_train = voxel_by_time(gump_subarr)
+clf = svm.SVC()
+
 
 ####################################################################
 #DELETE ALL THIS - JUST CHECKING IF WORKS 
 
 train = combined_runs[:,:,:,447:500] #run 2
-train_labels = on_off_course([66]) #random factor ids in time interval fix
+train_labels = on_off_course([66], factor_grid) #random factor ids in time interval fix
 train_labels = train_labels[447:500]
 train_vox_time = voxel_by_time(train)
 
 test = combined_runs[:,:,:,500:600]
-true_labels = on_off_course([66])
+true_labels = on_off_course([66], factor_grid)
 true_labels = true_labels[500:600]
 test_vox_time = voxel_by_time(test)
 
