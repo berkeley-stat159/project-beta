@@ -40,13 +40,13 @@ scenes_path = '../../data/scene_times_nums.csv' #FIX
 scenes = pd.read_csv('scene_times_nums.csv', header = None) 
 scenes = scenes.values #Now just numpy array
 
-combined_runs = combine_run_arrays(all_data) #FIX AND ADD runi
+combined_runs = combine_run_arrays(all_data) 
 combined_runs = combined_runs[:,:,:,9:] #First 17 seconds are credits/no scene id so drop
 
 TR = 2
-NUM_VOLUMES = combined_runs.shape[-1] #3459
+NUM_VOLUMES = combined_runs.shape[-1] #3459 
 ONSET_TIMES = scenes[:,0] 
-ONSET_TIMES_NORMED = ONSET_TIMES - 17 #Dropped first 9 volumes which corresponds to 18 sec
+ONSET_TIMES_NORMED = ONSET_TIMES - 17 #First recorded scene occurs at t = 17 sec 
 DURATION = scenes[:,1] 
 LABELS = scenes[:,3]
 SCAN_TIMES =  np.arange(start=0, stop=2*NUM_VOLUMES, step=2)
@@ -93,16 +93,43 @@ clf.predict(test_vox_time.T)
 
 #FIX: PUT THESE FUNCTIONS SOMEWHERE IN UTILS
 ###################################################################
+ALL_IDS = list(range(1, 91))
+
 def on_off_course(on_fact_ids):
+    """ Returns a list of 0's and 1's at each scan time in 'SCAN_TIMES' list. 
+        A 0 entry indicates the scene id at the corresponding scan time entry 
+        was not contained in 'on_fact_ids'. A 1 indicates the exact opposite.    
+    Parameters
+    ----------
+    on_fact_ids : list
+        All scene/factor ids to set to 1 in the output list. (see above)        
+    Returns
+    -------
+    other_ids : numpy array 
+        An array of 0's and 1's
+    """
     on_off_times = []
     for fact_id in factor_grid:
         if fact_id in on_fact_ids:
             on_off_times.append(1)
         else:
             on_off_times.append(0)
-    return on_off_times
+    return np.array(on_off_times)
 
-def multiple_types_course(on_fact_ids):
+def multiple_factors_course(on_fact_ids):
+    """ Returns a list of 0's and ids in 'on_fact_ids'. 
+        A 0 entry indicates the scene id at the corresponding scan time entry 
+        was not contained in 'on_fact_ids'. Otherwise a value i indicates
+        that scene/factor id i in 'on_fact_ids' occured at this scan time.    
+    Parameters
+    ----------
+    on_fact_ids : list
+        All scene/factor ids to set in the output list. (see above)        
+    Returns
+    -------
+    other_ids : numpy array
+        A list consisting of 0's and ids in 'on_fact_ids'
+    """
     on_off_times = []
     for fact_id in factor_grid:
         if fact_id in on_fact_ids:
@@ -128,15 +155,14 @@ def other_scene_ids(remove_ids):
     ----------
     remove_ids : list
         This is a list consisting of all ids to remove from the factor 
-        scene ids (which consist of ids between 1 - 90 inclusive)      
+        scene ids ALL_IDS (which consist of ids between 1 - 90 inclusive)      
     Returns
     -------
     other_ids : list
         A list of ids that do not contain the any of the ids in remove_ids
     """
     assert max(remove_ids) < 91 and min(remove_ids) > 0
-    all_ids = list(range(1, 91))
-    other_ids = [i for i in all_ids if i not in remove_ids]
+    other_ids = [i for i in ALL_IDS if i not in remove_ids]
     return other_ids
 
 def make_scene_design_mat(scenes, times, on_scene_ids):
