@@ -95,15 +95,32 @@ clf.predict(test_vox_time.T)
 ###################################################################
 ALL_IDS = list(range(1, 91))
 
+def get_factor_ids(times, factor_grid):
+    """ Returns factor ids that occured at 'times'   
+    
+    Parameters
+    ----------
+    times : list
+    Consists of scan times (multiples of TR = 2 sec)
+    factor_grid: numpy array 
+        At index i, this corresponds to the scene that occured at scan time (sec) i   
+    Returns
+    -------
+    numpy array 
+        An array consisting of factor ids at correponding time 
+    """
+    return factor_grid[times]
+
 def on_off_course(on_fact_ids, factor_grid):
     """ Returns a list of 0's and 1's at each scan time in 'SCAN_TIMES' list. 
         A 0 entry indicates the scene id at the corresponding scan time entry 
         was not contained in 'on_fact_ids'. A 1 indicates the exact opposite.    
+    
     Parameters
     ----------
     on_fact_ids : list
         All scene/factor ids to set to 1 in the output list. (see above)
-    factor_grid: list
+    factor_grid: numpy array 
         At index i, this corresponds to the scene that occured at scan time (sec) i   
     Returns
     -------
@@ -123,11 +140,12 @@ def multiple_factors_course(on_fact_ids, factor_grid):
         A 0 entry indicates the scene id at the corresponding scan time entry 
         was not contained in 'on_fact_ids'. Otherwise a value i indicates
         that scene/factor id i in 'on_fact_ids' occured at this scan time.    
+    
     Parameters
     ----------
     on_fact_ids : list
         All scene/factor ids to set in the output list. (see above)
-    factor_grid: list
+    factor_grid: numpy array 
         At index i, this corresponds to the scene that occured at scan time (sec)         
     Returns
     -------
@@ -157,11 +175,12 @@ def all_factors_indcs(factor_lst, factor_grid, min_time=0, max_time=3459):
     """ Returns a dictionary with numpy arrays as values. Each numpy array 
     consists of the indcs at which the corresponding factor id occured in 'factor_grid'
     within 'min_time' and 'max_time'    
+    
     Parameters
     ----------
     factor_lst : list  
         Scene/factor ids  
-    factor_grid: list
+    factor_grid: numpy array 
         At index i, this corresponds to the scene that occured at scan time (sec) 
     min_time: int
         Minimum index (scan time) to look at in 'factor_grid' 
@@ -185,8 +204,8 @@ def gen_sample_by_factors(factor_lst, factor_grid, randomize, prop=.5, min_time=
     and the value is a tuple. The first element of the tuple is numpy array of
     training indcs and the second element is numpy array of testing indcs. The
     input 'prop' allocates what proportion of all indcs the training and testing
-    samples recieve. If 'randomize' is true the indcs will be randomly assigned 
-    to the training and testing arrays instead of sequentially. The returned
+    samples recieve. If 'randomize' is true, the indcs will be randomly assigned 
+    to the training and testing arrays (instead of sequentially). The returned
     list 'missing_factors' corresponds to factor ids of the excluded factor ids 
     due to insufficient indcs list sizes. 
    
@@ -194,7 +213,7 @@ def gen_sample_by_factors(factor_lst, factor_grid, randomize, prop=.5, min_time=
     ----------
     factor_lst : list 
         Scene/factor ids  
-    factor_grid: list
+    factor_grid: numpy array 
         At index i, this corresponds to the scene that occured at scan time (sec)
     randomize: boolean 
         'True' randomizes the assigment to training and test sets  
@@ -226,12 +245,9 @@ def gen_sample_by_factors(factor_lst, factor_grid, randomize, prop=.5, min_time=
             missing_factors.append(factor)
     return (sample, missing_factors)
 
-def get_index_scene(factor_id, time_window):
-
-def get_scenes(ids):
-
 def other_scene_ids(remove_ids):
     """ Return list of ids that do not contain any ids present in remove_ids. 
+    
     Parameters
     ----------
     remove_ids : list
@@ -245,6 +261,8 @@ def other_scene_ids(remove_ids):
     assert max(remove_ids) < 91 and min(remove_ids) > 0
     other_ids = [i for i in ALL_IDS if i not in remove_ids]
     return other_ids
+
+#Regression 
 
 def make_scene_design_mat(scenes, times, on_scene_ids):
     synced_times = sync_scene_times(times)
