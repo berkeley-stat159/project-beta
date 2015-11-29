@@ -153,30 +153,78 @@ def combine_run_arrays(run_array_lst):
     """
     return np.concatenate(run_array_lst, axis = 3)
 
-def all_factors_indcs(factor_lst, factor_grid):
-    """ Returns a list of numpy arrays. Each numpy array consists of the indcs 
-    at which the corresponding factor id occured in 'factor_grid'    
+def all_factors_indcs(factor_lst, factor_grid, min_time=0, max_time=3459):
+    """ Returns a dictionary with numpy arrays as values. Each numpy array 
+    consists of the indcs at which the corresponding factor id occured in 'factor_grid'
+    within 'min_time' and 'max_time'    
     Parameters
     ----------
-    factor_lst : list
+    factor_lst : list  
         Scene/factor ids  
     factor_grid: list
-        At index i, this corresponds to the scene that occured at scan time (sec)         
+        At index i, this corresponds to the scene that occured at scan time (sec) 
+    min_time: int
+        Minimum index (scan time) to look at in 'factor_grid' 
+    max_time: int   
+        Maximum index (scan time) to look at in 'factor_grid'     
     Returns
     -------
-    all_factors : list of numpy arrays
-        Each list consists of idcs for corresponding factor id (see above)  
+    all_factors : dictionary of numpy arrays
+        Each value consists of idcs for corresponding factor id (see above)  
     """
-    all_factors = []
+    all_factors = {}
+    constrained_grid = factor_grid[min_time:max_time] 
     for factor in factor_lst:
-        factor_indcs = np.where(factor_grid == factor)[0] #Get desired list from tuple 
-        all_factors.append(factor_indcs)
+        factor_indcs = np.where(constrained_grid == factor)[0] #Get desired list from tuple 
+        all_factors[factor] = factor_indcs
     return all_factors
 
 
-def gen_train_byID(factor_id):
-
-def train_test_split(vox_by_time, train_times):
+def gen_sample_by_factors(factor_lst, factor_grid, randomize, prop=.5, min_time=0, max_time=3459):
+    """ Returns a dictionary and a list. The key of the dictionary is the factor_id
+    and the value is a tuple. The first element of the tuple is numpy array of
+    training indcs and the second element is numpy array of testing indcs. The
+    input 'prop' allocates what proportion of all indcs the training and testing
+    samples recieve. If 'randomize' is true the indcs will be randomly assigned 
+    to the training and testing arrays instead of sequentially. The returned
+    list 'missing_factors' corresponds to factor ids of the excluded factor ids 
+    due to insufficient indcs list sizes. 
+   
+    Parameters
+    ----------
+    factor_lst : list 
+        Scene/factor ids  
+    factor_grid: list
+        At index i, this corresponds to the scene that occured at scan time (sec)
+    randomize: boolean 
+        'True' randomizes the assigment to training and test sets  
+    min_time: int
+        Minimum index (scan time) to look at in 'factor_grid' 
+    max_time: int   
+        Maximum index (scan time) to look at in 'factor_grid'     
+    Returns
+    -------
+    (sample, missing_factors) : (dictionary, list) 
+        See above  
+    """
+    sample = {}
+    missing_factors = []
+    all_factors = all_factors_indcs(factor_lst, factor_grid, min_time, max_time)
+    for factor, factor_indcs in all_factors.iteritems():
+        samp_size = len(factor_indcs)
+        num_train = np.round(prop * samp_size)
+        num_test = samp_size - num_train
+        if num_train > 0 and num_test > 0:
+            if randomize:
+                shuffled = np.random.permutation(factor_indcs)
+            else: 
+                shuffled = factor_indcs 
+            train = shuffled[:num_train]
+            test = shuffled[num_train:]
+            sample[factor] = (train, test)
+        else:
+            missing_factors.append(factor)
+    return (sample, missing_factors)
 
 def get_index_scene(factor_id, time_window):
 
