@@ -1,6 +1,15 @@
-#FIX ALL PATHS SINCE NOT CORRECT
-#PROBABLY WANT TO DO THIS ON CLEANED DATA 
-#ADD TESTS 
+
+""" The following script will analyze the scenes data. Specifically, it will:
+
+* Use PCA to reduce data/noise for the methods below  
+* Classify scenes based on different combinations of scenes   
+* Regression, SVM, and KNN is used for classification 
+* Test the performance of the classification through cross-validation  
+
+""" 
+
+#ADD PATHS
+ 
 
 #Import standard libraries
 import numpy as np
@@ -63,33 +72,6 @@ for scan_time in SCAN_TIMES:
     factor_grid.append(factor_id)
 
 factor_grid = np.array(factor_grid) #Convert to np array for future analysis
-
-#Set up training and test set 
-train = combined_runs[:,:,:,447:500] #run 2
-train_labels = on_off_course([66]) #random factor ids in time interval fix
-train_labels = train_labels[447:500]
-train_vox_time = voxel_by_time(train)
-
-test = combined_runs[:,:,:,500:600]
-true_labels = on_off_course([66])
-true_labels = true_labels[500:600]
-test_vox_time = voxel_by_time(test)
-
-#Sample KNN example - FIX NEED TO CUT DOWN DIMENSION W/ PCA TO DO BETTER
-#Use PCA to find 'good' voxels that seem to predict well - probably need to do
-#this by breaking up by the scene and then for each scene group doing PCA 
-
-knn = KNN()
-
-#Kmeans 
-kmeans = KMeans(init='k-means++', n_clusters=n_digits, n_init=10)
-kmeans.fit(train_vox_time.T) #Fix should specify labels
-
-#SVM 
-clf = svm.SVC()
-clf.fit(train_vox_time.T, train_labels)
-clf.predict(test_vox_time.T)
-
 
 #FIX: PUT THESE FUNCTIONS SOMEWHERE IN UTILS
 ###################################################################
@@ -304,6 +286,32 @@ def analyze_performance(predicted_labels, actual_labels):
 
 
 ###################################################################
+#Set up training and test set 
+train = combined_runs[:,:,:,447:500] #run 2
+train_labels = on_off_course([66]) #random factor ids in time interval fix
+train_labels = train_labels[447:500]
+train_vox_time = voxel_by_time(train)
+
+test = combined_runs[:,:,:,500:600]
+true_labels = on_off_course([66])
+true_labels = true_labels[500:600]
+test_vox_time = voxel_by_time(test)
+
+#Sample KNN example - FIX NEED TO CUT DOWN DIMENSION W/ PCA TO DO BETTER
+#Use PCA to find 'good' voxels that seem to predict well - probably need to do
+#this by breaking up by the scene and then for each scene group doing PCA 
+
+knn = KNN()
+
+#Kmeans 
+kmeans = KMeans(init='k-means++', n_clusters=n_digits, n_init=10)
+kmeans.fit(train_vox_time.T) #Fix should specify labels
+
+#SVM 
+clf = svm.SVC()
+clf.fit(train_vox_time.T, train_labels)
+clf.predict(test_vox_time.T)
+
 
 #We will first check if there are any noticable differences between scenes
 #occuring in 'Gump house/room/etc.' vs. all other scenes 
