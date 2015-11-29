@@ -22,8 +22,8 @@ from scipy.spatial.distance import hamming #MIGHT NOT NEED SOME OF THESE PACKAGE
 
 files = ['task001_run001.bold_dico.nii', 'task001_run002.bold_dico.nii', 
          'task001_run003.bold_dico.nii', 'task001_run004.bold_dico.nii', 
-         'task001_run005.bold_dico.nii', 'task001_run006.bold.nii',
-         'task001_run007.bold.nii', 'task001_run008.bold.nii']
+         'task001_run005.bold_dico.nii', 'task001_run006.bold_dico.nii',
+         'task001_run007.bold_dico.nii', 'task001_run008.bold_dico.nii']
 #MIGHT NEED TO DROP FIRST 8 VOLUMES IN FIRST RUN BECAUSE SCENES FILE STARTS AT 17
 all_data = []
 for index, filename in enumerate(files):
@@ -40,6 +40,7 @@ scenes = pd.read_csv('scene_times_nums.csv', header = None)
 scenes = scenes.values #Now just numpy array
 
 combined_runs = combine_run_arrays(all_data) #FIX AND ADD runi
+combined_runs = combined_runs[:,:,:,9:] #First 17 seconds are credits/no scene id 
 
 #We will first check if there are any noticable differences between scenes
 #occuring in 'Gump house/room/etc.' vs. all other scenes 
