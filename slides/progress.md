@@ -42,8 +42,8 @@
 - Grouped audio stimuli according TRs
 - Generated a time (TRs) by features (WordNet tags) design matrix
 
-# Design Matrix
-![Design Matrix](design_matrix.png)
+# Completed Steps (Cont) 
+![Design Matrix](processflow.png "Design Matrix")
 
 # Completed Steps (Cont)
 ## Scene modeling
@@ -76,7 +76,7 @@
 - Hypothesis Testing: 
     - Parametric: t-test, z-test
     - Non-Parametric: permutation test, sign-test
-- Checking Robustness, assesing model peformance (e.g. AIC), resampling    
+- Checking robustness, assesing model peformance (e.g. AIC), resampling    
 
 # Future Plan 
 - Accomplish two modeling goals

@@ -22,6 +22,23 @@ def load_data(filename):
     print(data.shape)
     return data
 
+def load_all_data(filename):
+    """ Return fMRI data corresponding to the given filename and prints
+        shape of the data array
+    ----------
+    filename : string 
+        This string should be a path to given file. The file must be
+        .nii 
+    Returns
+    -------
+    data : numpy array
+        An array consisting of the data. 
+    """
+    img = nib.load(filename)
+    data = img.get_data()
+    print(data.shape)
+    return data
+
 def get_axis_data(data, axis):
     """ Returns 1-D array corresponding to the data along the given
         axis
@@ -126,8 +143,7 @@ def remove_outliers_iqr(arr, axis, iqr_scale=1.5):
      
 def voxel_by_time(data):
     n_voxels = np.prod(data.shape[:-1])
-    data_2d = np.reshape(data, (n_voxels, data.shape[-1]))
-    return data_2d
+    return np.reshape(data, (n_voxels, data.shape[-1]))
 
 def mask_data(data):
     return None 
