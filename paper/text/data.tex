@@ -1,6 +1,6 @@
 \par \indent 
 
-subsection{Original Dataset}
+\subsection{Original Dataset}
 \par Our team obtained the "A high-resolution 7-Tesla fMRI dataset from complex natural simulation with an audio movie" dataset from OpenfMRI.org. The dataset belongs to a study conducted using high-resolution functional magnetic resonance (fMRI) to analyze stimulation due to visual stimulii. 20 participants recorded at high field strength (7 Tesla) during prolonged stimulation with an auditory feature film ("Forrest Gump"). 
 
 \par The audio movie description was provided in a csv format, with each row containing a start and end time (in seconds) corresponding to the time in the movie, along with a description in German of the events occurring in the movie at that time. One noticeable feature of the dataset upon initial observation is that the description
@@ -18,8 +18,6 @@ is not continuous -- there exist around a 5 seconds gap in the audio events prov
 
 \par The survey data of emotion response was not used beyond this point.
 
-\subsection{Data Preprocessing} 
-According to studyforrest.org, "all segments, except for the first one, started by repeating the equivalent of three fMRI volumes from the previous segment. Volume acquisition was time-locked across segments with respect to the movie time". To account for this, we implemented the follow strategy to correct for the conversion: ignoring the first and last segment, we discarded four volumes at the end of the middle segments. 
 
 
 
