@@ -18,7 +18,8 @@ is not continuous -- there exist around a 5 seconds gap in the audio events prov
 
 \par The survey data of emotion response was not used beyond this point.
 
-
+\subsection{Data Preprocessing} 
+According to studyforrest.org, "all segments, except for the first one, started by repeating the equivalent of three fMRI volumes from the previous segment. Volume acquisition was time-locked across segments with respect to the movie time". To account for this, we implemented the follow strategy to correct for the conversion: ignoring the first and last segment, we discarded four volumes at the end of the middle segments. 
 
 
 
