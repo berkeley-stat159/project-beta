@@ -42,8 +42,13 @@
 - Grouped audio stimuli according TRs
 - Generated a time (TRs) by features (WordNet tags) design matrix
 
+<<<<<<< HEAD
+# Completed Steps (Cont) 
+![Design Matrix](images/visual_design_matrix.png)
+=======
 # Design Matrix
 ![Design Matrix](design_matrix.png)
+>>>>>>> e731198bb330faadc459a743bac37774a0d68f4f
 
 # Completed Steps (Cont)
 ## Scene modeling
