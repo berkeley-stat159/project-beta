@@ -378,10 +378,11 @@ testing_gump = get_testing_samples(samp_gump)
 train_labs_gump, train_times_gump = make_label_by_time(training_gump)
 test_labs_gump, test_times_gump = make_label_by_time(training_gump)
 
-#SVM 
-gump_subarr = combine_run_arrays[:,:,:,train_times_gump]
+#SVM #FIX MAKES NO SINCE I NEED TO ADD ANOTHER SCENE CATEGORY TO COMPARE W/ GUMP
+gump_subarr = combined_runs[:,:,:,train_times_gump]
 vox_by_time_train = voxel_by_time(gump_subarr)
-clf = svm.SVC()
+clf_gump = svm.SVC()
+clf_gump.fit(vox_by_time_train.T, train_labs_gump)
 
 
 ####################################################################
