@@ -13,8 +13,8 @@ import task_frame as tf
 
 files = ['task001_run001.bold_dico.nii', 'task001_run002.bold_dico.nii', 
          'task001_run003.bold_dico.nii', 'task001_run004.bold_dico.nii', 
-         'task001_run005.bold_dico.nii', 'task001_run006.bold.nii'
-         'task001_run007.bold.nii', 'task001_run008.bold.nii']
+         'task001_run005.bold_dico.nii', 'task001_run006.bold_dico.nii',
+         'task001_run007.bold_dico.nii', 'task001_run008.bold_dico.nii']
 
 
 # Load the images as an image object
