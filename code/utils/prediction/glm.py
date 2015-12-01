@@ -33,14 +33,14 @@ def glm(data_4d, convolved):
     glm_results : tuple
         Estimated coefficients in 4 dimensions and the design matrix.
     """
-	num_vols = data_4d.shape[-1]
-	assert(len(convolved) == num_vols)
-	design = np.ones((num_vols, 2))
-	design[:, 1] = convolved
-	vox_by_time = np.reshape(data_4d, (-1, num_vols))
-	betas = npl.pinv(design).dot(vox_by_time.T)
-	betas_4d = np.reshape(betas.T, data_4d.shape[:-1] + (-1,))
-	return (X, betas_4d)
+    num_vols = data_4d.shape[-1]
+    assert(len(convolved) == num_vols)
+    design = np.ones((num_vols, 2))
+    design[:, 1] = convolved
+    vox_by_time = np.reshape(data_4d, (-1, num_vols))
+    betas = npl.pinv(design).dot(vox_by_time.T)
+    betas_4d = np.reshape(betas.T, data_4d.shape[:-1] + (-1,))
+    return (design, betas_4d)
 
 def scale_design_mtx(X):
     """ 
