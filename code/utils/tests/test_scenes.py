@@ -413,7 +413,7 @@ def gen_sample_by_factors(factor_lst, factor_grid, randomize, prop=.5, min_time=
     sample = {}
     missing_factors = []
     all_factors = all_factors_indcs(factor_lst, factor_grid, min_time, max_time)
-    for factor, factor_indcs in all_factors.iteritems():
+    for factor, factor_indcs in all_factors.items():
         samp_size = len(factor_indcs)
         num_train = np.round(prop * samp_size)
         num_test = samp_size - num_train
@@ -458,7 +458,7 @@ def get_training_samples(samples):
     training : dictionary
     """
     training = {}
-    for factor, sample in samples.iteritems():
+    for factor, sample in samples.items():
         training[factor] = sample[0]
     return training
 
@@ -490,7 +490,7 @@ def make_label_by_time(sing_samp):
     factors = []
     lengths = []
     times = []
-    for factor, samp in sing_samp.iteritems():
+    for factor, samp in sing_samp.items():
         factors.append(factor)
         lengths.append(len(samp))
         times.append(samp)
