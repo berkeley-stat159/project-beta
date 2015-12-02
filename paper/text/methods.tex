@@ -17,6 +17,7 @@ any further processing. Though there may be translational errors, it was decided
 
 \par Due to grammatical differences, we decided to only keep nouns and verbs, and discarded the adjectives and other words including stop-words, which are commonly used words with little meaning or determinable context (e.g. 'and', 'to', 'him'). A publicly available list of stop-words from Princeton University was used for this task. Of the words that remained, a WordNet dictionary was built, which is a popular way to tag words according to a context-specific definition. In this way, words as stand-alone entities will have an unambiguous definition and deeper relationships can be derived from the correlations found. 
 
+
  \par After aggregating the set of all contextual definitions of words,
  we build a design matrix composed of the descriptive entries in the movie description. Thus each interval of time with a sentence description of the movie events was treated as a row, and each column represented a context-specific word as a feature. The matrix values are all binary, with a value of '1' indicating that the word is present in the sentence, while '0' indicates that it is not. This was illustrated as a rectangular image with a white square for '1' and black for '0'. As can be seen in Figure 2 below, this matrix is relatively sparse. Finally, in order to format the data such that it correlates explicitly
 to the FMRI images, the intervals were split into two-second intervals

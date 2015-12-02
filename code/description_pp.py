@@ -1,8 +1,8 @@
 # data file
-description = open("description.csv") 
+description = open("../description_pp/description.csv") 
 csv_description = csv.reader(description) 
 
 # stopwords file
-stopwords = open("stopwords.txt")
+stopwords = open("../description_pp/stopwords.txt")
 stopwords_list = stopwords.read().splitlines()
 

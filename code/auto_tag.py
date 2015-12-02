@@ -48,5 +48,5 @@ for w in all_words:
     else:
         word_dict[w] = [get_wn_synsets(w)[0]['synset']]
 
-with open("word2wn.json", 'w') as f:
+with open("../description_pp/word2wn.json", 'w') as f:
     json.dump(word_dict, f) 
