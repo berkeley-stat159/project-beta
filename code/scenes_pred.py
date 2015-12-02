@@ -13,16 +13,16 @@
  
 
 #Import standard libraries
+from __future__ import print_function, division
 import numpy as np
 import pandas as pd
 import nibabel as nib
 import matplotlib.pyplot as plt
-import data_loading as dl
+import data_loading_script as dl
 import plotting_fmri as plt_fmri
 import save_files as sv
 import numpy.linalg as npl
 
-from __future__ import print_function, division
 from sklearn.decomposition import PCA
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier as KNN 
