@@ -32,10 +32,6 @@ Original created by Yuan Wang to tagged affordance using WordNet;
 """
 
 
-
-# store_fpath = '/Users/AriaW/Desktop/GallantLab/Affordance/store.py'
-# store_fpath = '/Users/AriaW/Desktop/GallantLab/Affordance/other_codes/stored.py'
-
 with open(affordance_dict_fpath) as fid:
     affordanceDict = json.loads(fid.readlines()[0])
 fid.close()
