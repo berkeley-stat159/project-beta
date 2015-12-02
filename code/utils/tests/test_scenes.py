@@ -1,51 +1,33 @@
 from __future__ import print_function, division
 import numpy as np
 import nibabel as nib
+import pandas as pd
+import sys
+import os
 from numpy.testing import assert_almost_equal, assert_array_equal
+
 '''
 pathtoclassdata = "data/"
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../code/"))
 
-from glm import scenes_pred.py
+from . import scene
 '''
 ## Need to fix the path
-filename = 'task001_run001.bold_dico.nii.gz'
 
-def load_data(filename):
-    """ Return fMRI data corresponding to the given filename and prints
-        shape of the data array
-    ----------
-    filename : string 
-        This string should be a path to given file. The file must be
-        .nii 
-    Returns
-    -------
-    data : numpy array
-        An array consisting of the data. 
-    """
-    img = nib.load(filename)
-    data = img.get_data()
-    data = data[:,:,:,4:]
-    print(data.shape)
-    return data
+## Create the test image data
+shape_3d = (40, 40, 20)
+V = np.prod(shape_3d)
+T = 438
+arr_2d = np.random.normal(size=(V, T))
+expected_stds = np.std(arr_2d, axis=0)
+arr_4d = np.reshape(arr_2d, shape_3d + (T,))
 
-new_data = load_data(filename)
-num_vols = new_data.shape[-1]
-new_num_vols = num_vols - 4  
-print(new_data.shape[-1])
-all_data = new_data[:,:,:,:new_num_vols]
-
-
-## Need to fix the path
-#scenes = pd.read_csv('scene_times_nums.csv', header = None) 
-#scenes = scenes.values
-scenes= np.genfromtxt('scene_times_nums.csv',delimiter=',',dtype=int)
-
-combined_runs = all_data[:,:,:,9:] #First 17 seconds are credits/no scene id so drop
+scenes = pd.read_csv('scene_times_nums.csv', header = None) 
+scenes = scenes.values
 
 TR = 2
-NUM_VOLUMES = combined_runs.shape[-1] #3459 
+NUM_VOLUMES = arr_4d.shape[-1] 
 ONSET_TIMES = scenes[:,0] 
 ONSET_TIMES_NORMED = ONSET_TIMES - 17 #First recorded scene occurs at t = 17 sec 
 DURATION = scenes[:,1] 
@@ -113,7 +95,8 @@ def test_on_off_course():
        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0])
     assert_almost_equal(f1,r1)
 
 def multiple_factors_course(on_fact_ids, factor_grid):
@@ -168,7 +151,7 @@ def test_multiple_factors_course():
         0,  0,  0,  0,  0,  0,  0, 66, 66, 66, 66, 66, 66, 66,  0,  0,  0,
         0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
         0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-        0,  0,  0,  0,  0,  0,  0,  0,  0])
+        0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 66, 66, 66])
     assert_almost_equal(f2,r2)
 
 
@@ -246,6 +229,10 @@ def gen_sample_by_factors(factor_lst, factor_grid, randomize, prop=.5, min_time=
             missing_factors.append(factor)
     return (sample, missing_factors)
 
+
+test_GUMP_SCENES_IDS = [26, 36, 25, 38]
+samp_gump, miss_gump = gen_sample_by_factors(test_GUMP_SCENES_IDS, factor_grid, False)
+ 
 def test_gen_sample_by_factors():
     test_GUMP_SCENES_IDS = [26, 36, 25, 38]
     g1=gen_sample_by_factors(test_GUMP_SCENES_IDS, factor_grid, False)
@@ -275,12 +262,8 @@ def get_training_samples(samples):
         training[factor] = sample[0]
     return training
 
-test_GUMP_SCENES_IDS = [26, 36, 25, 38]
-samp_gump, miss_gump = gen_sample_by_factors(test_GUMP_SCENES_IDS, factor_grid, False)
-    
+ 
 def test_training_samples():
-    test_GUMP_SCENES_IDS = [26, 36, 25, 38]
-    samp_gump, miss_gump = gen_sample_by_factors(test_GUMP_SCENES_IDS, factor_grid, False)
     r5 = np.array([128, 129, 130, 131, 132, 133, 134, 135, 136, 137])
     f5= get_training_samples(samp_gump).values()[0]
     assert_almost_equal(f5,r5)
