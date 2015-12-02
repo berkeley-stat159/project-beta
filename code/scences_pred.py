@@ -11,14 +11,14 @@
 
 #ADD PATHS
  
- 
+
 
 #Import standard libraries
 import numpy as np
 import pandas as pd
 import nibabel as nib
 import matplotlib.pyplot as plt
-import data_loading as dl
+import utils.data_loading as dl
 import plotting_fmri as plt_fmri
 import save_files as sv
 import numpy.linalg as npl
@@ -95,9 +95,44 @@ def load_data(filename):
     print(data.shape)
     return data
 
+#Rishi sample
+rand_samp2 = npr.randint(0, 921600, 30000)
+rand_indcs2 = set(rand_samp2)
+rand_indcs2 = list(rand_indcs2)[:20000]
+
+pos2 = []
+for num in rand_indcs2:
+    pos2.append(get_index((160, 160, 36), num))
+pos2 = np.array(pos2)
+
+def load_data_60k(filename):
+    """ Return fMRI data corresponding to the given filename and prints
+        shape of the data array
+    ----------
+    filename : string 
+        This string should be a path to given file. The file must be
+        .nii 
+    Returns
+    -------
+    data : numpy array
+        An array consisting of the data. 
+    """
+    img = nib.load(filename)
+    data = img.get_data()
+    data = data[pos2[:,0],pos2[:,1], pos2[:,2],4:]
+    print(data.shape)
+    return data
+
 def voxel_by_time(data):
     n_voxels = np.prod(data.shape[:-1])
     return np.reshape(data, (n_voxels, data.shape[-1]))
+
+
+###PCA - ROUGH DEV production
+vox_by_time1 = voxel_by_time(all_data[0])
+vox_by_time1 = vox_by_time1.T
+
+import numpy.random as npr
 
 
 #FIX: PUT THESE FUNCTIONS SOMEWHERE IN UTILS
@@ -380,10 +415,53 @@ train_labs_gump, train_times_gump = make_label_by_time(training_gump)
 test_labs_gump, test_times_gump = make_label_by_time(training_gump)
 
 #SVM 
-gump_subarr = combine_run_arrays[:,:,:,train_times_gump]
+gump_subarr = combined_runs[:,:,:,train_times_gump]
 vox_by_time_train = voxel_by_time(gump_subarr)
 clf = svm.SVC()
 
+samp_gump2, miss_gump2 = gen_sample_by_factors(GUMP_SCENES_IDS, factor_grid, True, prop = .9)
+
+
+#Set up training and test set for Gump VS. Milary 
+####################################################################
+import numpy.random as npr
+rand_samp = npr.randint(0, 921600, 6000)
+rand_indcs = set(rand_samp)
+rand_indcs = list(rand_indcs)[:5000]
+pos = []
+for num in rand_indcs:
+    pos.append(get_index((160, 160, 36), num))
+pos = np.array(pos)
+
+GUMP_SCENES_IDS = [38, 40, 41, 42] #factor ids of Gump scenes
+MILITARY_IDS = [52, 77, 78, 80, 81, 82, 83]
+all_ids = GUMP_SCENES_IDS + MILITARY_IDS
+samp_2, miss_gump = gen_sample_by_factors(all_ids, factor_grid, True, prop = .9)
+training2 = get_training_samples(samp_2)
+testing2 = get_testing_samples(samp_2)
+
+train_labs2, train_times2 = make_label_by_time(training2)
+test_labs2, test_times2 = make_label_by_time(testing2)
+
+
+milt_subarr = combined_runs[pos[:,0],pos[:,1], pos[:,2], train_times2]
+milt_subarr = combined_runs[:,:,:,train_times2]
+milt_subarr = milt_subarr[pos[:,0],pos[:,1], pos[:,2],:]
+vox_by_time_train = voxel_by_time(milt_subarr)
+kmeans = KMeans(n_clusters=2, n_init=10)
+kmeans.fit_predict(vox_by_time_train.T) #88% accuracy 
+
+#Rishi sample
+rand_samp2 = npr.randint(0, 921600, 30000)
+rand_indcs2 = set(rand_samp2)
+rand_indcs2 = list(rand_indcs2)[:20000]
+
+pos2 = []
+for num in rand_indcs2:
+    pos2.append(get_index((160, 160, 36), num))
+pos2 = np.array(pos2)
+
+comined_subarr = combined_runs[pos2[:,0],pos2[:,1], pos2[:,2],:]
 
 ####################################################################
 #DELETE ALL THIS - JUST CHECKING IF WORKS 
