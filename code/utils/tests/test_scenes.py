@@ -5,7 +5,7 @@ from numpy.testing import assert_almost_equal, assert_array_equal
 '''
 pathtoclassdata = "data/"
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "../functions/"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "../code/"))
 
 from glm import scenes_pred.py
 '''
@@ -275,6 +275,9 @@ def get_training_samples(samples):
         training[factor] = sample[0]
     return training
 
+test_GUMP_SCENES_IDS = [26, 36, 25, 38]
+samp_gump, miss_gump = gen_sample_by_factors(test_GUMP_SCENES_IDS, factor_grid, False)
+    
 def test_training_samples():
     test_GUMP_SCENES_IDS = [26, 36, 25, 38]
     samp_gump, miss_gump = gen_sample_by_factors(test_GUMP_SCENES_IDS, factor_grid, False)
@@ -314,8 +317,6 @@ def make_label_by_time(sing_samp):
     return (labels, times)
     
 def test_make_label_by_time():
-    test_GUMP_SCENES_IDS = [26, 36, 25, 38]
-    samp_gump, miss_gump = gen_sample_by_factors(test_GUMP_SCENES_IDS, factor_grid, False)
     g2= make_label_by_time(get_training_samples(samp_gump))
     r2 =(np.array([26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 36, 36, 36, 36, 36, 36, 36,
         36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 38, 38, 38, 38,
