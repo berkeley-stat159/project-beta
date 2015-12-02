@@ -1,6 +1,5 @@
 from __future__ import print_function, division
 import numpy as np
-import pandas as pd
 import nibabel as nib
 from numpy.testing import assert_almost_equal, assert_array_equal
 '''
@@ -39,8 +38,9 @@ all_data = new_data[:,:,:,:new_num_vols]
 
 
 ## Need to fix the path
-scenes = pd.read_csv('scene_times_nums.csv', header = None) 
-scenes = scenes.values
+#scenes = pd.read_csv('scene_times_nums.csv', header = None) 
+#scenes = scenes.values
+scenes= np.genfromtxt('scene_times_nums.csv',delimiter=',',dtype=int)
 
 combined_runs = all_data[:,:,:,9:] #First 17 seconds are credits/no scene id so drop
 
