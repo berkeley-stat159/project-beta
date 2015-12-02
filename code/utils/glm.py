@@ -3,26 +3,58 @@ from sklearn import linear_model as lm
 import numpy.linalg as npl
 import matplotlib.pyplot as plt
 
+""" unclear about this function, need further discussion
+
 def sk_regression(data_4d, convolved, model):
 	num_vols = data_4d.shape[-1]
 	assert(len(convolved) == num_vols)
-	X = np.ones(num_vols, 2)
+	X = np.ones((num_vols, 2))
 	X[:, 1] = convolved
 	vox_by_time = np.reshape(data_4d, (-1, num_vols))
 
+"""
+
 def glm(data_4d, convolved):
-	num_vols = data_4d.shape[-1]
-	assert(len(convolved) == num_vols)
-	design = np.ones((num_vols, 2))
-	design[:, 1] = convolved
-	vox_by_time = np.reshape(data_4d, (-1, num_vols))
-	betas = npl.pinv(design).dot(vox_by_time.T)
-	betas_4d = np.reshape(betas.T, data_4d.shape[:-1] + (-1,))
-	return (X, betas_4d)
+    """
+    Return a tuple of the estimated coefficients in 4 dimensions and 
+    the design matrix. 
+    
+    Parameters
+    ----------
+    data_4d: numpy array of 4 dimensions 
+        The image data of one subject
+    conv: numpy array of 1 dimension
+        The convolved time course
+    Note that the fourth dimension of `data_4d` (time or the number 
+    of volumes) must be the same as the length of `convolved`. 
+    
+    Returns
+    -------
+    glm_results : tuple
+        Estimated coefficients in 4 dimensions and the design matrix.
+    """
+    num_vols = data_4d.shape[-1]
+    assert(len(convolved) == num_vols)
+    design = np.ones((num_vols, 2))
+    design[:, 1] = convolved
+    vox_by_time = np.reshape(data_4d, (-1, num_vols))
+    betas = npl.pinv(design).dot(vox_by_time.T)
+    betas_4d = np.reshape(betas.T, data_4d.shape[:-1] + (-1,))
+    return (design, betas_4d)
 
 def scale_design_mtx(X):
-    """utility to scale the design matrix for display
+    """ 
+    Return a scaled design matrix for display
+    
+    Parameters
+    ----------
+    X: Design Matrix
+    
+    Returns
+    -------
+    Xs: a scaled design matrix 
 
+    Estimated coefficients in 4 dimensions and the design matrix.
     This scales the columns to their own range so we can see the variations
     across the column for all the columns, regardless of the scaling of the
     column.
