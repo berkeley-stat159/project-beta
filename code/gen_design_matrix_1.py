@@ -9,7 +9,7 @@ from decimal import *
 
 # In[72]:
 
-fpath = 'wordnet_stop.json'
+fpath = '../description_pp/wordnet_stop.json'
 with open(fpath) as fid:
     sti_dict_list = json.loads(fid.readlines()[0])
 fid.close()
@@ -44,5 +44,5 @@ for d in sti_dict_list:
 
 # In[144]:
 
-design_1_fpath = "../prediction/design_matrix_1.npy"
+design_1_fpath = "../description_pp/design_matrix_1.npy"
 np.save(design_1_fpath,design_1)
