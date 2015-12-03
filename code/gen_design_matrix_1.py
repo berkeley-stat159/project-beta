@@ -4,6 +4,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from decimal import *
+import pickle
 
 
 
@@ -46,3 +47,7 @@ for d in sti_dict_list:
 
 design_1_fpath = "../description_pp/design_matrix_1.npy"
 np.save(design_1_fpath,design_1)
+
+#save the word list to file
+word_list_fpath = "../description_pp/word_list.p"
+pickle.dump(all_unique_words, open(word_list_fpath, "wb" ))
