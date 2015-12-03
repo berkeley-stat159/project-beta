@@ -1,8 +1,7 @@
+
 from __future__ import print_function
 import nibabel as nib
 import numpy as np
-
-#need function to relate 3d array at given time to what person was viewing - and the category label
 
 def load_data(filename):
     """ Return fMRI data corresponding to the given filename and prints
@@ -39,17 +38,18 @@ def load_all_data(filename):
     print(data.shape)
     return data
 
-def get_axis_data(data, axis):
-    """ Returns 1-D array corresponding to the data along the given
-        axis
+def vox_by_time(data):
+    """ Returns a reshaped array w/ dimensions = #voxels x #volumes  
+    Parameters
     ----------
-    data : numpy array 
-    axis : integer
-    """ 
-    return None
-
-
-
+    data : 4d array
+    Returns
+    -------
+    reshaped : 2-D array
+        Reshaped array consisting of voxels by time 
+    """
+    n_voxels = np.prod(data.shape[:1])
+    return np.reshaped(data, (n_voxels, data.shape[-1]))
 
 def vol_std(data):
     """ Return standard deviation across voxels for 4D array `data`
@@ -117,7 +117,6 @@ def vol_rms_diff(arr_4d):
     exp_rms = np.sqrt(np.mean(differences ** 2, axis=0))
     return exp_rms
 
-
 def remove_outliers_iqr(arr, axis, iqr_scale=1.5):
     """ Return data of outliers (identified by interquartile range) removed
     Parameters
@@ -140,12 +139,4 @@ def remove_outliers_iqr(arr, axis, iqr_scale=1.5):
     """
     axis_data = get_axis_data(data, axis)
     indcs, lo_hi_thresh = iqr_outliers(axis_data, iqr_scale)
-     
-def voxel_by_time(data):
-    n_voxels = np.prod(data.shape[:-1])
-    return np.reshape(data, (n_voxels, data.shape[-1]))
-
-def mask_data(data):
-    return None 
-
-
+    return (indcs, lo_hi_thresh) 

@@ -1,24 +1,15 @@
+
 #Import libraries
 from __future__ import print_function, division
 import numpy as np
-import pandas as pd
-import nibabel as nib
-import matplotlib.pyplot as plt
+
 import data_loading as dl
-import plotting_fmri as plt_fmri
-import save_files as sv
 import numpy.linalg as npl
 
-
-from sklearn.decomposition import PCA
-from sklearn import svm
-from sklearn.neighbors import KNeighborsClassifier as KNN 
-from sklearn.cluster import KMeans
 from scipy.spatial.distance import hamming 
 
-## function used in scences_pred.py
 
-ALL_IDS = list(range(1, 91))
+ALL_IDS = list(range(1, 91)) #Range of distinct factor ids 
 
 def get_factor_ids(times, factor_grid):
     """ Returns factor ids that occured at 'times'   
@@ -154,7 +145,7 @@ def gen_sample_by_factors(factor_lst, factor_grid, randomize, prop=.5, min_time=
     sample = {}
     missing_factors = []
     all_factors = all_factors_indcs(factor_lst, factor_grid, min_time, max_time)
-    for factor, factor_indcs in all_factors.iteritems():
+    for factor, factor_indcs in all_factors.items():
         samp_size = len(factor_indcs)
         num_train = np.round(prop * samp_size)
         num_test = samp_size - num_train
@@ -184,11 +175,11 @@ def get_training_samples(samples):
     training : dictionary
     """
     training = {}
-    for factor, sample in samples.iteritems():
+    for factor, sample in samples.items():
         training[factor] = sample[0]
     return training
 
-def get_testing_samples(samples):
+def get_tst_samples(samples):
     """ Returns only the testing indcs in 'samples.' 
     Note: 'samples' is the returned dictionary in the 'gen_sample_by_factors'
     function above 
@@ -254,48 +245,19 @@ def other_scene_ids(remove_ids):
     other_ids = [i for i in ALL_IDS if i not in remove_ids]
     return other_ids
 
-#Regression Analysis
-
-def make_scene_design_mat(scenes, times, on_scene_ids):
-    synced_times = sync_scene_times(times)
-
-
-def calc_weights(X, Y):
-    return npl.pinv(X).dot(Y)
-
-
-def get_voxel_weight(vox_by_time, voxel_index, times, on_scene_ids):
-    vox_time_course = vox_by_time[voxel_index, times]
-    vox_design_mat = make_scene_design_mat(vox_by_time, voxel_index, times, on_scene_ids)
-    weights = calc_weights(vox_design_mat, vox_time_course)
-    return weights
-
-
-def get_all_weights(vox_by_time, times, on_scene_ids):
-    all_weights = []
-    for i in range(vox_by_time.shape[0]):
-        weight = get_voxel_weight(vox_by_time, i, times, on_scene_ids)
-        all_weights.append(weight)
-    all_weights = np.array(all_weights)
-    return all_weights
-
-
-def predict_scene(trained_weights, t_0_activity):
-    #ASSERTS HERE FOR DIMENSION?
-    design_mat = trained_weights.T
-    raw_predicted_scenes = calc_weights(design_mat, t_0_activity)
-    largest_index = np.where(raw_predicted_scenes == max(raw_predicted_scenes))
-    return largest_index #FIX what if there are ties 
-
-
-def predict_all_times(trained_weights, test_activities):
-    predicted_indces = []
-    for activity in test_activities:
-        index = predict_scene(trained_weights, activity)
-    return predicted_indces
-
-
-def analyze_performance(predicted_labels, actual_labels): 
+def analyze_performance(predicted_labels, actual_labels):
+    """ Returns the proportion of total labels that are acurately matched 
+    
+    Parameters
+    ----------
+    predicted_labels : 1d array
+        Consists of numeric labels   
+    actual_labels: 1d array 
+        Consists of numeric labels     
+    Returns
+    -------
+    distance : float
+        'Distance' here equals #matching entries / length(predicted_labels)
+    """
     normed_distance = hamming(predicted_labels, actual_labels) #between 0 - 1
     return 1 - normed_distance
-
