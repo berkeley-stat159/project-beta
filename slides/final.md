@@ -21,9 +21,15 @@
  - categories. However, when we re-ran kmeans with these two categories combined, our 
  - overall accuracy went up by 15%. 
 
-# Neural Network
-
-## Set up
+# Neural Network: Initialization
 - Single layer perceptron
 - Input: timepoint with voxel activity as features
 - Output: prediction of presence of common words in scene
+
+# Neural Network: Training
+![NN Training](ce6.jpg)
+
+# 
+
+
+
