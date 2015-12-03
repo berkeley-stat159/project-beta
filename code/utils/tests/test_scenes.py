@@ -11,7 +11,7 @@ from numpy.testing import assert_almost_equal, assert_array_equal
 __file__ = os.getcwd()
 
 #sys.path.append(uppath(__file__, 1))
-sys.path.append(os.path.join(os.path.dirname(__file__),"../utils/"))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"../utils/")))
 from scenes import on_off_course, multiple_factors_course,gen_sample_by_factors,get_training_samples,get_tst_samples,make_label_by_time,other_scene_ids,analyze_performance
 
 ## Create the test image data
