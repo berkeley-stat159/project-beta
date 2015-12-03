@@ -86,18 +86,34 @@ for scan_time in SCAN_TIMES:
 
 factor_grid = np.array(factor_grid) #Convert to np array for future analysis
 
-############K-means Analysis ##################################
-#Set up training and test set for Gump 
+#Grouped Factors Ids 
 GUMP_SCENES_IDS = [38, 40, 41, 42] #factor ids of Gump scenes
 MILITARY_IDS = [52, 62, 77, 78, 80, 81, 82, 83]
 SCHOOL = [22,43, 67, 61, 69]
 SAVANNA = [66]
-POLITICAL = 
-other_scenes = other_scene_ids(GUMP_SCENES_IDS)
+POLITICAL = [86, 2, 87, 84]
+OUTSIDE = [27, 73, 58, 53, 59]
 
-samp_gump, miss_gump = gen_sample_by_factors(GUMP_SCENES_IDS, factor_grid, True)
-training_gump = get_training_samples(samp_gump)
-testing_gump = get_testing_samples(samp_gump)
+############K-means Analysis ##################################
 
-train_labs_gump, train_times_gump = make_label_by_time(training_gump)
-test_labs_gump, test_times_gump = make_label_by_time(testing_gump)
+#Comparison between Military and Gump Scenes 
+all_ids_1 = GUMP_SCENES_IDS + MILITARY_IDS 
+samp_1, miss_1 = sn.gen_sample_by_factors(all_ids_1, factor_grid, True, prop = .9)
+training1 = sn.get_training_samples(samp_1)
+train_labs1, train_times1 = sn.make_label_by_time(training1)
+milt_subarr = combined_runs[:,train_times1]
+
+kmeans = KMeans(n_clusters=2, n_init=10)
+pred1 = kmeans.fit_predict(milt_subarr.T)
+
+#Check accuracy 
+#Make a vector that is 1 for Gump Scenes and 0 otherwise 
+on_off_1 = sn.on_off_course(GUMP_SCENES_IDS, train_labs1)
+num = sn.analyze_performance(pred1, on_off_1)
+accuracy1 = max(num, 1 - num) 
+
+#Comparison between 
+
+
+
+
