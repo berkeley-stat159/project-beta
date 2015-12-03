@@ -14,16 +14,16 @@
  
 
 #Import standard libraries
+from __future__ import print_function, division
 import numpy as np
 import pandas as pd
 import nibabel as nib
 import matplotlib.pyplot as plt
-import data_loading as dl
+import data_loading_script as dl
 import plotting_fmri as plt_fmri
 import save_files as sv
 import numpy.linalg as npl
 
-from __future__ import print_function, division
 from sklearn.decomposition import PCA
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier as KNN 
@@ -291,6 +291,24 @@ def get_testing_samples(samples):
     return testing
 
 def make_label_by_time(sing_samp):
+    """ Return a tuple that consists of labels and their according time. 
+    
+    Parameters
+    ----------
+    sing_samp : dictionary
+        The key of the dictionary is the factor_id
+    and the value is a tuple. The element of the tuple is 
+    training indcs or testing indcs. The input 'prop' allocates what 
+    proportion of all indcs the training and testing samples recieve. 
+    Note: 'samples' is the returned dictionary in the 'gen_sample_by_factors'
+    
+    Returns
+    -------
+    labels:
+        numpy array that contains the labels
+    times:
+        numpy array that contains the times
+    """
     factors = []
     lengths = []
     times = []
@@ -377,7 +395,7 @@ training_gump = get_training_samples(samp_gump)
 testing_gump = get_testing_samples(samp_gump)
 
 train_labs_gump, train_times_gump = make_label_by_time(training_gump)
-test_labs_gump, test_times_gump = make_label_by_time(training_gump)
+test_labs_gump, test_times_gump = make_label_by_time(testing_gump)
 
 #SVM 
 gump_subarr = combine_run_arrays[:,:,:,train_times_gump]

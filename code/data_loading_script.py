@@ -75,14 +75,11 @@ for data in all_data:
     all_iqr_outliers.append(outlier)
     all_bands_outliers.append(band)
 
-sv.save_all(all_sdevs, fileroot='sdevs', typ='data', folder_root='SDEVS'
-                ext='txt')
+sv.save_all(all_sdevs, fileroot='sdevs', typ='data', folder_root='SDEVS', ext='txt')
 
-sv.save_all(all_iqr_outliers, fileroot='out_iqr', typ = 'data', 
-                folder_root='OUTLIER_IQRs', ext='txt')
+sv.save_all(all_iqr_outliers, fileroot='out_iqr', typ = 'data', folder_root='OUTLIER_IQRs', ext='txt')
 
-sv.save_all(all_bands_outliers,fileroot='band',typ='data',folder_root='IQR_BANDS'
-                ext='txt')
+sv.save_all(all_bands_outliers,fileroot='band',typ='data',folder_root='IQR_BANDS',ext='txt')
 
 #For each run, we have a plot of:
 
