@@ -193,7 +193,7 @@ def get_tst_samples(samples):
     testing : dictionary
     """
     testing = {}
-    for factor, sample in samples.iteritems():
+    for factor, sample in samples.items():
         testing[factor] = sample[1]
     return testing
 
@@ -219,7 +219,7 @@ def make_label_by_time(sing_samp):
     factors = []
     lengths = []
     times = []
-    for factor, samp in sing_samp.iteritems():
+    for factor, samp in sing_samp.items():
         factors.append(factor)
         lengths.append(len(samp))
         times.append(samp)
