@@ -31,6 +31,13 @@
  - categories. However, when we re-ran kmeans with these two categories combined, our 
  - overall accuracy went up by 15%. 
 
+# Scenes Analysis:
+![K-mean Analysis: cluster0](cluster_0.jpg)
+
+# Scenes Analysis:
+![K-mean Analysis: cluster1](cluster_1.jpg)
+
+
 #Ridge Regression
 - A voxel-vise ridge regression model is built to model all the words as features on the masked voxels. 
 - 2,3,4 s of time lags are added to the feature matrix to aligh with the BOLD response
@@ -55,10 +62,6 @@
 - Input: timepoint with voxel activity as features
 - Output: prediction of presence of common words in scene
 
-# Neural Network: Training
-![NN Training](ce6.jpg)
-
-# 
 
 
 
