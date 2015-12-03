@@ -15,9 +15,9 @@ import warnings
 import numpy as np
 import scipy.stats as _stats
 import time
-from . import io
+# from . import io
 from . import utils as _utils 
-from .Stats import utils as _sutils
+# from .Stats import utils as _sutils
 
 ### --- Parameters --- ###    
 DEFAULT_ALPHAS=np.array([0]+[2**x for x in range(10,21)])
