@@ -1,10 +1,15 @@
-Download:
-	wget http://openfmri.s3.amazonaws.com/tarballs/ds113_sub004.tgz
+all : Download Unzip validate
 
-Unzip:	
+Download:
+	wget -c https://www.googledrive.com/host/0Bz7lWLS0atxsalZSQWc1NXV2ajg
+	
+
+Unzip:
+	mv '0Bz7lWLS0atxsalZSQWc1NXV2ajg' 'ds113_sub004.tgz'
 	tar -zxvf ds113_sub004.tgz 
-	cd sub004 
-	find . -type f -name 'bold_dico.nii.gz' -exec gunzip -k "{}" \;
 
 validate:
 	python data.py
+
+
+	
