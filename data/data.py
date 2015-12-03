@@ -4,7 +4,7 @@ import hashlib
 import os
 
 
-d = {'ds113_sub004.tgz': "f16bac83fb4e9daa7225e977c9c39ec7"}
+d = {'ds113_sub004.tgz': '0a667868fdcb8a50df9f1ab69fb289fe'}
 
 
 def generate_file_md5(filename, blocksize=2**20):
