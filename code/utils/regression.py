@@ -15,8 +15,8 @@ import warnings
 import numpy as np
 import scipy.stats as _stats
 import time
-from . import io
-from . import utils as _utils 
+# from . import io
+import vmt_utils as _utils 
 from .Stats import utils as _sutils
 
 ### --- Parameters --- ###    

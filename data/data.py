@@ -4,7 +4,9 @@ import hashlib
 import os
 
 
-d = {'ds113_sub004.tgz': '0a667868fdcb8a50df9f1ab69fb289fe'}
+d = {'ds113_sub004.tgz': 'c4b21587249191bb54c46629ef60a8d5',
+     'BOLD_est_masked34589.npy' : '051354a895e6dbe9bf73d4d032f36d5f',
+     'BOLD_val_masked34589.npy' : '945f0bfeed4a3a824d9af4eb84c07956'}
 
 
 def generate_file_md5(filename, blocksize=2**20):
