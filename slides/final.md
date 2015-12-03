@@ -50,6 +50,15 @@
 # Neural Network
 
 ## Set up
+# Neural Network: Initialization
 - Single layer perceptron
 - Input: timepoint with voxel activity as features
 - Output: prediction of presence of common words in scene
+
+# Neural Network: Training
+![NN Training](ce6.jpg)
+
+# 
+
+
+
