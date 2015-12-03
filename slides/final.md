@@ -25,11 +25,17 @@
 - Single layer perceptron
 - Input: timepoint with voxel activity as features
 - Output: prediction of presence of common words in scene
+(e.g. bench, girl)
+![Neural Network](nn.jpg)
 
 # Neural Network: Training
-![NN Training](ce6.jpg)
+- Cross-entropy cost function
+- tanh activation function in layer 1, sigmoid activation in layer 2
+![NN Training](ceallwords.jpg)
 
-# 
-
+# Neural Network: Testing
+- Correct guess by random chance is $$1/2^10$$
+- Able to reach 21.99388%
+- 
 
 
