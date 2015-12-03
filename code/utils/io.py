@@ -1,18 +1,18 @@
 # in/out functions for vm_tools
-import h5py
+# import h5py
 import warnings
 import numpy as np
 from scipy.io import loadmat,savemat
 # Local stuff
-from .Classes.Stimulus import Stimulus #, Labels? (subclass Stimulus to allow for non-image/auditory/whatever inputs?)
-from .Classes.FeatureSpace import FeatureSpace # Change to: FeatureSpace
-from .Classes.Mask import Mask
-from .Classes.ROI import ROISet,ROIMask
-from .Classes.DataSet import fMRI_DataSet 
-from .Classes.Model import fMRI_Model 
-from .options import config
-from .utils import as_list
-from .dbwrapper import docdb
+# from .Classes.Stimulus import Stimulus #, Labels? (subclass Stimulus to allow for non-image/auditory/whatever inputs?)
+# from .Classes.FeatureSpace import FeatureSpace # Change to: FeatureSpace
+# from .Classes.Mask import Mask
+# from .Classes.ROI import ROISet,ROIMask
+# from .Classes.DataSet import fMRI_DataSet 
+# from .Classes.Model import fMRI_Model 
+# from .options import config
+# from .utils import as_list
+# from .dbwrapper import docdb
 is_verbose = config.get('general','is_verbose').lower() in ('true','yes','t','y','1') # global pkg verbosity option?
 
 # add generic load_variable function, agnostic to data type?
