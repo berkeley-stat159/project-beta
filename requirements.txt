@@ -5,4 +5,3 @@ matplotlib==1.4.3
 pandas
 nibabel
 scikit-learn
-nltk
