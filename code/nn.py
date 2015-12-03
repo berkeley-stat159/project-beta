@@ -10,9 +10,17 @@ import time
 # from sklearn.neural_network import MLPClassifier
 
 
+xtrain = pp.normalize(np.load("../data/BOLD_est_masked34589.npy"))
+xvar = np.var(xtrain, axis=1)
+varmask = np.where(xvar > .00015)
+print np.max(xvar[varmask]), np.min(xvar[varmask])
+xtrain = xtrain[varmask].T
+print np.max(xtrain), np.min(xtrain)
+# print 
+# print ve
+# print np.max(ve), np.min(ve), ve.shape
 
-xtrain = pp.normalize(np.load("../data/BOLD_est_masked34589.npy").T)
-xtest = pp.normalize(np.load("../data/BOLD_val_masked34589.npy").T)
+xtest = (pp.normalize(np.load("../data/BOLD_val_masked34589.npy"))[varmask]).T
 y = np.load("../description_pp/design_matrix_1.npy")
 ytrain = y[:3000]
 ytest = y[3000:3000+xtest.shape[0]]
@@ -80,26 +88,26 @@ class NeuralNetworkNaive():
 				# print "CURITER: "+str(i)#+" "+str(np.mean(self.mse(x, y)))
 				# print "x: "+str(x[e])
 				# print "y: "+str(y[e])
+				# ind = rand.randint()
 
 				self.backward(np.array([tx[e]]), np.array([ty[e]]), self.learn(i, n, a[1]))
-				if i%1000 == 0:
-					# print "\n=============================================="
-					# print "CURITER: "+str(i)#+" "+str(np.mean(self.mse(x, y)))
-					a = self.accuracy(vy, self.predict(vx))
-					self.errors.append(a[1])
-					print a
-					if a[1] > .5:
-						self.endlearn = self.learn(i, n, a[1])
-						return a[1]
-				i += 1
+				# if i%50 == 0:
+				# print "\n=============================================="
+				# print "CURITER: "+str(i)#+" "+str(np.mean(self.mse(x, y)))
+			a = self.accuracy(vy, self.predict(vx))
+			self.errors.append(a[1])
+			print a
+			if a[1] > .44:
+				self.endlearn = self.learn(i, n, a[1])
+				return a[1]
+				# i += 1
 
 	def learn(self, i, n, a):
-		i = (i/n/4) + 1
-		# print float(1) / (10 * 2**i * a) / 10
-		return float(1) / (10 * i * (a+.001)) / 5
+		i = (float(i/n)/4) + 1
+		return float(1) / (10 * i) / 20
 
 	def predict(self, x):
-		return np.array([np.around(self.forward(np.reshape(xi,(1,xi.shape[0])))) for xi in x])
+		return np.array([np.around(self.forward(np.reshape(xi,(1,xi.shape[0]))))[0] for xi in x])
 
 	######## ACTIVATION FUNCTIONS G ########
 	def sigmoid(self, z):
@@ -184,20 +192,16 @@ def dual_shuffle_array(lst, lst2):
 	return np.array(newlist), np.array(newlist2)
 
 
-nn = NeuralNetworkNaive(34589, 200, 1155)
+nn = NeuralNetworkNaive(xtrain.shape[1], 1000, ytrain.shape[1])
 nn.train(xtrain, ytrain)
+nn.plot()
 
 pred = nn.predict(xtest)
+with open("nnpreds.npy", "w") as f:
+	np.save(f, pred)
 
 acc = nn.accuracy(ytest, pred)
-print "FINAL ACC: "+acc
-
-# f = open("digitPredictions.csv","wb")
-# c = csv.writer(f)
-# c.writerow(["Id","Category"])
-# for i in range(len(pred)):
-# 	c.writerow([i+1,pred[i]])
-# f.close()
+print "FINAL ACC: "+str(acc)
 
 
 
