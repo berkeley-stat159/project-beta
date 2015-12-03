@@ -11,7 +11,7 @@ from numpy.testing import assert_almost_equal, assert_array_equal
 __file__ = os.getcwd()
 
 #sys.path.append(uppath(__file__, 1))
-sys.path.append(os.path.dirname(__file__))
+sys.path.append(os.path.join(os.path.dirname(__file__),"../utils/"))
 from scenes import *
 
 ## Create the test image data
@@ -128,9 +128,9 @@ def test_get_training_samples():
     assert_almost_equal(f5,r5)
     
 def test_get_tst_samples():
-    f7 =list(get_training_samples(samp_gump).values())[1]
-    r7 =np.array([148, 149, 150, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173,
-       174, 175, 176, 177, 178, 179, 180])
+    f7 =list(get_tst_samples(samp_gump).values())[1]
+    r7 =np.array([181, 182, 183, 184, 327, 328, 329, 330, 331, 332, 333, 334, 335,
+       336, 337, 338, 339, 340, 341, 342])
     assert_almost_equal(f7,r7)
     
 def test_make_label_by_time():
