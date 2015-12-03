@@ -68,7 +68,7 @@
 ![NN Training](ceallwords.jpg)
 
 # Neural Network: Testing
-- Correct guess by random chance is $$1/2^10$$
+- Correct guess by random chance is $$\frac{1}{2^{10}}$$
 - Able to reach 21.99388%
 
 
