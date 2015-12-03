@@ -6,3 +6,4 @@ pandas
 nibabel
 matplotlib
 sklearn
+nltk
