@@ -4,7 +4,6 @@ import nibabel as nib
 import pandas as pd
 import sys
 import os
-import six
 from numpy.testing import assert_almost_equal, assert_array_equal
 
 #uppath = lambda _path, n: os.sep.join(_path.split(os.sep)[:-n])
@@ -22,9 +21,8 @@ arr_2d = np.random.normal(size=(V, T))
 expected_stds = np.std(arr_2d, axis=0)
 arr_4d = np.reshape(arr_2d, shape_3d + (T,))
 
-
-datapath = '../../../data/'
-scenes = pd.read_csv(datapath+'scene_times_nums.csv', header = None) 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"../../data")))
+scenes = pd.read_csv('scene_times_nums.csv', header = None) 
 scenes = scenes.values
 
 TR = 2
