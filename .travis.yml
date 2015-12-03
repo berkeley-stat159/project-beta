@@ -23,10 +23,11 @@ install:
     pip install coveralls;
     fi
 
-script:
-  - make coverage
+before_script: 
   - export PYTHONPATH=$PYTHONPATH:$PWD/code/utils:$PWD/code
 
-
+script:
+  - make coverage
+ 
 after_success:
   - if [ "${COVERAGE}" == "1" ]; then coveralls; fi
