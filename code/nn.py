@@ -9,10 +9,19 @@ import matplotlib.pyplot as plt
 import time
 # from sklearn.neural_network import MLPClassifier
 
+words = np.array(np.load("../description_pp/word_list.p"))
+wordlist = words.tolist()
+# print len(words)
+# print wordlist
+print wordlist.index(u'angry.a.01')
+print wordlist.index(u'girl.n.01')
+print wordlist.index(u'kiss.n.01')
+
+
 
 xtrain = pp.normalize(np.load("../data/BOLD_est_masked34589.npy"))
 xvar = np.var(xtrain, axis=1)
-varmask = np.where(xvar > .00015)
+varmask = np.where(xvar > .00012)
 print np.max(xvar[varmask]), np.min(xvar[varmask])
 xtrain = xtrain[varmask].T
 print np.max(xtrain), np.min(xtrain)
@@ -20,15 +29,20 @@ print np.max(xtrain), np.min(xtrain)
 # print ve
 # print np.max(ve), np.min(ve), ve.shape
 
+
+
 xtest = (pp.normalize(np.load("../data/BOLD_val_masked34589.npy"))[varmask]).T
 y = np.load("../description_pp/design_matrix_1.npy")
 ytrain = y[:3000]
 ytest = y[3000:3000+xtest.shape[0]]
+
+ytraingirl = ytrain[:, wordlist.index(u'girl.n.01')]
+ytestgirl = ytest[:, wordlist.index(u'girl.n.01')]
 # print xtrain
 # print xtest
 # print y
 # print y[0].tolist()
-print xtrain.shape, xtest.shape, y.shape, ytrain.shape, ytest.shape
+# print xtrain.shape, xtest.shape, y.shape, ytrain.shape, ytest.shape
 
 class NeuralNetworkNaive():
 	def __init__(self, inputSize, hiddenSize, outputSize, mode="ce"):
@@ -72,7 +86,8 @@ class NeuralNetworkNaive():
 		self.b1 -= a*np.reshape(self.d2, (self.d2.shape[1],))
 		self.b2 -= a*np.reshape(self.d3, (self.d3.shape[1],))
 
-	def train(self, x, y):
+	def train(self, x, y, threshold=.9, epoch=1000):
+		self.epoch = epoch
 		i = 1
 		a = [20, .01]
 		cutoff = .9*len(x)
@@ -91,20 +106,20 @@ class NeuralNetworkNaive():
 				# ind = rand.randint()
 
 				self.backward(np.array([tx[e]]), np.array([ty[e]]), self.learn(i, n, a[1]))
-				# if i%50 == 0:
+				if i%epoch == 0:
 				# print "\n=============================================="
 				# print "CURITER: "+str(i)#+" "+str(np.mean(self.mse(x, y)))
-			a = self.accuracy(vy, self.predict(vx))
-			self.errors.append(a[1])
-			print a
-			if a[1] > .44:
-				self.endlearn = self.learn(i, n, a[1])
-				return a[1]
-				# i += 1
+					a = self.accuracy(vy, self.predict(vx))
+					self.errors.append(a[1])
+					print a
+					if a[1] > threshold:
+						self.endlearn = self.learn(i, n, a[1])
+						return a[1]
+				i += 1
 
 	def learn(self, i, n, a):
 		i = (float(i/n)/4) + 1
-		return float(1) / (10 * i) / 20
+		return (1+ a+.0001) *float(1) / (10 * i)
 
 	def predict(self, x):
 		return np.array([np.around(self.forward(np.reshape(xi,(1,xi.shape[0]))))[0] for xi in x])
@@ -165,8 +180,8 @@ class NeuralNetworkNaive():
 		self.d2 = np.dot(self.d3, np.transpose(self.w2) * self.d_tanh(self.z2))
 		self.djdw1 = np.dot(np.transpose(x), self.d2)
 
-	def plot(self):
-		plt.plot(range(1000, 1000*len(nn.errors)+1, 1000), nn.errors)
+	def plot(self, description):
+		plt.plot(range(self.epoch, self.epoch*len(self.errors)+1, self.epoch), self.errors)
 		if self.mode == "mse":
 			plt.title("Mean Squared Error")
 		else:
@@ -176,7 +191,7 @@ class NeuralNetworkNaive():
 		if self.mode == "mse":
 			plt.savefig("mse6.jpg")
 		else:
-			plt.savefig("ce6.jpg")
+			plt.savefig("ce"+description+".jpg")
 
 def dual_shuffle_array(lst, lst2):
 	assert len(lst)==len(lst2)
@@ -191,21 +206,49 @@ def dual_shuffle_array(lst, lst2):
 	# print np.array(newlist).shape, np.array(newlist2).shape
 	return np.array(newlist), np.array(newlist2)
 
+def nnword(word, xtrain, xtest, ytrain, ytest, wordlist, threshold, e):
+	ytraine = ytrain[:, wordlist.index(word)]
+	yteste = ytest[:, wordlist.index(word)]
 
-nn = NeuralNetworkNaive(xtrain.shape[1], 1000, ytrain.shape[1])
-nn.train(xtrain, ytrain)
-nn.plot()
+	nn = NeuralNetworkNaive(xtrain.shape[1], 1000, 1)
+	nn.train(xtrain, ytraine, threshold, e)
+	nn.plot(word)
 
-pred = nn.predict(xtest)
-with open("nnpreds.npy", "w") as f:
-	np.save(f, pred)
+	pred = nn.predict(xtest)
+	with open("../nnpreds/nnpreds_"+word+".npy", "w") as f:
+		np.save(f, pred)
 
-acc = nn.accuracy(ytest, pred)
-print "FINAL ACC: "+str(acc)
+	acc = nn.accuracy(yteste, pred)
+	print "FINAL ACC "+word+": "+str(acc)
+
+nnword(u'angry.a.01', xtrain, xtest, ytrain, ytest, wordlist, .998, 500)
 
 
 
+# (118, 0.3933333333333333)
+# (125, 0.4166666666666667)
+# (123, 0.41)
+# (129, 0.43)
+# (121, 0.4033333333333333)
+# (118, 0.3933333333333333)
+# (139, 0.4633333333333333)
+# FINAL ACC: (210, 0.44871794871794873)
 
+# pred = np.load("nnpreds.npy").astype(np.int)
+# print np.where(pred == 0)
+# # print pred.tolist()
+# print pred.shape
+
+# words = np.array(np.load("../description_pp/word_list.p"))
+# wordlist = words.tolist()
+# print len(words)
+# print wordlist
+# print wordlist.index(u'angry.a.01')
+# print wordlist.index(u'girl.n.01')
+# print wordlist.index(u'kiss.n.01')
+
+
+# print [words[np.where(pred[i] >0)] for i in range(len(pred))]
 
 
 
