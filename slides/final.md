@@ -2,6 +2,16 @@
 % Yuan Wang (Aria), Cindy Mo, Yucheng Dong (Steve), Rishi Sinha, Raj Agrawal
 % December 3, 2015
 
+
+
+# Generate 3 brain masks
+![voxel_variance](voxel_variance.png)
+- Thresholded on voxel variance, three brain masks are generated that gives us 3087, 6810, 34589 voxels, respectively.
+
+# All attempts
+- Scenes analysis: k-means clustering
+- Description/words analysis: Ridge Regression, Neural Network
+
 # Scenes Analysis: Basic Approach
  - Created different factor groups (e.g. Gump house, military, Savanna etc) to test if there was a 
  - connection between these groups and a subject’s brain activity
@@ -21,15 +31,45 @@
  - categories. However, when we re-ran kmeans with these two categories combined, our 
  - overall accuracy went up by 15%. 
 
+# Scenes Analysis:
+![K-mean Analysis: cluster0](cluster_0.jpg)
+
+# Scenes Analysis:
+![K-mean Analysis: cluster1](cluster_1.jpg)
+
+
+#Ridge Regression
+- A voxel-vise ridge regression model is built to model all the words as features on the masked voxels. 
+- 2,3,4 s of time lags are added to the feature matrix to aligh with the BOLD response
+- 1200 TRs are used as training set and 90 TRs are used as test set. I did a 10-fold cross validation to test on 10 differnt ridge parameters. 
+
+#Ridge Regression - design matrix
+![Design Matrix](design_matrix.png)
+
+# Ridge Regression - correlations coefficients
+![Correlation coefficients between voxel activites and predictions.
+](corr_coeff.png)
+
+# Ridge Regression - prediction
+![Examples of some well predicted voxels](voxel_prediction.png)
+
+
+
 # Neural Network: Initialization
-- Single layer perceptron
 - Input: timepoint with voxel activity as features
 - Output: prediction of presence of common words in scene
+(e.g. bench, girl)
+![Neural Network](nn.jpg)
+
 
 # Neural Network: Training
-![NN Training](ce6.jpg)
+- Cross-entropy cost function
+- tanh activation function in layer 1, sigmoid activation in layer 2
+![NN Training](ceallwords.jpg)
 
-# 
+# Neural Network: Testing
+- Correct guess by random chance is $$\frac{1}{2^{10}}$$
+- Able to reach 21.99388%
 
 
 
