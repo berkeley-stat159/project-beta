@@ -28,21 +28,27 @@ print np.max(xtrain), np.min(xtrain)
 # print 
 # print ve
 # print np.max(ve), np.min(ve), ve.shape
-
-
-
 xtest = (pp.normalize(np.load("../data/BOLD_val_masked34589.npy"))[varmask]).T
+
+def nonzero(x, y):
+	ind = [i for i in range(len(y)) if y[i].any()]
+	return x[ind], y[ind]
+
 y = np.load("../description_pp/design_matrix_1.npy")
 ytrain = y[:3000]
 ytest = y[3000:3000+xtest.shape[0]]
 
-ytraingirl = ytrain[:, wordlist.index(u'girl.n.01')]
-ytestgirl = ytest[:, wordlist.index(u'girl.n.01')]
+xtrain, ytrain = nonzero(xtrain, ytrain)
+xtest, ytest = nonzero(xtrain, ytrain)
+
+sums = np.sum(ytrain, axis = 0).tolist()
+mostcommonwords = [j[0] for j in sorted(enumerate(sums), key=lambda i: i[1], reverse=True)[:10]]
+
 # print xtrain
 # print xtest
 # print y
 # print y[0].tolist()
-# print xtrain.shape, xtest.shape, y.shape, ytrain.shape, ytest.shape
+print xtrain.shape, xtest.shape, ytrain.shape, ytest.shape
 
 class NeuralNetworkNaive():
 	def __init__(self, inputSize, hiddenSize, outputSize, mode="ce"):
@@ -73,6 +79,8 @@ class NeuralNetworkNaive():
 		self.z3 = np.dot(self.a2, self.w2) + self.b2
 		self.a3 = self.sigmoid(self.z3)
 
+		# print self.z3
+		# print self.a3
 		return self.a3
 
 	def backward(self, x, y, a):
@@ -85,44 +93,45 @@ class NeuralNetworkNaive():
 		self.w2 -= a*self.djdw2
 		self.b1 -= a*np.reshape(self.d2, (self.d2.shape[1],))
 		self.b2 -= a*np.reshape(self.d3, (self.d3.shape[1],))
+		# print self.w1
+		# print self.w2
+		# print "--------------"
 
 	def train(self, x, y, threshold=.9, epoch=1000):
 		self.epoch = epoch
 		i = 1
 		a = [20, .01]
-		cutoff = .9*len(x)
-		tx, ty = x[:cutoff], y[:cutoff]
-		vx, vy = x[cutoff:], y[cutoff:]
-		n = cutoff-1
+		# cutoff = .9*len(x)
+		# tx, ty = x[:cutoff], y[:cutoff]
+		# vx, vy = x[cutoff:], y[cutoff:]
+		n = len(x)
 		while True:
 			x, y = dual_shuffle_array(x, y)
-			tx, ty = x[:cutoff], y[:cutoff]
-			vx, vy = x[cutoff:], y[cutoff:]
-			for e in range(0, len(tx)):
+			for e in range(0, len(x)):
 				# print "\n=============================================="
 				# print "CURITER: "+str(i)#+" "+str(np.mean(self.mse(x, y)))
 				# print "x: "+str(x[e])
 				# print "y: "+str(y[e])
 				# ind = rand.randint()
 
-				self.backward(np.array([tx[e]]), np.array([ty[e]]), self.learn(i, n, a[1]))
+				self.backward(np.array([x[e]]), np.array([y[e]]), self.learn(i, n, a[1]))
 				if i%epoch == 0:
 				# print "\n=============================================="
 				# print "CURITER: "+str(i)#+" "+str(np.mean(self.mse(x, y)))
-					a = self.accuracy(vy, self.predict(vx))
+					a = self.accuracy(y, self.predict(x))
 					self.errors.append(a[1])
-					print a
-					if a[1] > threshold:
+					print a, self.learn(i, n, a[1])
+					if a[1] > threshold and i > epoch*30:
 						self.endlearn = self.learn(i, n, a[1])
 						return a[1]
 				i += 1
 
 	def learn(self, i, n, a):
-		i = (float(i/n)/4) + 1
-		return (1+ a+.0001) *float(1) / (10 * i)
+		i = ((i/n)/float(4)) + .1
+		return float(1) / (10 * i * (a+.1))
 
 	def predict(self, x):
-		return np.array([np.around(self.forward(np.reshape(xi,(1,xi.shape[0]))))[0] for xi in x])
+		return np.array([around(self.forward(np.reshape(xi,(1,xi.shape[0]))), .000000001)[0] for xi in x])
 
 	######## ACTIVATION FUNCTIONS G ########
 	def sigmoid(self, z):
@@ -193,6 +202,9 @@ class NeuralNetworkNaive():
 		else:
 			plt.savefig("ce"+description+".jpg")
 
+def around(x, b):
+	return np.where(x > b, 1, 0)
+
 def dual_shuffle_array(lst, lst2):
 	assert len(lst)==len(lst2)
 	newlist = lst[:].tolist()
@@ -206,38 +218,49 @@ def dual_shuffle_array(lst, lst2):
 	# print np.array(newlist).shape, np.array(newlist2).shape
 	return np.array(newlist), np.array(newlist2)
 
-def nnword(word, xtrain, xtest, ytrain, ytest, wordlist, threshold, e):
-	ytraine = ytrain[:, wordlist.index(word)]
-	yteste = ytest[:, wordlist.index(word)]
+def nnwords(indices, xtrain, xtest, ytrain, ytest, wordlist, threshold, e):
+	if indices:
+		ytrain = ytrain[:, indices]
+		ytest = ytest[:, indices]
 
-	nn = NeuralNetworkNaive(xtrain.shape[1], 1000, 1)
-	nn.train(xtrain, ytraine, threshold, e)
-	nn.plot(word)
+		xtrain, ytrain = nonzero(xtrain, ytrain)
+		xtest, ytest = nonzero(xtest, ytest)
+
+	nn = NeuralNetworkNaive(xtrain.shape[1], 5000, ytrain.shape[1])
+	nn.train(xtrain, ytrain, threshold, e)
+	nn.plot("allwords")
 
 	pred = nn.predict(xtest)
-	with open("../nnpreds/nnpreds_"+word+".npy", "w") as f:
+	with open("../nnpreds/nnpreds_"+str("mostcommon")+".npy", "w") as f:
 		np.save(f, pred)
 
-	acc = nn.accuracy(yteste, pred)
-	print "FINAL ACC "+word+": "+str(acc)
+	acc = nn.accuracy(ytest, pred)
+	print "FINAL ACC "+str("mostcommon")+": "+str(acc)
 
-nnword(u'angry.a.01', xtrain, xtest, ytrain, ytest, wordlist, .998, 500)
+# words = [u'angry.a.01', u'girl.n.01', u'kiss.n.01', u'jenny.n.01', u'christmas.n.01']
+# words = ytrain[:, words]
+nnwords(mostcommonwords, xtrain, xtest, ytrain, ytest, wordlist, .2, 10)
 
 
 
-# (118, 0.3933333333333333)
-# (125, 0.4166666666666667)
-# (123, 0.41)
-# (129, 0.43)
-# (121, 0.4033333333333333)
-# (118, 0.3933333333333333)
-# (139, 0.4633333333333333)
-# FINAL ACC: (210, 0.44871794871794873)
+# (37, 0.04596273291925466) 6.85106382979
+# (169, 0.20993788819875778) 3.22645290581
+# (0, 0.0) 10.0
+# (5, 0.006211180124223602) 9.41520467836
+# (0, 0.0) 10.0
+# (0, 0.0) 10.0
+# (89, 0.11055900621118013) 4.74926253687
+# (43, 0.05341614906832298) 6.51821862348
+# (0, 0.0) 10.0
+# (169, 0.20993788819875778) 3.22645290581
+# (169, 0.20993788819875778) 3.22645290581
+# FINAL ACC [u'rubbish.n.01' u'teammate.n.01' u'abruptly.r.01' ..., u'tray.n.01'
+#  u'wheelchair.n.01' u'bench.n.01']: (169, 0.20993788819875778)
 
-# pred = np.load("nnpreds.npy").astype(np.int)
-# print np.where(pred == 0)
-# # print pred.tolist()
-# print pred.shape
+pred = np.load("../nnpreds/nnpred_mostcommon.npy").astype(np.int)
+print np.where(pred != 0)
+# print pred.tolist()
+print pred.shape
 
 # words = np.array(np.load("../description_pp/word_list.p"))
 # wordlist = words.tolist()
@@ -246,13 +269,6 @@ nnword(u'angry.a.01', xtrain, xtest, ytrain, ytest, wordlist, .998, 500)
 # print wordlist.index(u'angry.a.01')
 # print wordlist.index(u'girl.n.01')
 # print wordlist.index(u'kiss.n.01')
-
-
-# print [words[np.where(pred[i] >0)] for i in range(len(pred))]
-
-
-
-
 
 
 
