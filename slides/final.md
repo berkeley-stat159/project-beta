@@ -54,11 +54,8 @@
 ![Examples of some well predicted voxels](voxel_prediction.png)
 
 
-# Neural Network
 
-## Set up
 # Neural Network: Initialization
-- Single layer perceptron
 - Input: timepoint with voxel activity as features
 - Output: prediction of presence of common words in scene
 (e.g. bench, girl)
