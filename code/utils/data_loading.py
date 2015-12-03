@@ -126,7 +126,8 @@ def remove_outliers_iqr(arr, axis, iqr_scale=1.5):
     """
     axis_data = get_axis_data(data, axis)
     indcs, lo_hi_thresh = iqr_outliers(axis_data, iqr_scale)
-     
+    return (indcs, lo_hi_thresh) 
+
 def voxel_by_time(data):
      """ Returns a reshaped array w/ dimensions = #voxels x #volumes  
     Parameters

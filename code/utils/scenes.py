@@ -9,7 +9,7 @@ import numpy.linalg as npl
 from scipy.spatial.distance import hamming 
 
 
-ALL_IDS = list(range(1, 91))
+ALL_IDS = list(range(1, 91)) #Range of distinct factor ids 
 
 def get_factor_ids(times, factor_grid):
     """ Returns factor ids that occured at 'times'   
@@ -179,7 +179,7 @@ def get_training_samples(samples):
         training[factor] = sample[0]
     return training
 
-def get_testing_samples(samples):
+def get_tst_samples(samples):
     """ Returns only the testing indcs in 'samples.' 
     Note: 'samples' is the returned dictionary in the 'gen_sample_by_factors'
     function above 
