@@ -25,7 +25,7 @@ install:
 
 script:
   - make coverage
-  - export PYTHONPATH=$PWD/code/utils
+  - export PYTHONPATH=$PYTHONPATH:$PWD/code/utils:$PWD/code
 
 
 after_success:
