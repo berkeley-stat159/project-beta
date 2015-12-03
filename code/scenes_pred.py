@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 import nibabel as nib
 import matplotlib.pyplot as plt
+import itertools
 
 #Local Modules 
 import utils.data_loading as dl
@@ -91,16 +92,17 @@ GUMP_SCENES_IDS = [38, 40, 41, 42] #factor ids of Gump scenes
 MILITARY_IDS = [52, 62, 77, 78, 80, 81, 82, 83]
 SCHOOL = [22,43, 67, 61, 69]
 SAVANNA = [66]
-POLITICAL = [86, 2, 87, 84]
+POLITICAL = [86, 85, 2, 87, 84]
 OUTSIDE = [27, 73, 58, 53, 59]
-
+CHURCH = [20]
+DEATH = [16, 48]
+BARBER = [8]
 ############K-means Analysis ##################################
 
 #Comparison between Military and Gump Scenes 
 all_ids_1 = GUMP_SCENES_IDS + MILITARY_IDS 
-samp_1, miss_1 = sn.gen_sample_by_factors(all_ids_1, factor_grid, True, prop = .9)
-training1 = sn.get_training_samples(samp_1)
-train_labs1, train_times1 = sn.make_label_by_time(training1)
+samp_1 = sn.all_factors_indcs(all_ids_1, factor_grid)
+train_labs1, train_times1 = sn.make_label_by_time(samp_1)
 milt_subarr = combined_runs[:,train_times1]
 
 kmeans = KMeans(n_clusters=2, n_init=10)
@@ -110,10 +112,139 @@ pred1 = kmeans.fit_predict(milt_subarr.T)
 #Make a vector that is 1 for Gump Scenes and 0 otherwise 
 on_off_1 = sn.on_off_course(GUMP_SCENES_IDS, train_labs1)
 num = sn.analyze_performance(pred1, on_off_1)
-accuracy1 = max(num, 1 - num) 
+accuracy1 = max(num, 1 - num)  #88% accuracy 
 
-#Comparison between 
+#Comparison between Gump, School, Political, Military, Outside Scenes
+all_ids_2 = GUMP_SCENES_IDS + SCHOOL + MILITARY_IDS 
+samp_2 = sn.all_factors_indcs(all_ids_2, factor_grid)
+lab2, times2 = sn.make_label_by_time(samp_2)
+subarr2 = combined_runs[:,times2]
 
+kmeans = KMeans(n_clusters=3, n_init=10)
+pred2 = kmeans.fit_predict(subarr2.T)
 
+#Set up categories: gump = 0, school = 1, military = 2,
+lab_course2 = []
+for val in lab2:
+    if val in GUMP_SCENES_IDS:
+        lab_course2.append(0)
+    if val in SCHOOL:
+        lab_course2.append(1)
+    if val in MILITARY_IDS:
+        lab_course2.append(2)
 
+#Asses performance - harder because multiple categories 
+def analyze_mult_factors(pred_labels, divided_cat_lst, num_labels):
+    all_perms = list(itertools.permutations(range(num_labels)))
+    relative_perform = []
+    total_perform = []
+    for perm in all_perms:
+        props = []
+        total = 0
+        for index, lab in enumerate(perm):
+            num_matches = np.where(divided_cat_lst[index] == lab)[0].shape[0]
+            prop_hits = num_matches / divided_cat_lst[index].shape[0]
+            total += num_matches
+            props.append(prop_hits)
+        total_perform.append(total)
+        relative_perform.append(props)
+    return (total_perform, relative_perform, all_perms)
+
+def get_max(analysis_factors, num_labs):
+    max_val = max(analysis_factors[0])
+    max_ind = [i for i, j in enumerate(analysis_factors[0]) if j == max_val]
+    max_ind = max_ind[0]
+    return (analysis_factors[0][max_ind]/num_labs, analysis_factors[1][max_ind], analysis_factors[2][max_ind])
+
+lab_course2 = np.array(lab_course2)
+
+gump_incs = np.where(lab_course2 == 0)
+school_indcs = np.where(lab_course2 == 1)
+military_inds = np.where(lab_course2 == 2)
+
+gump_pred = pred2[gump_incs] #77.3% accuracy using function below 
+school_pred = pred2[school_indcs] #77.4% accuracy 
+military_pred = pred2[military_inds] #75% accuracy 
+
+#Looking at all categories 
+all_ids_3 = GUMP_SCENES_IDS + SCHOOL + MILITARY_IDS + SAVANNA + POLITICAL + OUTSIDE
+
+samp_3 = sn.all_factors_indcs(all_ids_3, factor_grid)
+lab3, times3 = sn.make_label_by_time(samp_3)
+subarr3 = combined_runs[:,times3]
+
+kmeans = KMeans(n_clusters=6, n_init=10)
+pred3 = kmeans.fit_predict(subarr3.T)
+
+lab_course3 = []
+for val in lab3:
+    if val in GUMP_SCENES_IDS:
+        lab_course3.append(0)
+    if val in SCHOOL:
+        lab_course3.append(1)
+    if val in MILITARY_IDS:
+        lab_course3.append(2)
+    if val in SAVANNA:
+        lab_course3.append(3) 
+    if val in POLITICAL:
+        lab_course3.append(4)
+    if val in OUTSIDE:
+        lab_course3.append(5) 
+
+lab_course3 = np.array(lab_course3)
+
+gump_incs3 = np.where(lab_course3 == 0)
+school_indcs3 = np.where(lab_course3 == 1)
+military_inds3 = np.where(lab_course3 == 2)
+savanna_incs3 = np.where(lab_course3 == 3)
+political_indcs3 = np.where(lab_course3 == 4)
+outisde_inds3 = np.where(lab_course3 == 5)
+
+gump_pred3 = pred3[gump_incs3]  
+school_pred3 = pred3[school_indcs3] 
+military_pred3 = pred3[military_inds3]
+savanna_pred3 = pred3[savanna_incs3]
+political_pred3 = pred3[political_indcs3]
+outisde_pred3 = pred3[outisde_inds3]
+combined3 = [gump_pred3, school_pred3, military_pred3, savanna_pred3, political_pred3, outisde_pred3]
+
+analysis_fact3 = analyze_mult_factors(pred3, combined3, 6) #51% overall accuracy 
+performance3 = get_max(analysis_fact3, pred3.shape[0]) #Military and political scenes seem correlated
+                                                       #Gump and outside scenes seem correlated 
+
+#Since Military and Political Scenes seem correlated lets see how we do combining them 
+all_ids_4 = GUMP_SCENES_IDS + SCHOOL + MILITARY_IDS +  POLITICAL + SAVANNA  
+samp_4 = sn.all_factors_indcs(all_ids_4, factor_grid)
+lab4, times4 = sn.make_label_by_time(samp_4)
+subarr4 = combined_runs[:,times4]
+
+kmeans = KMeans(n_clusters=4, n_init=10)
+pred4 = kmeans.fit_predict(subarr4.T)
+
+lab_course4 = []
+for val in lab4:
+    if val in GUMP_SCENES_IDS:
+        lab_course4.append(0)
+    if val in SCHOOL:
+        lab_course4.append(1)
+    if val in MILITARY_IDS or val in POLITICAL:
+        lab_course4.append(2)
+    if val in SAVANNA:
+        lab_course4.append(3) 
+
+lab_course4 = np.array(lab_course4)
+
+gump_incs4 = np.where(lab_course4 == 0)
+school_indcs4 = np.where(lab_course4 == 1)
+military_pol_inds4 = np.where(lab_course4 == 2)
+savanna_incs4 = np.where(lab_course4 == 3)
+
+gump_pred4 = pred4[gump_incs4]  
+school_pred4 = pred4[school_indcs4] 
+military_pol_pred4 = pred4[military_pol_inds4]
+savanna_pred4 = pred4[savanna_incs4]
+combined4 = [gump_pred4, school_pred4, military_pol_pred4, savanna_pred4]
+
+analysis_fact4 = analyze_mult_factors(pred4, combined4, 4)
+performance4 = get_max(analysis_fact4, pred4.shape[0]) #62% overall accuracy 
 
