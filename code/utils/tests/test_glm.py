@@ -9,6 +9,8 @@ from numpy.testing import assert_almost_equal, assert_array_equal
 
 __file__ = os.getcwd()
 
+convolved = np.loadtxt("ds114_sub009_t2r1_conv.txt")[4:]
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"../utils/")))
 from glm import *
 
@@ -19,7 +21,6 @@ T = 169
 arr_2d = np.random.normal(size=(V, T))
 expected_stds = np.std(arr_2d, axis=0)
 data = np.reshape(arr_2d, shape_3d + (T,))
-convolved = np.loadtxt("ds114_sub009_t2r1_conv.txt")[4:]
 
 
 def test_glm():
