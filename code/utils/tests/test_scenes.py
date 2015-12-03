@@ -7,9 +7,11 @@ import os
 import six
 from numpy.testing import assert_almost_equal, assert_array_equal
 
-uppath = lambda _path, n: os.sep.join(_path.split(os.sep)[:-n])
+#uppath = lambda _path, n: os.sep.join(_path.split(os.sep)[:-n])
 __file__ = os.getcwd()
-sys.path.append(uppath(__file__, 1))
+
+#sys.path.append(uppath(__file__, 1))
+sys.path.append(os.path.dirname(__file__))
 from scenes import *
 
 ## Create the test image data
