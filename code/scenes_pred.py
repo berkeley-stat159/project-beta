@@ -97,7 +97,8 @@ OUTSIDE = [27, 73, 58, 53, 59]
 CHURCH = [20]
 DEATH = [16, 48]
 BARBER = [8]
-############K-means Analysis ##################################
+
+############ K-means Analysis #################################
 
 #Comparison between Military and Gump Scenes 
 all_ids_1 = GUMP_SCENES_IDS + MILITARY_IDS 
@@ -162,9 +163,9 @@ gump_incs = np.where(lab_course2 == 0)
 school_indcs = np.where(lab_course2 == 1)
 military_inds = np.where(lab_course2 == 2)
 
-gump_pred = pred2[gump_incs] #77.3% accuracy using function below 
-school_pred = pred2[school_indcs] #77.4% accuracy 
-military_pred = pred2[military_inds] #75% accuracy 
+gump_pred = pred2[gump_incs] #77.3% using function below 
+school_pred = pred2[school_indcs] #77.4%  
+military_pred = pred2[military_inds] #75%  
 
 #Looking at all categories 
 all_ids_3 = GUMP_SCENES_IDS + SCHOOL + MILITARY_IDS + SAVANNA + POLITICAL + OUTSIDE
@@ -208,7 +209,7 @@ political_pred3 = pred3[political_indcs3]
 outisde_pred3 = pred3[outisde_inds3]
 combined3 = [gump_pred3, school_pred3, military_pred3, savanna_pred3, political_pred3, outisde_pred3]
 
-analysis_fact3 = analyze_mult_factors(pred3, combined3, 6) #51% overall accuracy 
+analysis_fact3 = analyze_mult_factors(pred3, combined3, 6) #51% overall  
 performance3 = get_max(analysis_fact3, pred3.shape[0]) #Military and political scenes seem correlated
                                                        #Gump and outside scenes seem correlated 
 
@@ -246,5 +247,8 @@ savanna_pred4 = pred4[savanna_incs4]
 combined4 = [gump_pred4, school_pred4, military_pol_pred4, savanna_pred4]
 
 analysis_fact4 = analyze_mult_factors(pred4, combined4, 4)
-performance4 = get_max(analysis_fact4, pred4.shape[0]) #62% overall accuracy 
+performance4 = get_max(analysis_fact4, pred4.shape[0]) #62% overall  
+
+#smooth spatially - voxels next to each other are not iid - some filter (gaussian best) to fix this 
+
 
