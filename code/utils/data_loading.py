@@ -48,8 +48,8 @@ def vox_by_time(data):
     reshaped : 2-D array
         Reshaped array consisting of voxels by time 
     """
-    n_voxels = np.prod(data.shape[:1])
-    return np.reshaped(data, (n_voxels, data.shape[-1]))
+    n_voxels = np.prod(data.shape[:3])
+    return np.reshape(data, (n_voxels, data.shape[-1]))
 
 def vol_std(data):
     """ Return standard deviation across voxels for 4D array `data`

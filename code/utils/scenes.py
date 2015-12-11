@@ -133,6 +133,8 @@ def gen_sample_by_factors(factor_lst, factor_grid, randomize, prop=.5, min_time=
         At index i, this corresponds to the scene that occured at scan time (sec)
     randomize: boolean 
         'True' randomizes the assigment to training and test sets  
+    prop: float
+        The proportion of indcs to allocate to training sample 
     min_time: int
         Minimum index (scan time) to look at in 'factor_grid' 
     max_time: int   
