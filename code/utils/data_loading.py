@@ -144,14 +144,13 @@ def remove_outliers_iqr(arr, axis, iqr_scale=1.5):
     indcs, lo_hi_thresh = iqr_outliers(axis_data, iqr_scale)
     return (indcs, lo_hi_thresh) 
 
-#project alphas's 
 def smooth_gauss(data_4d, fwhm, time):
 
     """
-    Return a 'smoothed' version of data_4d.
+    Smooth the data using a Gaussian fliter
     Parameters
     ----------
-    data_4d : numpy array of 4 dimensions 
+    data_4d : 4d numpy array  
         The image data of one subject
     fwhm : width of normal gaussian curve
     time : time slice (4th dimension)
