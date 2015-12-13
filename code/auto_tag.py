@@ -1,9 +1,12 @@
+""" The scripts tag words in the movie description with wordNet labels. 
+The wordNet labels are saved as a json dictionary. 
+Tests are not necessary because most of the functions are loading
+from the nltk package, which is already well tested. 
+"""
+
 import nltk
 import json
 import sys
-
-
-
 
 affordance_dict_fpath = sys.argv[1] #loadin the json file with all unique words as keys
 
