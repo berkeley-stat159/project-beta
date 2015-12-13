@@ -6,6 +6,7 @@ from numpy.testing import assert_almost_equal, assert_array_equal
 
 __file__ = os.getcwd()
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"../utils/")))
+
 from vmt_utils import *
 
 #create a matrix and a vector
@@ -13,9 +14,7 @@ mtx = np.arange(9).reshape((3,3))
 d = np.arange(3)
 
 #create a dumpy feature space
-stim_fs_fpath = '../../../description_pp/design_matrix_1.npy'
-stim_fs_file = np.load(stim_fs_fpath)
-stim_fs_est = stim_fs_file[:20,:]
+stim_fs_est = np.zeros((20, 1155))
 tmp = add_lags(stim_fs_est, [2,3,4])
 
 
