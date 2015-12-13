@@ -2,10 +2,9 @@
 """ The following script will analyze the scenes data. Specifically, it will:
 
 * Try to find patterns between neural responses and scenes   
-* Use kmeans and KNN to link these together
+* Use SVM and KNN to link these together
 * Predict scenes based on BOLD activity 
-* Test the performance of the classification through cross-validation  
-
+  
 """ 
 #Import Standard Libraries
 from __future__ import print_function, division
@@ -27,12 +26,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.cluster import KMeans
 from sklearn.metrics import accuracy_score
                                             
-#All file strings corresponding to BOLD data for subject 4 
-files = ['../data/task001_run001.bold_dico.nii', '../data/task001_run002.bold_dico.nii', 
-         '../data/task001_run003.bold_dico.nii', '../data/task001_run004.bold_dico.nii', 
-         '../data/task001_run005.bold_dico.nii', '../data/task001_run006.bold_dico.nii',
-         '../data/task001_run007.bold_dico.nii', '../data/task001_run008.bold_dico.nii']
-
 #Load in filtered data 
 masked_path = "../data/masked_data_9k.npy"
 combined_runs = np.load(masked_path)
