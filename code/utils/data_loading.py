@@ -2,6 +2,9 @@
 from __future__ import print_function
 import nibabel as nib
 import numpy as np
+import scipy
+import scipy.ndimage
+from scipy.ndimage.filters import gaussian_filter
 
 def load_data(filename):
     """ Return fMRI data corresponding to the given filename and prints
@@ -48,8 +51,8 @@ def vox_by_time(data):
     reshaped : 2-D array
         Reshaped array consisting of voxels by time 
     """
-    n_voxels = np.prod(data.shape[:1])
-    return np.reshaped(data, (n_voxels, data.shape[-1]))
+    n_voxels = np.prod(data.shape[:3])
+    return np.reshape(data, (n_voxels, data.shape[-1]))
 
 def vol_std(data):
     """ Return standard deviation across voxels for 4D array `data`
@@ -140,3 +143,23 @@ def remove_outliers_iqr(arr, axis, iqr_scale=1.5):
     axis_data = get_axis_data(data, axis)
     indcs, lo_hi_thresh = iqr_outliers(axis_data, iqr_scale)
     return (indcs, lo_hi_thresh) 
+
+#project alphas's 
+def smooth_gauss(data_4d, fwhm, time):
+
+    """
+    Return a 'smoothed' version of data_4d.
+    Parameters
+    ----------
+    data_4d : numpy array of 4 dimensions 
+        The image data of one subject
+    fwhm : width of normal gaussian curve
+    time : time slice (4th dimension)
+    Returns
+    -------
+    smooth_results : array of the smoothed data from data_4d (same dimensions but super-voxels will be
+                        indicated by the same number) in time slice indicated.
+    """
+    time_slice = data_4d[..., time]
+    smooth_results = scipy.ndimage.filters.gaussian_filter(time_slice, fwhm)
+    return smooth_results
