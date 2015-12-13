@@ -15,7 +15,7 @@ coverage:
 	nosetests code/utils data --with-coverage --cover-package=data  --cover-package=utils
 
 test:
-	cd code/utils/tests && nosetests *.py
+	cd code/utils/tests && nosetests *.py 
 	cd data/tests && nosetests *.py
 
 verbose:
