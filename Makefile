@@ -1,4 +1,4 @@
-.PHONY: all clean coverage test
+.PHONY: all clean coverage
 
 all: clean
 
@@ -15,7 +15,8 @@ coverage:
 	nosetests code/utils data --with-coverage --cover-package=data  --cover-package=utils
 
 test:
-	nosetests code/utils data
+	cd code/utils/tests && nosetests *.py
+	cd data/tests && nosetests *.py
 
 verbose:
 	nosetests -v code/utils data
