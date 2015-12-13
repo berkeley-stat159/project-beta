@@ -7,7 +7,13 @@ import scipy.special as scsp
 from sklearn import preprocessing as pp
 import matplotlib.pyplot as plt
 import time
+import pybrain.datasets as pbds
+import pybrain.tools.shortcuts as pbts
+import pybrain.supervised.trainers as pbsvt
+
 # from sklearn.neural_network import MLPClassifier
+
+# load words
 
 words = np.array(np.load("../description_pp/word_list.p"))
 wordlist = words.tolist()
@@ -18,17 +24,22 @@ print wordlist.index(u'girl.n.01')
 print wordlist.index(u'kiss.n.01')
 
 
+# load data
 
-xtrain = pp.normalize(np.load("../data/BOLD_est_masked34589.npy"))
-xvar = np.var(xtrain, axis=1)
-varmask = np.where(xvar > .00012)
-print np.max(xvar[varmask]), np.min(xvar[varmask])
-xtrain = xtrain[varmask].T
-print np.max(xtrain), np.min(xtrain)
+x = pp.normalize(np.transpose(np.load("../data/masked_data_17k.npy")))
+# xvar = np.var(x, axis=1)
+# varmask = np.where(xvar > .00012)
+# print np.max(xvar[varmask]), np.min(xvar[varmask])
+# xtrain = xtrain[varmask].T
+# print np.max(xtrain), np.min(xtrain)
 # print 
 # print ve
 # print np.max(ve), np.min(ve), ve.shape
-xtest = (pp.normalize(np.load("../data/BOLD_val_masked34589.npy"))[varmask]).T
+# xtest = (pp.normalize(np.load("../data/BOLD_val_masked34589.npy"))[varmask]).T
+
+lag = 1
+xtrain = x[lag:lag+3000]
+xtest = x[3000:]
 
 def nonzero(x, y):
 	ind = [i for i in range(len(y)) if y[i].any()]
@@ -39,7 +50,7 @@ ytrain = y[:3000]
 ytest = y[3000:3000+xtest.shape[0]]
 
 xtrain, ytrain = nonzero(xtrain, ytrain)
-xtest, ytest = nonzero(xtrain, ytrain)
+xtest, ytest = nonzero(xtest, ytest)
 
 sums = np.sum(ytrain, axis = 0).tolist()
 mostcommonwords = [j[0] for j in sorted(enumerate(sums), key=lambda i: i[1], reverse=True)[:10]]
@@ -236,6 +247,32 @@ def nnwords(indices, xtrain, xtest, ytrain, ytest, wordlist, threshold, e):
 
 	acc = nn.accuracy(ytest, pred)
 	print "FINAL ACC "+str("mostcommon")+": "+str(acc)
+
+def nnreal(indices, x, y, hidden=5000):
+	if indices:
+		x = x[lag:]
+		y = y[:len(x)]
+		x, y = nonzero(x, y)
+
+	numInputFeatures, numOutputFeatures = x.shape[1], y.shape[1]
+	ds = pbds.SupervisedDataset(numInputFeatures, numOutputFeatures)
+	ds.setField('input', x)
+	ds.setField('target', y)
+	dstrain, dstest = ds.splitWithProportion(.93)
+
+	
+	nn = pbts.buildNetwork(numInputFeatures, hidden, numOutputFeatures, bias=True)
+	trainer = pbsvt.BackpropTrainer(nn, dstrain)
+	errors = trainer.trainUntilConvergence()
+
+	for i in dstest
+
+
+nnreal(mostcommonwords, x, y)
+
+
+
+
 
 # words = [u'angry.a.01', u'girl.n.01', u'kiss.n.01', u'jenny.n.01', u'christmas.n.01']
 # words = ytrain[:, words]
