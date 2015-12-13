@@ -1,28 +1,28 @@
-# # Stats utils
+# Stats utils
 
-# import numpy as np
-# import itertools as itools
-# import copy
-# from scipy.interpolate import interp1d
-# import scipy.stats as _stats
-# from ..utils import wrap,unwrap,as_list
-# import warnings
+import numpy as np
+import itertools as itools
+import copy
+from scipy.interpolate import interp1d
+import scipy.stats as _stats
+from ..utils import wrap,unwrap,as_list
+import warnings
 
-# def column_corr(A,B,dof=0):
-#     """Efficiently compute correlations between columns of two matrices
+def column_corr(A,B,dof=0):
+    """Efficiently compute correlations between columns of two matrices
     
-#     Does NOT compute full correlation matrix btw `A` and `B`; returns a 
-#     vector of correlation coefficients. FKA ccMatrix."""
-#     # zs = lambda x: (x-np.nanmean(x,axis=0))/np.nanstd(x,axis=0,ddof=dof)
-#     zs = lambda x: np.true_divide((x-np.nanmean(x,axis=0)), np.nanstd(x,axis=0,ddof=dof))
-#     rTmp = np.nansum(zs(A)*zs(B),axis=0)
-#     n = A.shape[0]
-#     # make sure not to count nans
-#     nNaN = np.sum(np.logical_or(np.isnan(zs(A)),np.isnan(zs(B))),0)
-#     n = n - nNaN
-#     # r = rTmp/n
-#     r = np.true_divide(rTmp, n)
-#     return r
+    Does NOT compute full correlation matrix btw `A` and `B`; returns a 
+    vector of correlation coefficients. FKA ccMatrix."""
+    # zs = lambda x: (x-np.nanmean(x,axis=0))/np.nanstd(x,axis=0,ddof=dof)
+    zs = lambda x: np.true_divide((x-np.nanmean(x,axis=0)), np.nanstd(x,axis=0,ddof=dof))
+    rTmp = np.nansum(zs(A)*zs(B),axis=0)
+    n = A.shape[0]
+    # make sure not to count nans
+    nNaN = np.sum(np.logical_or(np.isnan(zs(A)),np.isnan(zs(B))),0)
+    n = n - nNaN
+    # r = rTmp/n
+    r = np.true_divide(rTmp, n)
+    return r
 
 # def corr_mean(data,*args,**kwargs):
 #     """Take the mean of an array of correlation coefficients, first z-scoring them
@@ -330,15 +330,15 @@
 #     p[np.isnan(p)] = 0
 #     return p
 
-# def pval2r(pval,n,is_two_sided=True,r_res=.001):
+def pval2r(pval,n,is_two_sided=True,r_res=.001):
 
-#     r = 0.;
-#     while True:
-#         r += r_res
-#         ptemp = r2pval(r,n,is_two_sided);
-#         if ptemp <= pval:
-#             break
-#     return r
+    r = 0.;
+    while True:
+        r += r_res
+        ptemp = r2pval(r,n,is_two_sided);
+        if ptemp <= pval:
+            break
+    return r
 
 # def fdr_correct2(pval,thres):
 #     """Find the fdr corrected p-value thresholds

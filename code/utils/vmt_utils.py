@@ -12,7 +12,7 @@ def _svd(M,**kwargs):
     """
     try:
         U,S,Vh = np.linalg.svd(M,**kwargs)
-    except np.linalg.LinAlgError, e:
+    except np.linalg.LinAlgError as e:
         print "NORMAL SVD FAILED, trying more robust dgesvd.."
         from .svd_dgesvd import svd_dgesvd
         U,S,Vh = svd_dgesvd(M,**kwargs)
