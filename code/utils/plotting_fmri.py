@@ -1,22 +1,12 @@
 
 from __future__ import division, print_function, absolute_import
-import data_loading as dl
+import matplotlib.pyplot as plt
 
 """ In this module, we have provided plotting functions to help visulize fMRI data."""
 
 def plot_grayscale(data):
     plt.imshow(data, cmap='gray')
     
-def plot_removed_noise(data, axis, lower=.05, upper=.95):
-    new_data = dl.remove_outliers(data, axis, lower, upper)
-    plot_grayscale(new_data)
-
-#def plot_mask(data):    
-
-#def plot_dev(data, label, ylab, xlab, loc):
-    
-#def plot_rms_diff(data):
-
 def plot_sdevs(sdevs, outliers_sdevs, outlier_interval):
     plt.plot(sdevs, label = 'volume SD values')
     put_o = sdevs[outliers_sdevs]
@@ -38,6 +28,3 @@ def plot_rms(rms, outliers_rms, outlier_interval):
     plt.ylabel('RMS')
     plt.title('RMS Differences')
     plt.legend(loc='upper right')
-
-
-#Time-series plots 

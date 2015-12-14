@@ -34,8 +34,8 @@ data2d = data.reshape((data.shape[0]*data.shape[1]*data.shape[2],data.shape[3]))
 
 
 # In[28]:
-
-plt.plot(data2d[87440,:])
+# plt.figure(1)
+# plt.plot(data2d[87440,:])
 
 
 # In[29]:
@@ -55,7 +55,7 @@ S_original = SpectralAnalyzer(T)
 
 # In[32]:
 
-fig01 = plt.figure()
+fig01 = plt.figure(2)
 ax01 = fig01.add_subplot(1, 1, 1)
 # ax01.plot(S_original.psd[0],
 #           S_original.psd[1][9],
@@ -86,7 +86,7 @@ plt.savefig("../figure/FFT.jpg")
 F = FilterAnalyzer(T, ub=0.15, lb=0.02)
 
 # Initialize a figure to display the results:
-fig02 = plt.figure()
+fig02 = plt.figure(3)
 ax02 = fig02.add_subplot(1, 1, 1)
 
 # Plot the original, unfiltered data:
@@ -127,7 +127,7 @@ v = np.var(fdata,axis=1)
 
 
 # In[39]:
-
+plt.figure(4)
 plt.hist(v)
 plt.xlabel("voxels")
 plt.ylabel("variance")
