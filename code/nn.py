@@ -7,7 +7,13 @@ import scipy.special as scsp
 from sklearn import preprocessing as pp
 import matplotlib.pyplot as plt
 import time
+import pybrain.datasets as pbds
+import pybrain.tools.shortcuts as pbts
+import pybrain.supervised.trainers as pbsvt
+
 # from sklearn.neural_network import MLPClassifier
+
+# load words
 
 words = np.array(np.load("../description_pp/word_list.p"))
 wordlist = words.tolist()
@@ -18,28 +24,29 @@ print wordlist.index(u'girl.n.01')
 print wordlist.index(u'kiss.n.01')
 
 
+# load data
 
-xtrain = pp.normalize(np.load("../data/BOLD_est_masked34589.npy"))
-xvar = np.var(xtrain, axis=1)
-varmask = np.where(xvar > .00012)
+x = pp.normalize(np.transpose(np.load("../data/filtered_data.npy")))
+xvar = np.var(x, axis=0)
+print np.max(xvar), np.min(xvar)
+varmask = np.where(xvar > .000000001)[0]
 print np.max(xvar[varmask]), np.min(xvar[varmask])
-xtrain = xtrain[varmask].T
-print np.max(xtrain), np.min(xtrain)
-# print 
-# print ve
-# print np.max(ve), np.min(ve), ve.shape
-xtest = (pp.normalize(np.load("../data/BOLD_val_masked34589.npy"))[varmask]).T
+x = x.T[varmask].T
+
+lag = 1
+xtrain = x[lag:lag+3000]
+xtest = x[3000:]
 
 def nonzero(x, y):
 	ind = [i for i in range(len(y)) if y[i].any()]
 	return x[ind], y[ind]
 
-y = np.load("../description_pp/design_matrix_1.npy")
+y = np.load("../description_pp/design_matrix_1.npy")[1:]
 ytrain = y[:3000]
 ytest = y[3000:3000+xtest.shape[0]]
 
 xtrain, ytrain = nonzero(xtrain, ytrain)
-xtest, ytest = nonzero(xtrain, ytrain)
+xtest, ytest = nonzero(xtest, ytest)
 
 sums = np.sum(ytrain, axis = 0).tolist()
 mostcommonwords = [j[0] for j in sorted(enumerate(sums), key=lambda i: i[1], reverse=True)[:10]]
@@ -74,7 +81,7 @@ class NeuralNetworkNaive():
 		# print X.shape, self.w1.shape
 
 		self.z2 = np.dot(X, self.w1) + self.b1
-		self.a2 = self.tanh(self.z2)
+		self.a2 = self.relu(self.z2)
 		
 		self.z3 = np.dot(self.a2, self.w2) + self.b2
 		self.a3 = self.sigmoid(self.z3)
@@ -154,6 +161,15 @@ class NeuralNetworkNaive():
 	def d_tanh(self, z):
 		return 1 - self.tanh(z)**2
 
+	def relu(self, z):
+		def r(z):
+			return max(0, z)
+		return np.vectorize(r)(z)
+
+	def d_relu(self, z):
+		return self.sigmoid(z)
+
+
 	######### COST FNS ############
 
 	def accuracy(self, y, h):
@@ -186,7 +202,7 @@ class NeuralNetworkNaive():
 		self.d3 = -(y-self.a3)
 		self.djdw2 = np.dot(np.transpose(self.a2), self.d3)
 
-		self.d2 = np.dot(self.d3, np.transpose(self.w2) * self.d_tanh(self.z2))
+		self.d2 = np.dot(self.d3, np.transpose(self.w2) * self.d_relu(self.z2))
 		self.djdw1 = np.dot(np.transpose(x), self.d2)
 
 	def plot(self, description):
@@ -226,7 +242,7 @@ def nnwords(indices, xtrain, xtest, ytrain, ytest, wordlist, threshold, e):
 		xtrain, ytrain = nonzero(xtrain, ytrain)
 		xtest, ytest = nonzero(xtest, ytest)
 
-	nn = NeuralNetworkNaive(xtrain.shape[1], 5000, ytrain.shape[1])
+	nn = NeuralNetworkNaive(xtrain.shape[1], 10000, ytrain.shape[1])
 	nn.train(xtrain, ytrain, threshold, e)
 	nn.plot("allwords")
 
@@ -236,6 +252,39 @@ def nnwords(indices, xtrain, xtest, ytrain, ytest, wordlist, threshold, e):
 
 	acc = nn.accuracy(ytest, pred)
 	print "FINAL ACC "+str("mostcommon")+": "+str(acc)
+
+def nnreal(x, y, hidden=5000, threshold=.1, numwords=10):
+	sums = np.sum(y, axis = 0).tolist()
+	mostcommonwords = [j[0] for j in sorted(enumerate(sums), key=lambda i: i[1], reverse=True)[:numwords]]
+
+	# x = x[lag:]
+	# y = y[:len(x)]
+	x, y = nonzero(x, y)
+
+	numInputFeatures, numOutputFeatures = x.shape[1], y.shape[1]
+	ds = pbds.SupervisedDataSet(numInputFeatures, numOutputFeatures)
+	ds.setField('input', x)
+	ds.setField('target', y)
+	dstrain, dstest = ds.splitWithProportion(.93)
+
+	nn = pbts.buildNetwork(numInputFeatures, hidden, numOutputFeatures, bias=True)
+	trainer = pbsvt.BackpropTrainer(nn, dstrain)
+	errors = []
+	e = 1
+	i = 0
+	while e > .1 and i < 50:
+		e = trainer.train()
+		print e
+		i += 1
+
+	# for i in dstest
+
+
+# nnreal(mostcommonwords, x, y)
+
+
+
+
 
 # words = [u'angry.a.01', u'girl.n.01', u'kiss.n.01', u'jenny.n.01', u'christmas.n.01']
 # words = ytrain[:, words]
