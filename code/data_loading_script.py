@@ -11,40 +11,20 @@
         'save_files.py'  
 """   
 
-import sys
-import os
-
-#Add path to modules in 'utils' folder
-start_path = os.getcwd()
-os.chdir('..')
-curr_path = os.path.abspath(os.getcwd())
-sys.path.append(curr_path)
-
-#Add path to data files
-os.chdir('..') 
-os.chdir('..')
-os.chdir('data')
-data_path = os.path.abspath(os.getcwd())
-sys.path.append(data_path)
-os.chdir('..')
-os.chdir('code/scripts')
-
-assert start_path == os.getcwd()
-
 #Import standard libraries
 import numpy as np
 import nibabel as nib
 import matplotlib.pyplot as plt
-import data_loading as dl
-import plotting_fmri as plt_fmri
-import save_files as sv
+import utils.data_loading as dl
+import utils.plotting_fmri as plt_fmri
+import utils.save_files as sv
 
-#All file strings corresponding to BOLD data for subject 4 
+#All file strings corresponding to BOLD data for subject 12 
 
-files = ['task001_run001.bold_dico.nii', 'task001_run002.bold_dico.nii', 
-         'task001_run003.bold_dico.nii', 'task001_run004.bold_dico.nii', 
-         'task001_run005.bold_dico.nii', 'task001_run006.bold_dico.nii',
-         'task001_run007.bold_dico.nii', 'task001_run008.bold_dico.nii']
+files = ['../data/task001_run001.bold_dico.nii', '../data/task001_run002.bold_dico.nii', 
+         '../data/task001_run003.bold_dico.nii', '../data/task001_run004.bold_dico.nii', 
+         '../data/task001_run005.bold_dico.nii', '../data/task001_run006.bold_dico.nii',
+         '../data/task001_run007.bold_dico.nii', '../data/task001_run008.bold_dico.nii']
 
 #
 # Load the images as an image object
@@ -75,11 +55,13 @@ for data in all_data:
     all_iqr_outliers.append(outlier)
     all_bands_outliers.append(band)
 
-sv.save_all(all_sdevs, fileroot='sdevs', typ='data', folder_root='SDEVS', ext='txt')
+#Comment the lines below if you would like to save this data 
 
-sv.save_all(all_iqr_outliers, fileroot='out_iqr', typ = 'data', folder_root='OUTLIER_IQRs', ext='txt')
+#sv.save_all(all_sdevs, fileroot='sdevs', typ='data', folder_root='SDEVS', ext='txt')
 
-sv.save_all(all_bands_outliers,fileroot='band',typ='data',folder_root='IQR_BANDS',ext='txt')
+#sv.save_all(all_iqr_outliers, fileroot='out_iqr', typ = 'data', folder_root='OUTLIER_IQRs', ext='txt')
+
+#sv.save_all(all_bands_outliers,fileroot='band',typ='data',folder_root='IQR_BANDS',ext='txt')
 
 #For each run, we have a plot of:
 
@@ -93,7 +75,7 @@ for index, sdevs in enumerate(all_sdevs):
     outlier_sdevs = all_iqr_outliers[index]
     outlier_interval = all_bands_outliers[index]
     plt_fmri.plot_sdevs(sdevs, outlier_sdevs, outlier_interval)
-    sv.save_plt(fileroot='vol_std_plt', index=index, folder_root='VOL_STD_PLTS',ext='png')
+    plt.savefig('../figure/std_plt' + str(index) + '.png')
     plt.close()
 
 #Do the same for the RMS 
@@ -102,7 +84,7 @@ all_outliers_rms = []
 all_bands_rms = []
 for data in all_data:
     rms = dl.vol_rms_diff(data)
-    outliers_rms, rms_interval = dn.iqr_outliers(rms)
+    outliers_rms, rms_interval = dl.iqr_outliers(rms)
     all_rms.append(rms)
     all_outliers_rms.append(outliers_rms)
     all_bands_rms.append(rms_interval)
@@ -111,5 +93,5 @@ for index, rms in enumerate(all_rms):
     outlier_rms = all_outliers_rms[index]
     outlier_interval = all_bands_rms[index]
     plt_fmri.plot_rms(rms, outlier_rms, outlier_interval)
-    sv.save_plt(fileroot='vol_rms_outliers', index=index, folder_root='VOL_RMS_PLTS',ext='png')
+    plt.savefig('../figure/rms_outliers' + str(index) + '.png')
     plt.close()
