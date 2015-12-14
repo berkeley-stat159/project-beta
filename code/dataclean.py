@@ -74,11 +74,11 @@ for w in all_words:
     else:
         word_dict[w] = [get_wn_synsets(w)[0]['synset']]
 
-with open("../description_pp/word2wn.json", 'w') as f:
+with open("../data/word2wn.json", 'w') as f:
     json.dump(word_dict, f) 
 
 
-with open("word2wn.json") as f:
+with open("../data/word2wn.json") as f:
 	translator = json.loads(f.read())
 for w in translator:
 	translator[w] = translator[w][0]
