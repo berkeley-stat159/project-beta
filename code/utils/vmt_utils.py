@@ -38,6 +38,14 @@ def mult_diag(d, mtx, left=True):
     else:
         return d*mtx
 
+def as_list(x):
+    """Assure that a variable that might either be a scalar or a list is a list."""
+    if x is None:
+        return []
+    if not isinstance(x,(list,tuple)):
+        x = [x]
+    return x
+
 
 # def split_data(n_splits,n_tps,is_contiguous=True):
 #   """Splits data of length "n_tps" up in to "n_splits" cross-validation chunks

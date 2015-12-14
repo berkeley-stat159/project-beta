@@ -10,10 +10,11 @@ from scipy.io import loadmat,savemat
 # from .Classes.ROI import ROISet,ROIMask
 # from .Classes.DataSet import fMRI_DataSet 
 # from .Classes.Model import fMRI_Model 
-from .options import config
+# from .options import config
 # from .utils import as_list
 # from .dbwrapper import docdbs
-is_verbose = config.get('general','is_verbose').lower() in ('true','yes','t','y','1') # global pkg verbosity option?
+# is_verbose = config.get('general','is_verbose').lower() in ('true','yes','t','y','1') # global pkg verbosity option?
+is_verbose = True
 
 # add generic load_variable function, agnostic to data type?
 

@@ -1,3 +1,11 @@
+###
+# The code loads words in the audio description and generate design matrix
+# (Time by feature). Entry in position ij indicate whether the word j appears in 
+# time point i.
+###
+
+
+
 # In[108]:
 import json
 import sys
