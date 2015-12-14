@@ -1,11 +1,11 @@
 # Stats utils
 
 import numpy as np
-import itertools as itools
+# import itertools as itools
 import copy
 from scipy.interpolate import interp1d
 import scipy.stats as _stats
-from ..utils import wrap,unwrap,as_list
+# from ..utils import wrap,unwrap,as_list
 import warnings
 
 def column_corr(A,B,dof=0):
