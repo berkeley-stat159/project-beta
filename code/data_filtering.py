@@ -21,8 +21,6 @@ data2d = np.load('masked_data_50k.npy')
 ## warning
 print('Warning!! This scripts take at least 20 minutes to run.')
 
-## plot data
-plt.plot(data2d[7440,:])
 
 ## setting the TR 
 TR = 2
@@ -86,13 +84,12 @@ F.filtered_fourier.data.shape
 
 fdata = F.filtered_fourier.data
 
-fdata.shape
-
 v = np.var(fdata,axis=1)
 
-plt.hist(v)
+plt.figure()
+plt.plot(v)
 plt.xlabel("voxels")
 plt.ylabel("variance")
-plt.title("variance of the voxel activity filtering")
-plt.savefig("../figure/voxel_variance_on_smoothed_data.jpg")
+plt.title("variance of the filtered voxel activity")
+plt.savefig("../figure/voxel_variance_on_filtered_data.jpg")
 print('voxel_variance_on_smoothed_data.jpg')

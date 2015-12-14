@@ -35,7 +35,7 @@ data_normalized = stats.zscore(data,axis=1,ddof=1)
 
 
 # In[64]:
-
+plt.figure(1)
 plt.plot(data_normalized[16188,:])
 plt.xlabel('TRs')
 plt.ylabel('normalized voxel repsonse')
@@ -44,15 +44,15 @@ plt.savefig('../figure/normalized_data.jpg')
 
 # In[10]:
 
-vvar = np.var(data,axis=1)
+# vvar = np.var(data_normalized,axis=1)
 
 
-# In[11]:
-
-plt.plot(vvar)
-plt.ylabel('variance')
-plt.xlabel('voxels')
-plt.savefig('../figure/data_variance_normalization.jpg')
+# # In[11]:
+# plt.figure(2)
+# plt.plot(vvar)
+# plt.ylabel('variance')
+# plt.xlabel('voxels')
+# plt.savefig('../figure/data_variance_normalization.jpg')
 
 
 # ## Get feature space
@@ -75,6 +75,8 @@ stim_fs_file.shape
 # In[30]:
 
 e, v = 3000, 543
+# e, v = 500, 143
+
 
 
 # In[31]:
@@ -145,15 +147,13 @@ print data_val_masked.shape
 # ## Run regression
 
 # In[39]:
-
-reload(vmt_utils)
+# 
+# reload(vmt_utils)
 
 
 # In[40]:
 
 alpha = np.logspace(0,6,10)
-alpha
-
 
 # In[41]:
 
@@ -202,7 +202,7 @@ weights = out['weights']
 
 
 # In[56]:
-
+plt.figure(3)
 plt.hist(np.nan_to_num(cc),21)
 plt.ylabel('number of voxels')
 plt.xlabel('correlation coefficients')
@@ -224,7 +224,7 @@ voxel_idx
 # In[69]:
 
 idxx = [13,1780,1014,15500] # hand picked voxels
-plt.figure(figsize=(5,10))
+plt.figure(4,figsize=(8,16))
 for n in range(4):
     i = idxx[n]
     pred_activity = vfs.dot(weights[:,i])
