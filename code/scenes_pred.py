@@ -207,7 +207,7 @@ categories = ['gump', 'school', 'military', 'savanna', 'political',
 
 categories_per = []
 for index, name in enumerate(categories):
-    name2 = name + ': ' + '' + str(round(perform_by_cat[index], 3)) + '%'
+    name2 = name + ': ' + '' + str(round(perform_by_cat[index], 3) * 100) + '%'
     categories_per.append(name2)
 
 pie(relative_weights, labels=categories_per,autopct='%1.1f%%')
