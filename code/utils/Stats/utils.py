@@ -5,7 +5,8 @@ import numpy as np
 import copy
 from scipy.interpolate import interp1d
 import scipy.stats as _stats
-# from ..utils import wrap,unwrap,as_list
+from ..vmt_utils import as_list
+# from ..vmt_utils import wrap,unwrap
 import warnings
 
 def column_corr(A,B,dof=0):
@@ -179,14 +180,14 @@ def column_corr(A,B,dof=0):
 #     return t, df, p 
 
 
-# def t2pval(t,dof,is_two_sided=False):
-#     """Convert t value to p value give dof"""
-#     if is_two_sided:
-#         t=abs(t); # use |t| for two sided P-value
-#         p=2*(1-_stats.t.cdf(t,dof));
-#     else:
-#         p=2*(1-_stats.t.cdf(t,dof))/2; # divde by two for one-tailed test
-#     return p
+def t2pval(t,dof,is_two_sided=False):
+    """Convert t value to p value give dof"""
+    if is_two_sided:
+        t=abs(t); # use |t| for two sided P-value
+        p=2*(1-_stats.t.cdf(t,dof));
+    else:
+        p=2*(1-_stats.t.cdf(t,dof))/2; # divde by two for one-tailed test
+    return p
 
 
 # def distr2thr(dst,p_lev=.001,thr_start=0,thr_incr=.001,is_two_sided=True):
@@ -308,27 +309,27 @@ def column_corr(A,B,dof=0):
 #                 x[iI] = x[iI-1] + 10^(np.log10(np.abs(x[iI-1])))
 #     return x
 
-# def r2pval(r,n,is_two_sided=True):
-#     """Convert r values to p values by standard t distribution assumption.
+def r2pval(r,n,is_two_sided=True):
+    """Convert r values to p values by standard t distribution assumption.
 
-#     Parameters
-#     ----------
+    Parameters
+    ----------
 
-#     """
-#     r = np.array(as_list(r))
-#     if n < 3:
-#         raise Exception('n < 3');
-#     r[r==1.] = np.nan
-#     t=np.sqrt(n-2)*r/(np.sqrt(1-r*r));  # this is t with n-2 degrees of freedom
-#     p = t2pval(t,n-2)
-#     # if is_two_sided:
-#     #     t=abs(t); # use |t| for two sided P-value
-#     #     p=2*(1-_stats.t.cdf(t,n-2));
-#     # else:
-#     #     p=2*(1-_stats.t.cdf(t,n-2))/2; # divde by two for one-tailed test
-#     # Slightly sketch - could turn errors into highly unlikely (p=0) values...
-#     p[np.isnan(p)] = 0
-#     return p
+    """
+    r = np.array(as_list(r))
+    if n < 3:
+        raise Exception('n < 3');
+    r[r==1.] = np.nan
+    t=np.sqrt(n-2)*r/(np.sqrt(1-r*r));  # this is t with n-2 degrees of freedom
+    p = t2pval(t,n-2)
+    # if is_two_sided:
+    #     t=abs(t); # use |t| for two sided P-value
+    #     p=2*(1-_stats.t.cdf(t,n-2));
+    # else:
+    #     p=2*(1-_stats.t.cdf(t,n-2))/2; # divde by two for one-tailed test
+    # Slightly sketch - could turn errors into highly unlikely (p=0) values...
+    p[np.isnan(p)] = 0
+    return p
 
 def pval2r(pval,n,is_two_sided=True,r_res=.001):
 
