@@ -37,7 +37,9 @@ data_normalized = stats.zscore(data,axis=1,ddof=1)
 # In[64]:
 
 plt.plot(data_normalized[16188,:])
-plt.savefig('../figure/normailzed_data.jpg')
+plt.xlabel('TRs')
+plt.ylabel('normalized voxel repsonse')
+plt.savefig('../figure/normalized_data.jpg')
 
 
 # In[10]:
@@ -48,6 +50,8 @@ vvar = np.var(data,axis=1)
 # In[11]:
 
 plt.plot(vvar)
+plt.ylabel('variance')
+plt.xlabel('voxels')
 plt.savefig('../figure/data_variance_normalization.jpg')
 
 
@@ -200,6 +204,8 @@ weights = out['weights']
 # In[56]:
 
 plt.hist(np.nan_to_num(cc),21)
+plt.ylabel('number of voxels')
+plt.xlabel('correlation coefficients')
 plt.title('correlation coefficient histogram')
 plt.savefig('../figure/correlation_coefficient_histogram.jpg')
 
@@ -231,7 +237,7 @@ for n in range(4):
     plt.legend([l1, l2], ['data','prediction'],loc=3)
     
 plt.tight_layout()
-plt.savefig('../ridge_prediciton_resutls.jpg')
+plt.savefig('../figure/ridge_prediction_results.jpg')
 
 
 # In[76]:
