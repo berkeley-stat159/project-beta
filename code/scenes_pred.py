@@ -2,11 +2,10 @@
 """ The following script will analyze the scenes data. Specifically, it will:
 
 * Try to find patterns between neural responses and scenes   
-* Use kmeans and KNN to link these together
+* Use SVM and KNN to link these together
 * Predict scenes based on BOLD activity 
-* Test the performance of the classification through cross-validation  
-
-""" 
+  
+"""  
 #Import Standard Libraries
 from __future__ import print_function, division
 import numpy as np
@@ -14,6 +13,7 @@ import pandas as pd
 import nibabel as nib
 import matplotlib.pyplot as plt
 import itertools
+from pylab import *
 
 #Local Modules 
 import utils.data_loading as dl
@@ -21,53 +21,32 @@ import utils.save_files as sv
 import utils.scenes as sn
 
 #Clustering Libraries 
+from sklearn import preprocessing as pp 
 from sklearn.decomposition import PCA
 from sklearn import svm
-from sklearn.neighbors import KNeighborsClassifier as KNN 
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.cluster import KMeans
+from sklearn.metrics import accuracy_score
+from sklearn.grid_search import GridSearchCV
+from sklearn.metrics import classification_report
+from sklearn.svm import SVC
                                             
-#All file strings corresponding to BOLD data for subject 4 
-files = ['../data/task001_run001.bold_dico.nii', '../data/task001_run002.bold_dico.nii', 
-         '../data/task001_run003.bold_dico.nii', '../data/task001_run004.bold_dico.nii', 
-         '../data/task001_run005.bold_dico.nii', '../data/task001_run006.bold_dico.nii',
-         '../data/task001_run007.bold_dico.nii', '../data/task001_run008.bold_dico.nii']
+#Load in filtered data and normalize 
+masked_path = "../data/filtered_data.npy"
+combined_runs = pp.normalize(np.transpose(np.load("../data/filtered_data.npy")))
 
-#Use only 6810 of the voxels (choose most variance-stable voxels for further analysis)
-SUBSET_VOXELS_PATH = '../brain_mask/mask6810.npy'
-mask = np.load(SUBSET_VOXELS_PATH) #mask 
-VOXEL_INDCS = np.where(mask == True)[0]
+#Too many predictors (55k) - filter to around 1500 predictors
+xvar = np.var(combined_runs, axis=0)
+varmask = np.where(xvar > .0000000015)[0]
+combined_runs = combined_runs.T[varmask] #1584 voxels 
 
-unraveled = []
-for one_d_pos in VOXEL_INDCS:
-    three_d_pos = np.unravel_index(one_d_pos, (160, 160, 36))
-    unraveled.append(three_d_pos)
-unraveled = np.array(unraveled)
-
-first_comp = unraveled[:,0]
-sec_comp = unraveled[:,1]
-third_comp = unraveled[:,2]
-
-#Load in data 
-all_data = []
-for index, filename in enumerate(files):
-    new_data = dl.load_data(filename) #load_data function drops first 4 for us
-    new_data = new_data[first_comp, sec_comp, third_comp, :] #vox by time array 2d
-    num_vols = new_data.shape[-1]
-    if index != 0 and index != 7:
-        new_num_vols = num_vols - 4   
-        new_data = new_data[:,:new_num_vols] #Drop last 4 volumes for middle runs    
-    all_data.append(new_data)
-
+#Load in scenes data 
 scenes_path = '../data/scene_times_nums.csv'
 scenes = pd.read_csv(scenes_path, header = None) 
 scenes = scenes.values #Now just a numpy array
 
-combined_runs = np.concatenate(all_data, axis = 1) 
-combined_runs = combined_runs[:,9:] #First 17 seconds are credits/no scene id so drop
-all_data = [] #Dont need to store this anymore
-
 TR = 2
-NUM_VOLUMES = combined_runs.shape[-1] #3459 
+NUM_VOLUMES = combined_runs.shape[-1] #3543 
 ONSET_TIMES = scenes[:,0] 
 ONSET_TIMES_NORMED = ONSET_TIMES - 17 #First recorded scene occurs at t = 17 sec 
 DURATION = scenes[:,1] 
@@ -96,159 +75,142 @@ POLITICAL = [86, 85, 2, 87, 84]
 OUTSIDE = [27, 73, 58, 53, 59]
 CHURCH = [20]
 DEATH = [16, 48]
-BARBER = [8]
 
-############ K-means Analysis #################################
+############ SVM and KNN Analysis #################################
 
 #Comparison between Military and Gump Scenes 
+
+#Set up training and testing samples and data 
 all_ids_1 = GUMP_SCENES_IDS + MILITARY_IDS 
-samp_1 = sn.all_factors_indcs(all_ids_1, factor_grid)
-train_labs1, train_times1 = sn.make_label_by_time(samp_1)
-milt_subarr = combined_runs[:,train_times1]
+sample1, missing_facts1 = sn.gen_sample_by_factors(all_ids_1, factor_grid, True, prop=.9)
+train_samp1 = sn.get_training_samples(sample1)
+test_samp1 = sn.get_tst_samples(sample1)
 
-kmeans = KMeans(n_clusters=2, n_init=10)
-pred1 = kmeans.fit_predict(milt_subarr.T)
+train1_labs, train1_times = sn.make_label_by_time(train_samp1)
+test1_labs, test1_times = sn.make_label_by_time(test_samp1)
 
-#Check accuracy 
-#Make a vector that is 1 for Gump Scenes and 0 otherwise 
-on_off_1 = sn.on_off_course(GUMP_SCENES_IDS, train_labs1)
-num = sn.analyze_performance(pred1, on_off_1)
-accuracy1 = max(num, 1 - num)  #88% accuracy 
+on_off1_train = sn.on_off_course(GUMP_SCENES_IDS, train1_labs)
+on_off1_test = sn.on_off_course(GUMP_SCENES_IDS, test1_labs)
 
-#Comparison between Gump, School, Political, Military, Outside Scenes
-all_ids_2 = GUMP_SCENES_IDS + SCHOOL + MILITARY_IDS 
-samp_2 = sn.all_factors_indcs(all_ids_2, factor_grid)
-lab2, times2 = sn.make_label_by_time(samp_2)
-subarr2 = combined_runs[:,times2]
+subarr1_train = combined_runs[:,train1_times].T #rows correspond to images, colums to voxels 
+subarr1_test = combined_runs[:,test1_times].T #data we feed into our classifier 
 
-kmeans = KMeans(n_clusters=3, n_init=10)
-pred2 = kmeans.fit_predict(subarr2.T)
+clf = svm.SVC(C=100, kernel='linear') #Paramters obtained through cross-validation
+clf.fit(subarr1_train, on_off1_train)
+pred_svm1 = clf.predict(subarr1_test)
+accuracy_score(on_off1_test, pred_svm1) #52%
 
-#Set up categories: gump = 0, school = 1, military = 2,
-lab_course2 = []
-for val in lab2:
+knn = KNeighborsClassifier()
+knn.fit(subarr1_train, on_off1_train)
+pred_knn1 = knn.predict(subarr1_test)
+accuracy_score(on_off1_test, pred_knn1) #69%
+
+#Compare more scenes 
+all_ids_2 = GUMP_SCENES_IDS + SCHOOL + MILITARY_IDS + SAVANNA + POLITICAL + OUTSIDE + DEATH + CHURCH
+sample2, missing_facts2 = sn.gen_sample_by_factors(all_ids_2, factor_grid, True, prop=.9)
+train_samp2 = sn.get_training_samples(sample2)
+test_samp2 = sn.get_tst_samples(sample2)
+
+train2_labs, train2_times = sn.make_label_by_time(train_samp2)
+test2_labs, test2_times = sn.make_label_by_time(test_samp2)
+
+#Set up ids for each category 
+labels2_train = []
+for val in train2_labs:
     if val in GUMP_SCENES_IDS:
-        lab_course2.append(0)
-    if val in SCHOOL:
-        lab_course2.append(1)
-    if val in MILITARY_IDS:
-        lab_course2.append(2)
+        labels2_train.append(0)
+    elif val in SCHOOL:
+        labels2_train.append(1)
+    elif val in MILITARY_IDS:
+        labels2_train.append(2)
+    elif val in SAVANNA:
+        labels2_train.append(3)
+    elif val in POLITICAL:
+        labels2_train.append(4)
+    elif val in OUTSIDE:
+        labels2_train.append(5)
+    elif val in DEATH:
+        labels2_train.append(6)
+    else:
+        labels2_train.append(7)
 
-#Asses performance - harder because multiple categories 
-def analyze_mult_factors(pred_labels, divided_cat_lst, num_labels):
-    all_perms = list(itertools.permutations(range(num_labels)))
-    relative_perform = []
-    total_perform = []
-    for perm in all_perms:
-        props = []
-        total = 0
-        for index, lab in enumerate(perm):
-            num_matches = np.where(divided_cat_lst[index] == lab)[0].shape[0]
-            prop_hits = num_matches / divided_cat_lst[index].shape[0]
-            total += num_matches
-            props.append(prop_hits)
-        total_perform.append(total)
-        relative_perform.append(props)
-    return (total_perform, relative_perform, all_perms)
+labels2_train = np.array(labels2_train)
 
-def get_max(analysis_factors, num_labs):
-    max_val = max(analysis_factors[0])
-    max_ind = [i for i, j in enumerate(analysis_factors[0]) if j == max_val]
-    max_ind = max_ind[0]
-    return (analysis_factors[0][max_ind]/num_labs, analysis_factors[1][max_ind], analysis_factors[2][max_ind])
-
-lab_course2 = np.array(lab_course2)
-
-gump_incs = np.where(lab_course2 == 0)
-school_indcs = np.where(lab_course2 == 1)
-military_inds = np.where(lab_course2 == 2)
-
-gump_pred = pred2[gump_incs] #77.3% using function below 
-school_pred = pred2[school_indcs] #77.4%  
-military_pred = pred2[military_inds] #75%  
-
-#Looking at all categories 
-all_ids_3 = GUMP_SCENES_IDS + SCHOOL + MILITARY_IDS + SAVANNA + POLITICAL + OUTSIDE
-
-samp_3 = sn.all_factors_indcs(all_ids_3, factor_grid)
-lab3, times3 = sn.make_label_by_time(samp_3)
-subarr3 = combined_runs[:,times3]
-
-kmeans = KMeans(n_clusters=6, n_init=10)
-pred3 = kmeans.fit_predict(subarr3.T)
-
-lab_course3 = []
-for val in lab3:
+labels2_test = []
+for val in test2_labs:
     if val in GUMP_SCENES_IDS:
-        lab_course3.append(0)
-    if val in SCHOOL:
-        lab_course3.append(1)
-    if val in MILITARY_IDS:
-        lab_course3.append(2)
-    if val in SAVANNA:
-        lab_course3.append(3) 
-    if val in POLITICAL:
-        lab_course3.append(4)
-    if val in OUTSIDE:
-        lab_course3.append(5) 
+        labels2_test.append(0)
+    elif val in SCHOOL:
+        labels2_test.append(1)
+    elif val in MILITARY_IDS:
+        labels2_test.append(2)
+    elif val in SAVANNA:
+        labels2_test.append(3)
+    elif val in POLITICAL:
+        labels2_test.append(4)
+    elif val in OUTSIDE:
+        labels2_test.append(5)
+    elif val in DEATH:
+        labels2_test.append(6)
+    else:
+        labels2_test.append(7)
 
-lab_course3 = np.array(lab_course3)
+labels2_test = np.array(labels2_test)
 
-gump_incs3 = np.where(lab_course3 == 0)
-school_indcs3 = np.where(lab_course3 == 1)
-military_inds3 = np.where(lab_course3 == 2)
-savanna_incs3 = np.where(lab_course3 == 3)
-political_indcs3 = np.where(lab_course3 == 4)
-outisde_inds3 = np.where(lab_course3 == 5)
+subarr2_train = combined_runs[:,train2_times].T 
+subarr2_test = combined_runs[:,test2_times].T
 
-gump_pred3 = pred3[gump_incs3]  
-school_pred3 = pred3[school_indcs3] 
-military_pred3 = pred3[military_inds3]
-savanna_pred3 = pred3[savanna_incs3]
-political_pred3 = pred3[political_indcs3]
-outisde_pred3 = pred3[outisde_inds3]
-combined3 = [gump_pred3, school_pred3, military_pred3, savanna_pred3, political_pred3, outisde_pred3]
+clf = svm.SVC(C=100, kernel='linear') #Paramters obtained through cross-validation 
+clf.fit(subarr2_train, labels2_train)
+pred_svm2 = clf.predict(subarr2_test)
 
-analysis_fact3 = analyze_mult_factors(pred3, combined3, 6) #51% overall  
-performance3 = get_max(analysis_fact3, pred3.shape[0]) #Military and political scenes seem correlated
-                                                       #Gump and outside scenes seem correlated 
+accuracy_score(labels2_test, pred_svm2) #27.7%
 
-#Since Military and Political Scenes seem correlated lets see how we do combining them 
-all_ids_4 = GUMP_SCENES_IDS + SCHOOL + MILITARY_IDS +  POLITICAL + SAVANNA  
-samp_4 = sn.all_factors_indcs(all_ids_4, factor_grid)
-lab4, times4 = sn.make_label_by_time(samp_4)
-subarr4 = combined_runs[:,times4]
+knn = KNeighborsClassifier()
+knn.fit(subarr2_train, labels2_train)
+pred_knn2 = knn.predict(subarr2_test)
 
-kmeans = KMeans(n_clusters=4, n_init=10)
-pred4 = kmeans.fit_predict(subarr4.T)
+accuracy_score(labels2_test, pred_knn2) #34% 
 
-lab_course4 = []
-for val in lab4:
-    if val in GUMP_SCENES_IDS:
-        lab_course4.append(0)
-    if val in SCHOOL:
-        lab_course4.append(1)
-    if val in MILITARY_IDS or val in POLITICAL:
-        lab_course4.append(2)
-    if val in SAVANNA:
-        lab_course4.append(3) 
+#Knn looks better - let's see how it performs by cateogry 
 
-lab_course4 = np.array(lab_course4)
+#Check performance over the 6 categories 
+gump_indcs = np.where(labels2_test == 0)[0]
+school_inds = np.where(labels2_test == 1)[0]
+milit_incs = np.where(labels2_test == 2)[0]
+savan_indcs = np.where(labels2_test == 3)[0]
+political_indcs = np.where(labels2_test == 4)[0]
+outside_indcs = np.where(labels2_test == 5)[0]
+death_indcs = np.where(labels2_test == 6)[0]
+church_inds = np.where(labels2_test == 7)[0]
 
-gump_incs4 = np.where(lab_course4 == 0)
-school_indcs4 = np.where(lab_course4 == 1)
-military_pol_inds4 = np.where(lab_course4 == 2)
-savanna_incs4 = np.where(lab_course4 == 3)
+by_cat = [gump_indcs, school_inds, milit_incs, savan_indcs, political_indcs, 
+          outside_indcs, death_indcs, church_inds]
 
-gump_pred4 = pred4[gump_incs4]  
-school_pred4 = pred4[school_indcs4] 
-military_pol_pred4 = pred4[military_pol_inds4]
-savanna_pred4 = pred4[savanna_incs4]
-combined4 = [gump_pred4, school_pred4, military_pol_pred4, savanna_pred4]
+perform_by_cat = []
+actual_count = []
+pred_count = []
 
-analysis_fact4 = analyze_mult_factors(pred4, combined4, 4)
-performance4 = get_max(analysis_fact4, pred4.shape[0]) #62% overall  
+for scence_ind in by_cat:
+    acc = accuracy_score(labels2_test[scence_ind], pred_knn2[scence_ind])
+    weight = scence_ind.shape[0]
+    perform_by_cat.append(acc)
+    actual_count.append(weight)
+     
+#Plot this
+actual_count = np.array(actual_count)
+relative_weights = actual_count / sum(actual_count)
 
-#smooth spatially - voxels next to each other are not iid - some filter (gaussian best) to fix this 
+#create labels for pie chart 
+categories = ['gump', 'school', 'military', 'savanna', 'political',
+              'outside', 'death', 'church']
 
+categories_per = []
+for index, name in enumerate(categories):
+    name2 = name + ': ' + '' + str(round(perform_by_cat[index], 3)) + '%'
+    categories_per.append(name2)
 
+pie(relative_weights, labels=categories_per,autopct='%1.1f%%')
+plt.title('Category Weight and Performance by Category')
+plt.savefig('../figure/scenes_pie_chart.png')
+plt.close()

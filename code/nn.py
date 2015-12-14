@@ -33,6 +33,7 @@ varmask = np.where(xvar > .000000001)[0]
 print np.max(xvar[varmask]), np.min(xvar[varmask])
 x = x.T[varmask].T
 
+
 lag = 1
 xtrain = x[lag:lag+3000]
 xtest = x[3000:]
@@ -281,8 +282,6 @@ def nnreal(x, y, hidden=5000, threshold=.1, numwords=10):
 
 
 # nnreal(mostcommonwords, x, y)
-
-
 
 
 

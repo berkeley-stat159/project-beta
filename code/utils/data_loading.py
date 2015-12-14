@@ -2,6 +2,9 @@
 from __future__ import print_function
 import nibabel as nib
 import numpy as np
+import scipy
+import scipy.ndimage
+from scipy.ndimage.filters import gaussian_filter
 
 def load_data(filename):
     """ Return fMRI data corresponding to the given filename and prints
@@ -140,3 +143,22 @@ def remove_outliers_iqr(arr, axis, iqr_scale=1.5):
     axis_data = get_axis_data(data, axis)
     indcs, lo_hi_thresh = iqr_outliers(axis_data, iqr_scale)
     return (indcs, lo_hi_thresh) 
+
+def smooth_gauss(data_4d, fwhm, time):
+
+    """
+    Smooth the data using a Gaussian fliter
+    Parameters
+    ----------
+    data_4d : 4d numpy array  
+        The image data of one subject
+    fwhm : width of normal gaussian curve
+    time : time slice (4th dimension)
+    Returns
+    -------
+    smooth_results : array of the smoothed data from data_4d (same dimensions but super-voxels will be
+                        indicated by the same number) in time slice indicated.
+    """
+    time_slice = data_4d[..., time]
+    smooth_results = scipy.ndimage.filters.gaussian_filter(time_slice, fwhm)
+    return smooth_results
