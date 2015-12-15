@@ -14,8 +14,8 @@ clean:
 
 coverage:
 	#nosetests code/utils data --with-coverage -cover-package=data  --cover-package=utils
-	cd code/utils/ nosetests --with-coverage
-	cd data/tests nosetests --with-coverage
+	cd code/utils/tests && nosetests --with-coverage
+	cd data/tests && nosetests --with-coverage
 
 test:
 	cd code/utils/tests && nosetests *.py 
@@ -33,9 +33,9 @@ preprocess_description:
 	cd code && python gen_design_matrix.py
 
 analysis:
-	cd code && description_modeling_ridge_regression.py
-	cd code && scenes_pred.py
-	cd code && nn.py
+	cd code && python description_modeling_ridge_regression.py
+	cd code && python scenes_pred.py
+	cd code && python nn.py
 
 verbose:
 	cd code/utils/tests && nosetests -v *.py
