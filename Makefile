@@ -38,6 +38,9 @@ analysis:
 	cd code && python scenes_pred.py
 	cd code && python nn.py
 
+regression_beta:
+	cd code && python regression_l1.py
+
 verbose:
 	cd code/utils/tests && nosetests -v *.py
 	cd data/tests && nosetests -v *.py 
