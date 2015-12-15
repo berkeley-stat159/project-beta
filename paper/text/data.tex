@@ -1,20 +1,22 @@
-\par \indent 
 
 \subsection{Original Dataset}
-\par Our team obtained the "A high-resolution 7-Tesla fMRI dataset from complex natural simulation with an audio movie" dataset from OpenfMRI.org. The dataset belongs to a study conducted using high-resolution functional magnetic resonance (fMRI) to analyze stimulation due to visual stimulii. 20 participants recorded at high field strength (7 Tesla) during prolonged stimulation with an auditory feature film ("Forrest Gump"). 
+\par Our team obtained the "A high-resolution 7-Tesla fMRI dataset from complex natural simulation with an audio movie" dataset from OpenfMRI.org. The curated dataset belongs to a study conducted using high-resolution functional magnetic resonance (fMRI) to analyze stimulation due to visual stimulii. 20 participants recorded at high field strength (7 Tesla) during prolonged stimulation with an auditory feature film ("Forrest Gump"). 
 
-\par The audio movie description was provided in a csv format, with each row containing a start and end time (in seconds) corresponding to the time in the movie, along with a description in German of the events occurring in the movie at that time. One noticeable feature of the dataset upon initial observation is that the description
-is not continuous -- there exist around a 5 seconds gap in the audio events provided. The second CSV file includes the start and end times of each of the 196 distinct movie scenes. In addition, each table row contains whether a scene takes place indoors or outdoors. The last CSV file contains questionnaire responses from the 20 subjects regarding their backgrounds,  but we have discarded them from our study. 
+\par The audio movie description was provided in a csv format, with each row containing a start and end time (in seconds) corresponding to the time in the movie, along with a description in German of the events occurring in the movie at that time. One noticeable feature of the dataset upon initial observation is that the description is not continuous -- there exist around a 4 second gap in the audio events provided. 
 
-\par As for the FMRI data, data for 20 subjects were provided, each of whom watched the movie while being scanned. The FMRI scan were taken every two seconds (TR=2s) for the duration of the movie. All of this data was in nii format, and thus compatible with nibabel libraries in Python. One thing we noticed is that between 8 runs of the fMRI scanning, there are around 6s of repetition of stimuli between each run. We thus discarded four volumes at the end of any preceding segment and at the start of the following segment for any transition between segments according to the instruction in http://studyforrest.org/annotation\_timing.html. The other things is that these images have partial brain coverage — mostly focused on the auditory cortices in both left and right hemispheres, including frontal and posterior portions of the brain. There is no coverage for the upper portion of the brain where large parts of motor and somato-sensory cortices are located. This case of brain data coverage would potentially affect the way that we are going to model and visualize the brain response.
+\par The second CSV file includes the start and end times of each of the 90 distinct movie scenes. In addition, each table row contains whether a scene takes place indoors or outdoors. 
+
+\par The last CSV file contains questionnaire responses from the 20 subjects regarding their backgrounds,  but we have discarded them from our study. 
+
+\par As for the FMRI data, data for 20 subjects were provided, each of whom watched the movie while being scanned. The FMRI scan were taken every two seconds (TR=2s) for the duration of the movie. All of this data was in nii format, and thus compatible with libraries such as \texttt{nibabel} or \texttt{nitime} in Python. One thing we noticed is that between 8 runs of the fMRI scanning, there are around 6s of repetition of stimuli between each run. We thus discarded four volumes at the end of any preceding segment and at the start of the following segment for any transition between segments, according to the instructions at http://studyforrest.org/annotation\_timing.html. A last note is that these images have partial brain coverage — mostly focused on the auditory cortices in both left and right hemispheres, including frontal and posterior portions of the brain. There is no coverage for the upper portion of the brain where large parts of motor and somato-sensory cortices are located. This case of brain data coverage would potentially affect the way that we are going to model and visualize the brain response.
 
 \par For each of the 20 subjects, answers to pre-experiment survey questions were made available, asking a variety of questions (e.g. left or right handed). 
 
 
 \subsection{Data Used in the Analysis}
-\par The survey data was used to select BOLD response from subject 004 to do a first pass modeling attempt. She was chosen partially because her fMRI data was one of the most complete and also for the arbitrary fact that she had perfect pitch. After we successfully implement first regression model, more subject(subject 014, 015) would be downloaded and used.
+\par The survey data was used to select subject 012 to do a first pass modeling attempt, as there were no warning notes from the authors included, and they seemed normal. Subjects 014 and 015 were selected for further modeling attempts.
 
-\par All of the movie description data as well as the scene description was used, as it is applicable to the FMRI time-course data for all subjects. 
+\par All of the movie description data, scene description data and audio description data was used, as it is applicable to the FMRI time-course data for all subjects. 
 
 \par The survey data of emotion response was not used beyond this point.
 

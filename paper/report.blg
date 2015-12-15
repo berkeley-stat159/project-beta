@@ -1,53 +1,46 @@
-This is BibTeX, Version 0.99d (TeX Live 2015)
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: report.aux
 The style file: siam.bst
-I found no \citation commands---while reading file report.aux
 Database file #1: project.bib
-I was expecting a `,' or a `}'---line 23 of file project.bib
- :   
- :   author={Michael Hankel et al},
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
-You've used 0 entries,
+You've used 2 entries,
             2030 wiz_defined-function locations,
-            497 strings with 3721 characters,
-and the built_in function-call counts, 18 in all, are:
-= -- 0
-> -- 0
+            513 strings with 4058 characters,
+and the built_in function-call counts, 615 in all, are:
+= -- 61
+> -- 14
 < -- 0
-+ -- 0
-- -- 0
-* -- 2
-:= -- 7
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
++ -- 7
+- -- 4
+* -- 44
+:= -- 98
+add.period$ -- 2
+call.type$ -- 2
+change.case$ -- 8
 chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 1
-format.name$ -- 0
-if$ -- 1
+cite$ -- 2
+duplicate$ -- 32
+empty$ -- 49
+format.name$ -- 4
+if$ -- 129
 int.to.chr$ -- 0
-int.to.str$ -- 0
-missing$ -- 0
-newline$ -- 3
-num.names$ -- 0
-pop$ -- 0
+int.to.str$ -- 2
+missing$ -- 2
+newline$ -- 9
+num.names$ -- 4
+pop$ -- 5
 preamble$ -- 1
-purify$ -- 0
+purify$ -- 6
 quote$ -- 0
-skip$ -- 1
+skip$ -- 28
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
+substring$ -- 51
+swap$ -- 14
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
+type$ -- 8
 warning$ -- 0
-while$ -- 0
-width$ -- 0
-write$ -- 2
-(There were 2 error messages)
+while$ -- 7
+width$ -- 3
+write$ -- 19

@@ -77,6 +77,8 @@ The files are grouped by their functionalities.
 - ridge regression 
 	- description_modeling_ridge_regression.py 
 		-  Uses ridge regression to simultaneously model all BOLD response time courses given the design matrix
+		-  Determines a optimal ridge parameter with 10 fold cross validation
+		-  Evaluates regression performance by computing correlationship coefficient between prediciton and the actual response
 - k-nearest neighbors 
 	- scenes_pred.py 
 		- Uses KNN to try and predict what scene occured at a time point based on the brain image at that time point 
