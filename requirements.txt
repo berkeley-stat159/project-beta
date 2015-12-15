@@ -2,7 +2,8 @@ nose==1.3.7
 numpy==1.9.2
 scipy==0.16.0
 matplotlib==1.4.3
-pandas
+pandas==0.17.0
 nibabel
 scikit-learn
 h5py
+nltk 
