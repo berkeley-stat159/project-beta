@@ -9,7 +9,10 @@ import nltk
 import json
 import sys
 
-affordance_dict_fpath = sys.argv[1] #loadin the json file with all unique words as keys
+
+
+
+affordance_dict_fpath = "../data/uniquewords.json" #loadin the json file with all unique words as keys
 
 with open(affordance_dict_fpath) as fid:
     affordanceDict = json.loads(fid.readlines()[0])
