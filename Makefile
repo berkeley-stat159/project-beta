@@ -2,7 +2,7 @@
 
 all: clean
 
-data_process:
+data_download:
 	wget -P ./date https://www.googledrive.com/host/0Bz7lWLS0atxsbXZpT056ZnJnd1U && mv '0Bz7lWLS0atxsbXZpT056ZnJnd1U' 'ds113_sub012.tgz' && tar -zxvf ds113_sub012.tgz
 	wget -P ./data https://www.googledrive.com/host/0BxlqqubRo4V3WTVkSXVNTktuLW8 && mv '0BxlqqubRo4V3WTVkSXVNTktuLW8' 'smoothed_data.npy'
 
@@ -13,7 +13,9 @@ clean:
 	find . -name "*.so" -o -name "*.pyc" -o -name "*.pyx.md5" | xargs rm -f
 
 coverage:
-	nosetests code/utils data --with-coverage --cover-package=data  --cover-package=utils
+	#nosetests code/utils data --with-coverage -cover-package=data  --cover-package=utils
+	cd code/utils/ nosetests --with-coverage
+	cd data/tests nosetests --with-coverage
 
 test:
 	cd code/utils/tests && nosetests *.py 
@@ -36,7 +38,9 @@ analysis:
 	cd code && nn.py
 
 verbose:
-	nosetests -v code/utils data
+	cd code/utils/tests && nosetests -v *.py
+	cd data/tests && nosetests -v *.py 
+	#nosetests -v code/utils data
 
 paper_report:
 	make clean -C paper
