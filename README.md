@@ -63,12 +63,12 @@ The files are grouped by their functionalities.
 - gen_design_matrix.py 
 
 ### 4. Analysis 
-- ridge regression 
-	- description_modling_ridge_regression.py 
-- k-nearest neighbors 
-	- scenes_pred.py 
-- neural network 
-	- nn.py 
+- description_modling_ridge_regression.py 
+    - Ridge regression 
+- scenes_pred.py 
+    - K-nearest neighbors
+- nn.py 
+    - Neural network 
 
 ## Team Members  
 - Raj Agrawal ([([`raj4`](https://github.com/raj4))
