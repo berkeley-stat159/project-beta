@@ -11,8 +11,6 @@ _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yu
 ## Installation
 1. Clone the project repository: `git clone https://github.com/berkeley-stat159/project-beta.git'
 2. Install python dependencies with pip: `pip install -r requirements.txt`
-3. Code depends on an internally provided python module module called `stat159lambda`. Ensure this module is on your python path with `export PYTHONPATH='<absolute-path-to-repository>/project-lambda/code'`.  
-For example, `export PYTHONPATH='/Users/alondaks/project-lambda/code'`. We strongly encourage adding your export statement to your `.bashrc` while running this project to ensure the environement variable is defined in all shells. 
 
 
 ## Roadmap
