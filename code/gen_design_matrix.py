@@ -52,9 +52,16 @@ for d in sti_dict_list:
 
 
 # In[144]:
-
+#save the design matrix
 design_1_fpath = "../description_pp/design_matrix_1.npy"
 np.save(design_1_fpath,design_1)
+
+#save the figure
+plt.figure()
+plt.imshow(design_1,aspect='auto',cmap='hot')
+plt.colorbar()
+plt.savefig('../figure/visual_design_matrix.png')
+
 
 #save the word list to file
 word_list_fpath = "../description_pp/word_list.p"
