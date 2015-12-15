@@ -21,10 +21,10 @@ import utils.save_files as sv
 
 #All file strings corresponding to BOLD data for subject 12 
 
-files = ['../data/task001_run001.bold_dico.nii', '../data/task001_run002.bold_dico.nii', 
-         '../data/task001_run003.bold_dico.nii', '../data/task001_run004.bold_dico.nii', 
-         '../data/task001_run005.bold_dico.nii', '../data/task001_run006.bold_dico.nii',
-         '../data/task001_run007.bold_dico.nii', '../data/task001_run008.bold_dico.nii']
+files = ['../data/task001_run001.bold_dico.nii.gz', '../data/task001_run002.bold_dico.nii.gz', 
+         '../data/task001_run003.bold_dico.nii.gz', '../data/task001_run004.bold_dico.nii.gz', 
+         '../data/task001_run005.bold_dico.nii.gz', '../data/task001_run006.bold_dico.nii.gz',
+         '../data/task001_run007.bold_dico.nii.gz', '../data/task001_run008.bold_dico.nii.gz']
 
 #
 # Load the images as an image object

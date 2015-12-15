@@ -4,7 +4,8 @@ import hashlib
 import os
 
 
-d = {'ds113_sub012.tgz': 'da19b5ca0417888a27464e919a719fdc'}
+d = {'ds113_sub012.tgz': 'da19b5ca0417888a27464e919a719fdc',
+     'smoothed_data.npy': 'faeebb34757619574248e963a44b265d'}
 
 
 def generate_file_md5(filename, blocksize=2**20):
