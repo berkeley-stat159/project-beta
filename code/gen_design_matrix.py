@@ -59,6 +59,8 @@ np.save(design_1_fpath,design_1)
 #save the figure
 plt.figure()
 plt.imshow(design_1,aspect='auto',cmap='hot')
+plt.xlabel('features (unique words')
+plt.ylabel('time (TRs)')
 plt.colorbar()
 plt.savefig('../figure/visual_design_matrix.png')
 
