@@ -6,3 +6,4 @@ pandas
 nibabel
 scikit-learn
 h5py
+nltk
