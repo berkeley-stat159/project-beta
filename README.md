@@ -11,7 +11,7 @@ _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yu
 ## Installation
 1. Install python dependencies with pip: `pip install -r requirements.txt`
 2. Clone the project repository: `git clone https://github.com/berkeley-stat159/project-beta.git'
-
+3. cd to the project-beta directory 
 
 
 ## Roadmap
