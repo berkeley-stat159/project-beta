@@ -1,3 +1,4 @@
+# Project Beta
 ## UC Berkeley's Statistics 159/259
 ### Project Group Beta, Fall Term 2015 
 
@@ -10,7 +11,7 @@ _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yu
 
 ## Roadmap
 
-#### Recommended Steps
+#### Repository Navigation Overview 
 1. make data -  downloads the data for analysis
 2. make validate - ensure the data is not corrupted
 3. make coverage - runs coverage tests and generates the Travis coverage report
@@ -39,3 +40,36 @@ _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yu
 
 #### Report
 - `make report`: Build final report
+
+## Discussion on Reproducibility 
+All files mentioned below are located in the /code/ directory. 
+The files are grouped by their functionalities. 
+
+### 1. Download Data 
+- data_loading_script.py 
+
+### 2. Data Preprocessing 
+- dataprep_script.py 
+- mask_generating.py 
+- filter_script.py 
+- mask_generating.py 
+
+### 3. Preprocess Description
+- dataclean.py 
+- gen_design_matrix.py 
+
+### 4. Analysis 
+- ridge regression 
+	- description_modling_ridge_regression.py 
+- k-nearest neighbors 
+	- scenes_pred.py 
+- neural network 
+	- nn.py 
+
+## Team Members  
+- Raj Agrawal ([([`raj4`](https://github.com/raj4))
+- Steve Yucheng Dong ([([`yuchengdong`](https://github.com/yuchengdong))
+- Cindy Mo ([([`cxmo`](https://github.com/cxmo))
+- Rishi Sinha ([([`rishizsinha`](https://github.com/rishizsinha))
+- Aria Yuan Wang ([([`ariaaay`](https://github.com/ariaaay))
+
