@@ -1,3 +1,12 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
+
+\bibitem{Hanke}
+{\sc M.~H. et~al}, {\em A high-resolution 7-tesla fmri dataset from complex
+  natural stimulation with an audio movie}, Scientific Data, 1 (2014).
+
+\bibitem{stansbury2013neuron}
+{\sc G.~J. Stansbury~DE, Naselaris~T}, {\em Natural scene statistics account
+  for the representation of scene categories in human visual cortex}, Neuron,
+  79 (2013), pp.~1025--1034.
 
 \end{thebibliography}
