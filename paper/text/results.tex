@@ -21,13 +21,21 @@ The correlation coefficient of the predicted response and the actual response is
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=.45\linewidth]{ridge_prediction_results.jpg}
+ \includegraphics[width=.4\linewidth]{ridge_prediction_results.jpg}
   \captionof{figure}{Examples of voxel predictions}
   \label{fig:test1}
 \end{figure}
 The figure above shows several examples of predicted activity. The predictions are on around the similar frequency compared to the actual activities, indicating that the model is predicting the activities instead of low frequency noise.
 
 \subsection{Lasso Regression}
+\par The lasso regression did not work as well as the ridge regression. As visible from the below plot, the $L1$ prediction is slightly less fitted than the $L2$ regression.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=.4\linewidth]{lassoplot.jpg}
+  \captionof{figure}{Test Voxel 70 }
+  \label{fig:cc}
+\end{figure}
 
 \subsection{Neural Network}
 \begin{figure}[H]

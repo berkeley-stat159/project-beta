@@ -3,21 +3,23 @@ import numpy as np
 from sklearn import preprocessing as pp
 import scipy as sc
 import matplotlib.pyplot as plt
-
+from scipy import stats
 
 lag = 1
 
-y = pp.normalize(np.load("../data/filtered_data.npy"))
-yvar = np.var(y, axis=1)
+y = stats.zscore(np.load("../data/filtered_data.npy"), axis=1, ddof=1)
+yvar = np.var(y, axis=0)
 print np.max(yvar), np.min(yvar)
-varmask = np.where(yvar > .0000001)[0]
+# varmask = np.where(yvar > .006)[0]
+varmask = np.where(yvar > 1)[0]
 print np.max(yvar[varmask]), np.min(yvar[varmask])
 y = y[varmask].T
+print y.shape
 
 x = np.load("../description_pp/design_matrix_1.npy")
 x = x[:len(x)-1]
 
-xtrain, ytrain = x[:3000], y[:3000]
+xtrain, ytrain = x[:1000], y[:1000]
 xtest, ytest = x[3000:], y[3000:]
 
 
@@ -35,10 +37,11 @@ class lassoreg:
 	def train(self, x, y):
 		self.models = []
 		self.coef = []
+		self.corr = []
 		# self.t = []
 		# self.p = []
 		for i in range(y.shape[1]):
-			clf = splm.Lasso(alpha=.000000005)
+			clf = splm.Lasso(alpha=.000001)
 			clf.fit(x, y[:,i])
 
 			# n, k = x.shape
@@ -74,7 +77,7 @@ class lassoreg:
 			self.coef.append(clf.coef_)
 			# self.t.append(t)
 			# self.p.append(p)
-			if i%500 == 0: print i, clf.coef_, clf.coef_.any()
+			if i%100 == 0: print i, clf.coef_, clf.coef_.any()
 		# self.coef = [clf.coef_ for clf in self.models]
 
 	def predict(self, x):
@@ -92,10 +95,17 @@ class lassoreg:
 
 # def plot(y, p):
 def plot(pred, y):
-	times = range(0, 2*len(pred), 2)
-	plt.plot(times, pred, 'r-', times, y, 'b-')
-	# plt.plot(y)
+	predm, ym = stats.zscore(pred, axis=0, ddof=1), stats.zscore(y, axis=0, ddof=1)
+	# predm, ym = pp.normalize(pred), pp.normalize(y)
+	print predm.shape, ym.shape
+	times = range(0, len(pred))
+	# print times.shape
+	print len(times)
+	plt.plot(times, predm, 'r-', times, ym, 'b-')
+	plt.xlabel("Time (s)")
+	plt.ylabel("BOLD Response")
 	plt.show()
+	plt.savefig("../figure/lassoplot.jpg")
 
 l = lassoreg()
 l.train(xtrain, ytrain)
