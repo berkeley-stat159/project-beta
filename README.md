@@ -47,6 +47,9 @@ _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yu
 #### Analysis
 - `make analysis`: Runs all the scripts that are used for Analysis including Ridge Regression Analysis and Neural Network Analysis (~ 1 - 2 hr)
 
+#### Regression
+- `make regression_beta`: has not tested be aware. Run the script for l1 regression.
+
 #### Report
 - `make paper_report`: Build final report (~ 1 min)
 
@@ -88,6 +91,9 @@ The files are grouped by their functionalities.
 - neural network 
 	- nn.py 
 		- Creates a neural network using cross-entropy error and stochastic gradient descent to predict presence/absence of common objects in movie based on voxel responses
+
+- l1 regression
+	- lasso regression to remove more features than ridge
 
 ## Team Members  
 - Raj Agrawal ([`raj4`](https://github.com/raj4))
