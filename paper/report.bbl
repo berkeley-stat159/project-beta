@@ -1,8 +1,13 @@
 \begin{thebibliography}{1}
 
 \bibitem{Hanke}
-{\sc M.~H. et~al}, {\em A high-resolution 7-tesla fmri dataset from complex
-  natural stimulation with an audio movie}, Scientific Data, 1 (2014).
+{\sc M.~Hanke, F.~J. Baumgartner, P.~Ibe, F.~R. Kaule, S.~Pollmann, O.~Speck,
+  W.~Zinke, and J.~Stadler}, {\em A high-resolution 7-tesla fmri dataset from
+  complex natural stimulation with an audio movie}, Scientific data, 1 (2014).
+
+\bibitem{lindquist2008statistical}
+{\sc M.~A. Lindquist et~al.}, {\em The statistical analysis of fmri data},
+  Statistical Science, 23 (2008), pp.~439--464.
 
 \bibitem{stansbury2013neuron}
 {\sc G.~J. Stansbury~DE, Naselaris~T}, {\em Natural scene statistics account
