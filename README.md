@@ -9,8 +9,9 @@ _**Topic:**_ [Modeling of Semantic Representation in the Brain Using fMRI Respon
 _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yuan
 
 ## Installation
-1. Clone the project repository: `git clone https://github.com/berkeley-stat159/project-beta.git'
-2. Install python dependencies with pip: `pip install -r requirements.txt`
+1. Install python dependencies with pip: `pip install -r requirements.txt`
+2. Clone the project repository: `git clone https://github.com/berkeley-stat159/project-beta.git'
+3. cd to the project-beta directory 
 
 
 ## Roadmap
@@ -26,38 +27,40 @@ _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yu
 8. make report - build final report
 
 #### Data
-- `make data_download`: Download a 5GB ds013-subject12 data for our analysis from Googledrive. It is a compressed file that contains 8 bold_dico.nii.gz from 8runs. We then rename it with the correct name. Data is then uncompressed.
+- `make data_download`: Download a 5GB ds013-subject12 data for our analysis from Googledrive. It is a compressed file that contains 8 bold_dico.nii.gz from 8runs. We then rename it with the correct name. Data is then uncompressed. (~ 15-20 min)
 
 #### Validate
-- `make validate`: Validates the ds013-subject12 data by checking the right named file is present and has the correct hash. 
+- `make validate`: Validates the ds013-subject12 data by checking the right named file is present and has the correct hash. (~ 1 min)
 
 #### Tests 
-- `make test`: Runs all the tests for this project repository. The test functions are located in code/utils/tests
+- `make test`: Runs all the tests for this project repository. The test functions are located in code/utils/tests (~ 2 min)
 
 #### Coverage 
-- `make coverage`: Runs the coverage tests and then generates a coverage report.
+- `make coverage`: Runs the coverage tests and then generates a coverage report. (~ 2 min)
 
 #### Preprocess data
-- `make preprocess_data`: Runs all the scripts that are used for preprocess data analysis.
+- `make preprocess_data`: Runs all the scripts that are used for preprocess data analysis. (~ 30 - 60 min)
 
 #### Preprocess Description
-- `make preprocess_description`: Run all the scripts that are used for preprocess description.
+- `make preprocess_description`: Run all the scripts that are used for preprocess description. (~ 10 min)
 
 #### Analysis
-- `make analysis`: Runs all the scripts that are used for Analysis including Ridge Regression Analysis and Neural Network Analysis
+- `make analysis`: Runs all the scripts that are used for Analysis including Ridge Regression Analysis and Neural Network Analysis (~ 1 - 2 hr)
 
 #### Report
-- `make report`: Build final report
+- `make paper_report`: Build final report (~ 1 min)
 
 ## Discussion on Reproducibility 
 All files mentioned below are located in the /code/ directory. 
 The files are grouped by their functionalities. 
 
-### 1. Download Data 
-- data_loading_script.py 
-    - This does some basic EDA on the raw data (as done in HW2). We look at RMS and standard deviation spreads on voxel time courses. It saves these figures as 'std_plt[index of run].png' and 'rms_outliers[index of run].png'
+### 1. Disk Usage
+- Note: All data and figures will occupy around 22GB.
+	
 
 ### 2. Data Preprocessing 
+- data_loading_script.py 
+    - This does some basic EDA on the raw data (as done in HW2). We look at RMS and standard deviation spreads on voxel time courses. It saves these figures as 'std_plt[index of run].png' and 'rms_outliers[index of run].png'
 - dataprep_script.py 
     - Apply Gaussian filter to each run and save each smoothed run into data as 'smoothed_run_[index of run]'
 - mask_generating.py 
@@ -87,9 +90,9 @@ The files are grouped by their functionalities.
 		- Creates a neural network using cross-entropy error and stochastic gradient descent to predict presence/absence of common objects in movie based on voxel responses
 
 ## Team Members  
-- Raj Agrawal ([([`raj4`](https://github.com/raj4))
-- Steve Yucheng Dong ([([`yuchengdong`](https://github.com/yuchengdong))
-- Cindy Mo ([([`cxmo`](https://github.com/cxmo))
-- Rishi Sinha ([([`rishizsinha`](https://github.com/rishizsinha))
-- Aria Yuan Wang ([([`ariaaay`](https://github.com/ariaaay))
+- Raj Agrawal ([`raj4`](https://github.com/raj4))
+- Steve Yucheng Dong ([`yuchengdong`](https://github.com/yuchengdong))
+- Cindy Mo ([`cxmo`](https://github.com/cxmo))
+- Rishi Sinha ([`rishizsinha`](https://github.com/rishizsinha))
+- Aria Yuan Wang ([`ariaaay`](https://github.com/ariaaay))
 

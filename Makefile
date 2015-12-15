@@ -22,6 +22,7 @@ test:
 	cd data/tests && nosetests *.py
 
 preprocess_data:
+	cd code && python data_loading_script.py
 	cd code && python dataprep_script.py
 	cd code && python mask_generating.py 
 	cd code && python filter_script.py
@@ -43,5 +44,4 @@ verbose:
 	#nosetests -v code/utils data
 
 paper_report:
-	make clean -C paper
-	make -C paper
+	cd paper && make all

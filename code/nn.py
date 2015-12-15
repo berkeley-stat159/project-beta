@@ -7,9 +7,11 @@ import scipy.special as scsp
 from sklearn import preprocessing as pp
 import matplotlib.pyplot as plt
 import time
-import pybrain.datasets as pbds
-import pybrain.tools.shortcuts as pbts
-import pybrain.supervised.trainers as pbsvt
+from math import pow
+from scipy.stats import norm
+# import pybrain.datasets as pbds
+# import pybrain.tools.shortcuts as pbts
+# import pybrain.supervised.trainers as pbsvt
 
 # from sklearn.neural_network import MLPClassifier
 
@@ -35,16 +37,16 @@ x = x.T[varmask].T
 
 
 lag = 1
-xtrain = x[lag:lag+3000]
-xtest = x[3000:]
+xtrain = x[lag:lag+3200]
+xtest = x[3200:]
 
 def nonzero(x, y):
 	ind = [i for i in range(len(y)) if y[i].any()]
 	return x[ind], y[ind]
 
 y = np.load("../description_pp/design_matrix_1.npy")[1:]
-ytrain = y[:3000]
-ytest = y[3000:3000+xtest.shape[0]]
+ytrain = y[:3200]
+ytest = y[3200:3200+xtest.shape[0]]
 
 xtrain, ytrain = nonzero(xtrain, ytrain)
 xtest, ytest = nonzero(xtest, ytest)
@@ -59,7 +61,7 @@ mostcommonwords = [j[0] for j in sorted(enumerate(sums), key=lambda i: i[1], rev
 print xtrain.shape, xtest.shape, ytrain.shape, ytest.shape
 
 class NeuralNetworkNaive():
-	def __init__(self, inputSize, hiddenSize, outputSize, mode="ce"):
+	def __init__(self, inputSize, hiddenSize, outputSize, mode="ce", relu=False):
 		self.inputSize = inputSize
 		self.outputSize = outputSize
 		self.hiddenSize = hiddenSize
@@ -77,12 +79,14 @@ class NeuralNetworkNaive():
 		self.endlearn = None
 		
 		self.mode = mode
+		self.reluon = relu
+		print "relu on: "+ str(self.reluon)
 
 	def forward(self, X):
 		# print X.shape, self.w1.shape
 
 		self.z2 = np.dot(X, self.w1) + self.b1
-		self.a2 = self.relu(self.z2)
+		self.a2 = self.relu(self.z2) if self.reluon else self.tanh(self.z2)
 		
 		self.z3 = np.dot(self.a2, self.w2) + self.b2
 		self.a3 = self.sigmoid(self.z3)
@@ -163,9 +167,7 @@ class NeuralNetworkNaive():
 		return 1 - self.tanh(z)**2
 
 	def relu(self, z):
-		def r(z):
-			return max(0, z)
-		return np.vectorize(r)(z)
+		return np.log(1+np.exp(z))
 
 	def d_relu(self, z):
 		return self.sigmoid(z)
@@ -180,6 +182,18 @@ class NeuralNetworkNaive():
 			if (y[i] == h[i]).all():
 				score += 1
 		return score, float(score)/len(y)
+
+	def ztest(self, y, h):
+		score = 0
+		for i in range(len(y)):
+			if (y[i] == h[i]).all():
+				score += 1
+		expected = 300 * pow(.5,10)
+		sigma = 300 *  pow(.5, 10) * (1 - pow(.5, 10))
+		standardized = (score - expected) / sigma
+		pval = 1 - norm.cdf(standardized)
+		print standardized, pval
+
 
 	def d_mse(self, x, y):
 		self.forward(x)
@@ -203,7 +217,8 @@ class NeuralNetworkNaive():
 		self.d3 = -(y-self.a3)
 		self.djdw2 = np.dot(np.transpose(self.a2), self.d3)
 
-		self.d2 = np.dot(self.d3, np.transpose(self.w2) * self.d_relu(self.z2))
+		self.d2 = np.dot(self.d3, np.transpose(self.w2) * self.d_relu(self.z2)) if self.reluon else \
+			np.dot(self.d3, np.transpose(self.w2) * self.d_tanh(self.z2)) 
 		self.djdw1 = np.dot(np.transpose(x), self.d2)
 
 	def plot(self, description):
@@ -235,17 +250,16 @@ def dual_shuffle_array(lst, lst2):
 	# print np.array(newlist).shape, np.array(newlist2).shape
 	return np.array(newlist), np.array(newlist2)
 
-def nnwords(indices, xtrain, xtest, ytrain, ytest, wordlist, threshold, e):
+def nnwords(indices, xtrain, xtest, ytrain, ytest, wordlist, threshold, e, relu=False):
 	if indices:
 		ytrain = ytrain[:, indices]
 		ytest = ytest[:, indices]
-
 		xtrain, ytrain = nonzero(xtrain, ytrain)
 		xtest, ytest = nonzero(xtest, ytest)
 
-	nn = NeuralNetworkNaive(xtrain.shape[1], 10000, ytrain.shape[1])
-	nn.train(xtrain, ytrain, threshold, e)
-	nn.plot("allwords")
+		nn = NeuralNetworkNaive(xtrain.shape[1], 10000, ytrain.shape[1], relu=relu)
+		nn.train(xtrain, ytrain, threshold, e)
+		nn.plot("allwords")
 
 	pred = nn.predict(xtest)
 	with open("../nnpreds/nnpreds_"+str("mostcommon")+".npy", "w") as f:
@@ -253,30 +267,32 @@ def nnwords(indices, xtrain, xtest, ytrain, ytest, wordlist, threshold, e):
 
 	acc = nn.accuracy(ytest, pred)
 	print "FINAL ACC "+str("mostcommon")+": "+str(acc)
+	test = nn.ztest(ytest, pred)
+	print test
 
-def nnreal(x, y, hidden=5000, threshold=.1, numwords=10):
-	sums = np.sum(y, axis = 0).tolist()
-	mostcommonwords = [j[0] for j in sorted(enumerate(sums), key=lambda i: i[1], reverse=True)[:numwords]]
+# def nnreal(x, y, hidden=5000, threshold=.1, numwords=10):
+# 	sums = np.sum(y, axis = 0).tolist()
+# 	mostcommonwords = [j[0] for j in sorted(enumerate(sums), key=lambda i: i[1], reverse=True)[:numwords]]
 
-	# x = x[lag:]
-	# y = y[:len(x)]
-	x, y = nonzero(x, y)
+# 	# x = x[lag:]
+# 	# y = y[:len(x)]
+# 	x, y = nonzero(x, y)
 
-	numInputFeatures, numOutputFeatures = x.shape[1], y.shape[1]
-	ds = pbds.SupervisedDataSet(numInputFeatures, numOutputFeatures)
-	ds.setField('input', x)
-	ds.setField('target', y)
-	dstrain, dstest = ds.splitWithProportion(.93)
+# 	numInputFeatures, numOutputFeatures = x.shape[1], y.shape[1]
+# 	ds = pbds.SupervisedDataSet(numInputFeatures, numOutputFeatures)
+# 	ds.setField('input', x)
+# 	ds.setField('target', y)
+# 	dstrain, dstest = ds.splitWithProportion(.93)
 
-	nn = pbts.buildNetwork(numInputFeatures, hidden, numOutputFeatures, bias=True)
-	trainer = pbsvt.BackpropTrainer(nn, dstrain)
-	errors = []
-	e = 1
-	i = 0
-	while e > .1 and i < 50:
-		e = trainer.train()
-		print e
-		i += 1
+# 	nn = pbts.buildNetwork(numInputFeatures, hidden, numOutputFeatures, bias=True)
+# 	trainer = pbsvt.BackpropTrainer(nn, dstrain)
+# 	errors = []
+# 	e = 1
+# 	i = 0
+# 	while e > .1 and i < 50:
+# 		e = trainer.train()
+# 		print e
+# 		i += 1
 
 	# for i in dstest
 
@@ -287,10 +303,19 @@ def nnreal(x, y, hidden=5000, threshold=.1, numwords=10):
 
 # words = [u'angry.a.01', u'girl.n.01', u'kiss.n.01', u'jenny.n.01', u'christmas.n.01']
 # words = ytrain[:, words]
-nnwords(mostcommonwords, xtrain, xtest, ytrain, ytest, wordlist, .2, 10)
+nnwords(mostcommonwords, xtrain, xtest, ytrain, ytest, wordlist, .2, 10, False)
 
-
-
+def ztest(y, h):
+	score = 0
+	for i in range(len(y)):
+		if (y[i] == h[i]).all():
+			score += 1
+	print score
+	expected = 300 * pow(.5,10)
+	sigma = pow((300 * pow(.5, 10) * (1 - pow(.5, 10))), .5)
+	standardized = (score - expected) / sigma
+	pval = 1 - norm.cdf(standardized)
+	print standardized, pval
 # (37, 0.04596273291925466) 6.85106382979
 # (169, 0.20993788819875778) 3.22645290581
 # (0, 0.0) 10.0
