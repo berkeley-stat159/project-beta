@@ -1,46 +1,46 @@
-This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
+This is BibTeX, Version 0.99d (TeX Live 2015)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: report.aux
 The style file: siam.bst
 Database file #1: project.bib
-You've used 2 entries,
+You've used 3 entries,
             2030 wiz_defined-function locations,
-            513 strings with 4058 characters,
-and the built_in function-call counts, 615 in all, are:
-= -- 61
-> -- 14
+            521 strings with 4368 characters,
+and the built_in function-call counts, 1236 in all, are:
+= -- 119
+> -- 63
 < -- 0
-+ -- 7
-- -- 4
-* -- 44
-:= -- 98
-add.period$ -- 2
-call.type$ -- 2
-change.case$ -- 8
++ -- 27
+- -- 22
+* -- 101
+:= -- 197
+add.period$ -- 3
+call.type$ -- 3
+change.case$ -- 19
 chr.to.int$ -- 0
-cite$ -- 2
-duplicate$ -- 32
-empty$ -- 49
-format.name$ -- 4
-if$ -- 129
+cite$ -- 3
+duplicate$ -- 51
+empty$ -- 78
+format.name$ -- 22
+if$ -- 255
 int.to.chr$ -- 0
-int.to.str$ -- 2
-missing$ -- 2
-newline$ -- 9
-num.names$ -- 4
-pop$ -- 5
+int.to.str$ -- 3
+missing$ -- 3
+newline$ -- 12
+num.names$ -- 6
+pop$ -- 14
 preamble$ -- 1
-purify$ -- 6
+purify$ -- 16
 quote$ -- 0
-skip$ -- 28
+skip$ -- 49
 stack$ -- 0
-substring$ -- 51
-swap$ -- 14
+substring$ -- 89
+swap$ -- 24
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 8
+type$ -- 12
 warning$ -- 0
-while$ -- 7
-width$ -- 3
-write$ -- 19
+while$ -- 12
+width$ -- 4
+write$ -- 28
