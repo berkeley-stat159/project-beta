@@ -210,7 +210,9 @@ for index, name in enumerate(categories):
     name2 = name + ': ' + '' + str(round(perform_by_cat[index], 3) * 100) + '%'
     categories_per.append(name2)
 
-pie(relative_weights, labels=categories_per,autopct='%1.1f%%')
+fig = plt.figure()
+ax = fig.gca()
+ax.pie(relative_weights, labels=categories_per,autopct='%1.1f%%')
 plt.title('Category Weight and Performance by Category')
 plt.savefig('../figure/scenes_pie_chart.png')
 plt.close()
