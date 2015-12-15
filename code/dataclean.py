@@ -2,7 +2,7 @@
 # Cindy Mo  
 # clean data from translated text file 
 # remove stop words 
-
+import sys
 from collections import OrderedDict
 import csv 
 import numpy as np 
@@ -11,6 +11,7 @@ import re
 import json
 import nltk
 
+nltk.download("wordnet")
 
 # data file
 description = open("../description_pp/description.csv") 

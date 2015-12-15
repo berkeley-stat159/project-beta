@@ -1,4 +1,9 @@
+\subsection{Problems}
 \par
-There are places where we expected errors to be introduce to the project. For example, we use Google translate to conver the german description into English without supervising, which might induce random errors into the design matrix. And since not all words in the description has an one to one correspondence in WordNet, we took out some words in the process of generating the design matrix.
+In addition to the common problems faced in fMRI data (e.g. time lag, motion noise, etc), we point out some additional project-specific problems. We used Google translate to convert the German description into English which might induce random errors into the design matrix. Since every word in the description does not have a one to one correspondence in WordNet, we took some words out when generating the design matrix.
 
-Furthermore, because the movie description we obtained from openfmri.org is not detailedly mark with each TR. It is not able for us to infer what words are said to the subjects inside a specific TR. We have to infer that brain activity are activated by the whole sentence within a certain time window instead of by each single words at a single time point.
+Furthermore, the movie description downloaded from openfmri.org is not marked by time very precisely. For example, we were given all the words that occurred in 20 second/10 TR blocks. This prevented us from linking each word to a specific TR with certainty, creating difficulties with modeling individual words to brain activity. As a result, we had to assume that brain activity is activated by the whole sentence within a certain time window instead of activated by individual words at discrete time points.
+
+\subsection{Future Work}
+\par We only got the chance to analyze subject 12. It would be interesting to see how our results extend to the other subjects and if there are any similarities in scenes and words subjects respond strongly to. With the code we currently have on Github, this would be very easy; we would just need to change the file names at the top of each file in the scripts folder. Another avenue of future work could be contacting the head researcher of this study and ask for a more detailed movie description. This would then allow us to link individual words to each TR which would give us a more accurate and robust model. 
+
