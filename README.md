@@ -90,9 +90,9 @@ The files are grouped by their functionalities.
 		- Creates a neural network using cross-entropy error and stochastic gradient descent to predict presence/absence of common objects in movie based on voxel responses
 
 ## Team Members  
-- Raj Agrawal ([([`raj4`](https://github.com/raj4))
-- Steve Yucheng Dong ([([`yuchengdong`](https://github.com/yuchengdong))
-- Cindy Mo ([([`cxmo`](https://github.com/cxmo))
-- Rishi Sinha ([([`rishizsinha`](https://github.com/rishizsinha))
-- Aria Yuan Wang ([([`ariaaay`](https://github.com/ariaaay))
+- Raj Agrawal ([`raj4`](https://github.com/raj4))
+- Steve Yucheng Dong ([`yuchengdong`](https://github.com/yuchengdong))
+- Cindy Mo ([`cxmo`](https://github.com/cxmo))
+- Rishi Sinha ([`rishizsinha`](https://github.com/rishizsinha))
+- Aria Yuan Wang ([`ariaaay`](https://github.com/ariaaay))
 
