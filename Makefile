@@ -3,8 +3,8 @@
 all: clean
 
 data_download:
-	wget -P ./date https://www.googledrive.com/host/0Bz7lWLS0atxsbXZpT056ZnJnd1U && mv '0Bz7lWLS0atxsbXZpT056ZnJnd1U' 'ds113_sub012.tgz' && tar -zxvf ds113_sub012.tgz
-	wget -P ./data https://www.googledrive.com/host/0BxlqqubRo4V3WTVkSXVNTktuLW8 && mv '0BxlqqubRo4V3WTVkSXVNTktuLW8' 'smoothed_data.npy'
+	wget -P ./data https://www.googledrive.com/host/0Bz7lWLS0atxsbXZpT056ZnJnd1U && cd data && mv '0Bz7lWLS0atxsbXZpT056ZnJnd1U' 'ds113_sub012.tgz' && tar -zxvf ds113_sub012.tgz
+	wget -P ./data https://www.googledrive.com/host/0BxlqqubRo4V3WTVkSXVNTktuLW8 && cd data && mv '0BxlqqubRo4V3WTVkSXVNTktuLW8' 'smoothed_data.npy'
 
 validate:
 	cd data && python data.py
