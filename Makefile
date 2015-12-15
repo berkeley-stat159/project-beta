@@ -18,5 +18,25 @@ test:
 	cd code/utils/tests && nosetests *.py 
 	cd data/tests && nosetests *.py
 
+preprocess_data:
+	cd code && python dataprep_script.py
+	cd code && python mask_generating.py 
+	cd code && python filter_script.py
+	cd code && python data_filtering.py
+	cd code && python mask_generating.py
+
+preprocess_description:
+	cd code && python dataclean.py
+	cd code && python gen_design_matrix.py
+
+analysis:
+	cd code && description_modeling_ridge_regression.py
+	cd code && scenes_pred.py
+	cd code && nn.py
+
 verbose:
 	nosetests -v code/utils data
+
+paper_report:
+	make clean -C paper
+	make -C paper
