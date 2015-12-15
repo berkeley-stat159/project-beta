@@ -13,25 +13,27 @@ import nltk
 
 
 # data file
-description = open("../data/description.csv") 
+description = open("../description_pp/description.csv") 
 csv_description = csv.reader(description) 
 
 # stopwords file
-stopwords = open("../data/stopwords.txt")
+stopwords = open("../description_pp/stopwords.txt")
 stopwords_list = stopwords.read().splitlines()
 
 # extract set of all significant words from text
-with open("../data/description.csv") as f:
+with open("../description_pp/description.csv") as f:
 	uwords = set()
 	for row in f:
-		r = row[3].lower().split()
+		r = row.split(',')[3].lower().split()
+		print r
 		r = [re.sub(r'\W+', '', w) for w in r if re.sub(r'\W+', '', w) != ""]
 		r = [w for w in r if w not in stopwords_list]
 		uwords |= set(r)
-	with open("../data/uniquewords.json", 'w') as f:
+	print uwords
+	with open("../description_pp/uniquewords.json", 'w') as f:
 		json.dump(dict.fromkeys(uwords), f) 
 
-affordance_dict_fpath = "../data/uniquewords.json" #loadin the json file with all unique words as keys
+affordance_dict_fpath = "../description_pp/uniquewords.json" #loadin the json file with all unique words as keys
 
 with open(affordance_dict_fpath) as fid:
     affordanceDict = json.loads(fid.readlines()[0])
@@ -74,17 +76,17 @@ for w in all_words:
     else:
         word_dict[w] = [get_wn_synsets(w)[0]['synset']]
 
-with open("../data/word2wn.json", 'w') as f:
+with open("../description_pp/word2wn.json", 'w') as f:
     json.dump(word_dict, f) 
 
 
-with open("../data/word2wn.json") as f:
+with open("../description_pp/word2wn.json") as f:
 	translator = json.loads(f.read())
 for w in translator:
 	translator[w] = translator[w][0]
 print translator
 
-with open("../data/description.csv") as f:
+with open("../description_pp/description.csv") as f:
 	storedictduration = OrderedDict()
 	storedictstop = OrderedDict()
 	ind = 0
@@ -99,9 +101,9 @@ with open("../data/description.csv") as f:
 			storedictduration[ind] = {"start":start, "duration":duration, "words":refined}
 			storedictstop[ind] = {"start":start, "stop":stop, "words":refined}
 		ind += 1
-	with open("../data/wordnet_stop.json", 'w') as f:
+	with open("../description_pp/wordnet_stop.json", 'w') as f:
 		json.dump(storedictstop.values(), f)
-	with open("../data/wordnet_duration.json", 'w') as f:
+	with open("../description_pp/wordnet_duration.json", 'w') as f:
 		json.dump(storedictduration.values(), f)
 
 # print sum([len(e["words"]) for e in storedict])/float(len(storedict))
