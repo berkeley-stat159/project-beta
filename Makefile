@@ -2,9 +2,9 @@
 
 all: clean
 
-data_process:
-	wget -P ./date https://www.googledrive.com/host/0Bz7lWLS0atxsbXZpT056ZnJnd1U && mv '0Bz7lWLS0atxsbXZpT056ZnJnd1U' 'ds113_sub012.tgz' && tar -zxvf ds113_sub012.tgz
-	wget -P ./data https://www.googledrive.com/host/0BxlqqubRo4V3WTVkSXVNTktuLW8 && mv '0BxlqqubRo4V3WTVkSXVNTktuLW8' 'smoothed_data.npy'
+data_download:
+	wget -P ./data https://www.googledrive.com/host/0Bz7lWLS0atxsbXZpT056ZnJnd1U && cd data && mv '0Bz7lWLS0atxsbXZpT056ZnJnd1U' 'ds113_sub012.tgz' && tar -zxvf ds113_sub012.tgz
+	wget -P ./data https://www.googledrive.com/host/0BxlqqubRo4V3WTVkSXVNTktuLW8 && cd data && mv '0BxlqqubRo4V3WTVkSXVNTktuLW8' 'smoothed_data.npy'
 
 validate:
 	cd data && python data.py
@@ -13,7 +13,9 @@ clean:
 	find . -name "*.so" -o -name "*.pyc" -o -name "*.pyx.md5" | xargs rm -f
 
 coverage:
-	nosetests code/utils data --with-coverage --cover-package=data  --cover-package=utils
+	#nosetests code/utils data --with-coverage -cover-package=data  --cover-package=utils
+	cd code/utils/tests && nosetests --with-coverage
+	cd data/tests && nosetests --with-coverage
 
 test:
 	cd code/utils/tests && nosetests *.py 
@@ -31,12 +33,14 @@ preprocess_description:
 	cd code && python gen_design_matrix.py
 
 analysis:
-	cd code && description_modeling_ridge_regression.py
-	cd code && scenes_pred.py
-	cd code && nn.py
+	cd code && python description_modeling_ridge_regression.py
+	cd code && python scenes_pred.py
+	cd code && python nn.py
 
 verbose:
-	nosetests -v code/utils data
+	cd code/utils/tests && nosetests -v *.py
+	cd data/tests && nosetests -v *.py 
+	#nosetests -v code/utils data
 
 paper_report:
 	make clean -C paper
