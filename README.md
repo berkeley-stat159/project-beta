@@ -8,6 +8,10 @@
 _**Topic:**_ [Modeling of Semantic Representation in the Brain Using fMRI Response] (https://openfmri.org/dataset/ds000113)
 _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yuan
 
+## Installation
+1. Clone the project repository: `git clone https://github.com/berkeley-stat159/project-beta.git'
+2. Install python dependencies with pip: `pip install -r requirements.txt`
+
 
 ## Roadmap
 
@@ -16,9 +20,10 @@ _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yu
 2. make validate - ensure the data is not corrupted
 3. make coverage - runs coverage tests and generates the Travis coverage report
 4. make test - runs all of the tests for scripts 
-5. make eda - generate figures from exploratory analysis
-6. make analysis - generate figures and results
-7. make report - build final report
+5. make Preprocess data - preprocess the data
+6. make Preprocess Description - Preprocess Description data
+7. make analysis - generate figures and results
+8. make report - build final report
 
 #### Data
 - `make data_download`: Download a 5GB ds013-subject12 data for our analysis from Googledrive. It is a compressed file that contains 8 bold_dico.nii.gz from 8runs. We then rename it with the correct name. Data is then uncompressed.
@@ -32,8 +37,11 @@ _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yu
 #### Coverage 
 - `make coverage`: Runs the coverage tests and then generates a coverage report.
 
-#### EDA
-- `make eda`: Runs all the scripts that are used for exploratory data analysis.
+#### Preprocess data
+- `make preprocess_data`: Runs all the scripts that are used for preprocess data analysis.
+
+#### Preprocess Description
+- `make preprocess_description`: Run all the scripts that are used for preprocess description.
 
 #### Analysis
 - `make analysis`: Runs all the scripts that are used for Analysis including Ridge Regression Analysis and Neural Network Analysis
@@ -47,6 +55,7 @@ The files are grouped by their functionalities.
 
 ### 1. Download Data 
 - data_loading_script.py 
+    - This does some basic EDA on the raw data (as done in HW2). We look at RMS and standard deviation spreads on voxel time courses. It saves these figures as 'std_plt[index of run].png' and 'rms_outliers[index of run].png'
 
 ### 2. Data Preprocessing 
 - dataprep_script.py 
@@ -60,15 +69,20 @@ The files are grouped by their functionalities.
 
 ### 3. Preprocess Description
 - dataclean.py 
+	- Cleaning up random words in translated movie description and tagging every word in the description with nltk WordNet labels.
 - gen_design_matrix.py 
+	- take in description in every time window and tranform it into a design matrix for modeling
 
 ### 4. Analysis 
 - ridge regression 
-	- description_modling_ridge_regression.py 
+	- description_modeling_ridge_regression.py 
+		-  Uses ridge regression to simultaneously model all BOLD response time courses given the design matrix
 - k-nearest neighbors 
 	- scenes_pred.py 
+		- Uses KNN to try and predict what scene occured at a time point based on the brain image at that time point 
 - neural network 
 	- nn.py 
+		- Creates a neural network using cross-entropy error and stochastic gradient descent to predict presence/absence of common objects in movie based on voxel responses
 
 ## Team Members  
 - Raj Agrawal ([([`raj4`](https://github.com/raj4))
