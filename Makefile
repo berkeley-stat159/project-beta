@@ -44,5 +44,4 @@ verbose:
 	#nosetests -v code/utils data
 
 paper_report:
-	make clean -C paper
-	make -C paper
+	cd paper && make all

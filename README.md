@@ -48,7 +48,7 @@ _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yu
 - `make analysis`: Runs all the scripts that are used for Analysis including Ridge Regression Analysis and Neural Network Analysis (~ 1 - 2 hr)
 
 #### Report
-- `make report`: Build final report (~ 1 min)
+- `make paper_report`: Build final report (~ 1 min)
 
 ## Discussion on Reproducibility 
 All files mentioned below are located in the /code/ directory. 
