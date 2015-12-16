@@ -232,7 +232,7 @@ class NeuralNetworkNaive():
 		if self.mode == "mse":
 			plt.savefig("mse6.jpg")
 		else:
-			plt.savefig("ce"+description+".jpg")
+			plt.savefig("../figure/ce"+description+".jpg")
 
 def around(x, b):
 	return np.where(x > b, 1, 0)
