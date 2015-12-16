@@ -1,9 +1,16 @@
-\subsection{Problems}
 \par
-In addition to the common problems faced in fMRI data (e.g. time lag, motion noise, etc), we point out some additional project-specific problems. We used Google translate to convert the German description into English which might induce random errors into the design matrix. Since every word in the description does not have a one to one correspondence in WordNet, we took some words out when generating the design matrix.
 
-Furthermore, the movie description downloaded from openfmri.org is not marked by time very precisely. For example, we were given all the words that occurred in 20 second/10 TR blocks. This prevented us from linking each word to a specific TR with certainty, creating difficulties with modeling individual words to brain activity. As a result, we had to assume that brain activity is activated by the whole sentence within a certain time window instead of activated by individual words at discrete time points.
+In addition to the common problems faced in fMRI data (e.g. time lag, motion noise, etc), we point out some additional project-specific problems. First of all, the audio movie description we got from the dataset are in German. We used Google translate to convert the German description into English. Although we went through the description and make sure the translation makes sense, the translation might still induce random errors into the design matrix. Moreover, since every word in the description does not have a one to one correspondence in WordNet, we took some words out of the description when generating the design matrix.
+
+Furthermore, the movie description downloaded from openfmri.org is not marked by time precisely. For example, we were given the words that occurred in every 20 seconds/10 TRs blocks. This prevented us from linking each word to a specific TR with certainty, creating difficulties with modeling individual words to brain activity. As a result, we had to assume that brain activity is activated by the whole sentence within a certain time window(10s) instead of activated by individual words at each time points(2s).
+
 
 \subsection{Future Work}
 \par We only got the chance to analyze subject 12. It would be interesting to see how our results extend to the other subjects and if there are any similarities in scenes and words subjects respond strongly to. With the code we currently have on Github, this would be very easy; we would just need to change the file names at the top of each file in the scripts folder. Another avenue of future work could be contacting the head researcher of this study and ask for a more detailed movie description. This would then allow us to link individual words to each TR which would give us a more accurate and robust model. 
+
+Also, it would be interesting to locate the well predicted voxels in the brain and see what it would inform us about the their neural functions, such as finding out the semantic representation of the predicted voxels.
+
+As for the modeling method, we would like to improve our neural network model by adding more hidden layers. Currently, the model predicts pretty naively and its accuracy mostly comes from predicting only one categories. A more complex neural network might potentially solved this issue.
+
+
 

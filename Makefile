@@ -38,11 +38,13 @@ analysis:
 	cd code && python scenes_pred.py
 	cd code && python nn.py
 
+regression_beta:
+	cd code && python regression_l1.py
+
 verbose:
 	cd code/utils/tests && nosetests -v *.py
 	cd data/tests && nosetests -v *.py 
 	#nosetests -v code/utils data
 
 paper_report:
-	make clean -C paper
-	make -C paper
+	cd paper && make all
