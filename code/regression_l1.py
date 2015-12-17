@@ -104,7 +104,6 @@ def plot(pred, y):
 	plt.plot(times, predm, 'r-', times, ym, 'b-')
 	plt.xlabel("Time (s)")
 	plt.ylabel("BOLD Response")
-	plt.show()
 	plt.savefig("../figure/lassoplot.jpg")
 
 l = lassoreg()
@@ -118,6 +117,7 @@ print pred
 print pred.shape
 acc = l.accuracy(pred, ytest)
 print acc
+plot(pred, ytest)
 
 
 
