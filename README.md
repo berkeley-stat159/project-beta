@@ -21,10 +21,10 @@ _**Group members:**_ Agrawal Raj, Dong Yucheng, Mo Cindy, Sinha Rishi & Wang, Yu
 2. make validate - ensure the data is not corrupted
 3. make coverage - runs coverage tests and generates the Travis coverage report
 4. make test - runs all of the tests for scripts 
-5. make Preprocess data - preprocess the data
-6. make Preprocess Description - Preprocess Description data
+5. make preprocess_data - preprocess the data
+6. make preprocess_description - Preprocess Description data
 7. make analysis - generate figures and results
-8. make report - build final report
+8. make paper_report - build final report
 
 #### Data
 - `make data_download`: Download a 5GB ds013-subject12 data for our analysis from Googledrive. It is a compressed file that contains 8 bold_dico.nii.gz from 8runs. We then rename it with the correct name. Data is then uncompressed. (~ 15-20 min)
