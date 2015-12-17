@@ -232,7 +232,7 @@ class NeuralNetworkNaive():
 		if self.mode == "mse":
 			plt.savefig("mse6.jpg")
 		else:
-			plt.savefig("ce"+description+".jpg")
+			plt.savefig("../figure/ce"+description+".jpg")
 
 def around(x, b):
 	return np.where(x > b, 1, 0)
@@ -257,18 +257,18 @@ def nnwords(indices, xtrain, xtest, ytrain, ytest, wordlist, threshold, e, relu=
 		xtrain, ytrain = nonzero(xtrain, ytrain)
 		xtest, ytest = nonzero(xtest, ytest)
 
-		nn = NeuralNetworkNaive(xtrain.shape[1], 10000, ytrain.shape[1], relu=relu)
+		nn = NeuralNetworkNaive(xtrain.shape[1], 5000, ytrain.shape[1], relu=relu)
 		nn.train(xtrain, ytrain, threshold, e)
 		nn.plot("allwords")
 
 	pred = nn.predict(xtest)
-	with open("../nnpreds/nnpreds_"+str("mostcommon")+".npy", "w") as f:
+	with open("../data/nnpreds_"+str("mostcommon")+".npy", "w") as f:
 		np.save(f, pred)
 
 	acc = nn.accuracy(ytest, pred)
 	print "FINAL ACC "+str("mostcommon")+": "+str(acc)
 	test = nn.ztest(ytest, pred)
-	print test
+	print "ztest: "+ str(test)
 
 # def nnreal(x, y, hidden=5000, threshold=.1, numwords=10):
 # 	sums = np.sum(y, axis = 0).tolist()
@@ -330,7 +330,7 @@ def ztest(y, h):
 # FINAL ACC [u'rubbish.n.01' u'teammate.n.01' u'abruptly.r.01' ..., u'tray.n.01'
 #  u'wheelchair.n.01' u'bench.n.01']: (169, 0.20993788819875778)
 
-pred = np.load("../nnpreds/nnpred_mostcommon.npy").astype(np.int)
+pred = np.load("../data/nnpred_mostcommon.npy").astype(np.int)
 print np.where(pred != 0)
 # print pred.tolist()
 print pred.shape
