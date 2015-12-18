@@ -133,7 +133,7 @@ class NeuralNetworkNaive():
 					a = self.accuracy(y, self.predict(x))
 					self.errors.append(a[1])
 					print a, self.learn(i, n, a[1])
-					if a[1] > threshold and i > epoch*30:
+					if a[1] > threshold or i > epoch*30:
 						self.endlearn = self.learn(i, n, a[1])
 						return a[1]
 				i += 1
@@ -192,7 +192,7 @@ class NeuralNetworkNaive():
 		sigma = 300 *  pow(.5, 10) * (1 - pow(.5, 10))
 		standardized = (score - expected) / sigma
 		pval = 1 - norm.cdf(standardized)
-		print standardized, pval
+		return standardized, pval
 
 
 	def d_mse(self, x, y):
@@ -257,14 +257,13 @@ def nnwords(indices, xtrain, xtest, ytrain, ytest, wordlist, threshold, e, relu=
 		xtrain, ytrain = nonzero(xtrain, ytrain)
 		xtest, ytest = nonzero(xtest, ytest)
 
-		nn = NeuralNetworkNaive(xtrain.shape[1], 5000, ytrain.shape[1], relu=relu)
+		nn = NeuralNetworkNaive(xtrain.shape[1], 10, ytrain.shape[1], relu=relu)
 		nn.train(xtrain, ytrain, threshold, e)
 		nn.plot("allwords")
 
 	pred = nn.predict(xtest)
-	with open("../data/nnpreds_"+str("mostcommon")+".npy", "w") as f:
+	with open("../data/nnpreds_mostcommon.npy", "w") as f:
 		np.save(f, pred)
-
 	acc = nn.accuracy(ytest, pred)
 	print "FINAL ACC "+str("mostcommon")+": "+str(acc)
 	test = nn.ztest(ytest, pred)
@@ -330,7 +329,7 @@ def ztest(y, h):
 # FINAL ACC [u'rubbish.n.01' u'teammate.n.01' u'abruptly.r.01' ..., u'tray.n.01'
 #  u'wheelchair.n.01' u'bench.n.01']: (169, 0.20993788819875778)
 
-pred = np.load("../data/nnpred_mostcommon.npy").astype(np.int)
+pred = np.load("../data/nnpreds_mostcommon.npy").astype(np.int)
 print np.where(pred != 0)
 # print pred.tolist()
 print pred.shape
