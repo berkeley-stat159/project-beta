@@ -257,7 +257,7 @@ def nnwords(indices, xtrain, xtest, ytrain, ytest, wordlist, threshold, e, relu=
 		xtrain, ytrain = nonzero(xtrain, ytrain)
 		xtest, ytest = nonzero(xtest, ytest)
 
-		nn = NeuralNetworkNaive(xtrain.shape[1], 10, ytrain.shape[1], relu=relu)
+		nn = NeuralNetworkNaive(xtrain.shape[1], 5000, ytrain.shape[1], relu=relu)
 		nn.train(xtrain, ytrain, threshold, e)
 		nn.plot("allwords")
 
